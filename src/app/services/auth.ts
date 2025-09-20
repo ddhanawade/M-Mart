@@ -184,9 +184,21 @@ export class AuthService {
     return localStorage.getItem(environment.auth.tokenKey);
   }
 
+  // Explicitly fetch current user profile (addresses, etc.)
+  fetchMe(): Observable<User> {
+    return this.apiService.get<User>('userService', '/api/auth/me').pipe(
+      tap(user => {
+        this.currentUserSubject.next(user);
+        localStorage.setItem(environment.auth.userKey, JSON.stringify(user));
+      })
+    );
+  }
+
   // Update user profile
   updateProfile(userData: Partial<User>): Observable<User> {
-    return this.apiService.put<User>('userService', '/api/users/profile', userData).pipe(
+    const current = this.getCurrentUser();
+    const endpoint = current?.id ? `/api/users/profile/${current.id}` : '/api/users/profile';
+    return this.apiService.put<User>('userService', endpoint, userData).pipe(
       tap(updatedUser => {
         this.currentUserSubject.next(updatedUser);
         localStorage.setItem(environment.auth.userKey, JSON.stringify(updatedUser));

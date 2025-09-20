@@ -39,6 +39,12 @@ export class Profile implements OnInit {
   private authService = inject(AuthService);
 
   ngOnInit(): void {
+    // Ensure we have the latest profile from backend
+    this.authService.fetchMe().subscribe({
+      next: () => {},
+      error: () => {}
+    });
+
     this.authService.currentUser$.subscribe(user => {
       this.user = user;
       if (user) {
@@ -111,6 +117,7 @@ export class Profile implements OnInit {
       current.push({ ...(form as Address), id: newId });
     }
 
+    // Persist using backend: send full user payload subset (addresses only)
     this.persistAddresses(current);
   }
 
