@@ -1,0 +1,52 @@
+<svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mobileLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2E7D32;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4CAF50;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#66BB6A;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="mobileTextGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1B5E20;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2E7D32;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Simplified mountain silhouette -->
+  <path d="M5 25 L12 18 L18 21 L24 15 L30 19 L35 17" 
+        stroke="url(#mobileLogoGradient)" 
+        stroke-width="2.5" 
+        fill="none" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+  
+  <!-- Shopping cart icon -->
+  <g transform="translate(32, 22)">
+    <rect x="0" y="0" width="8" height="5" rx="0.8" 
+          fill="url(#mobileLogoGradient)" 
+          stroke="#1B5E20" 
+          stroke-width="0.8"/>
+    <circle cx="2" cy="8" r="1.2" fill="#FF6B35"/>
+    <circle cx="6" cy="8" r="1.2" fill="#FF6B35"/>
+    <path d="M-1.5 0 L0 0 L0.5 -3 L7.5 -3" 
+          stroke="#1B5E20" 
+          stroke-width="1" 
+          fill="none"/>
+  </g>
+  
+  <!-- Compact text -->
+  <text x="45" y="18" 
+        font-family="Arial, sans-serif" 
+        font-size="12" 
+        font-weight="bold" 
+        fill="url(#mobileTextGradient)">
+    Mahabaleshwer
+  </text>
+  
+  <text x="45" y="30" 
+        font-family="Arial, sans-serif" 
+        font-size="8" 
+        font-weight="600" 
+        fill="#FF6B35">
+    MART
+  </text>
+</svg>
