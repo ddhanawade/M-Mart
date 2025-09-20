@@ -85,4 +85,9 @@ export class ProductCard {
     // You could open a modal or navigate to product details
     this.navigateToProductDetail();
   }
+
+  isUrl(value: string | undefined | null): boolean {
+    if (!value) return false;
+    return /^(https?:)?\/\//i.test(value);
+  }
 }

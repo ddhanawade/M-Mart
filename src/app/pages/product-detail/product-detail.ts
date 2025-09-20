@@ -20,6 +20,7 @@ export class ProductDetail implements OnInit, OnDestroy {
   quantity: number = 1;
   isLoading: boolean = true;
   isAddingToCart: boolean = false;
+  isLightboxOpen: boolean = false;
   
   private productService = inject(ProductService);
   private cartService = inject(CartService);
@@ -167,5 +168,16 @@ export class ProductDetail implements OnInit, OnDestroy {
 
   navigateToProduct(productId: string) {
     this.router.navigate(['/product', productId]);
+  }
+
+  openLightbox() {
+    this.isLightboxOpen = true;
+  }
+
+  closeLightbox(event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.isLightboxOpen = false;
   }
 } 

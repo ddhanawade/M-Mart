@@ -126,8 +126,8 @@
                 <span class="item-label">My Orders</span>
               </a>
               <a routerLink="/profile" class="dropdown-item">
-                <span class="item-icon">⚙️</span>
-                <span class="item-label">Settings</span>
+                <span class="item-icon">👤</span>
+                <span class="item-label">Profile</span>
               </a>
               <a (click)="onLogout()" class="dropdown-item logout-item" [class.loading]="isLoggingOut">
                 <span class="item-icon" *ngIf="!isLoggingOut">🚪</span>
@@ -244,8 +244,8 @@
             <span class="user-name">{{userName}}</span>
           </div>
           <a routerLink="/profile" class="mobile-link" (click)="closeMobileMenu()">
-            <span class="nav-icon">⚙️</span>
-            <span class="nav-label">Settings</span>
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Profile</span>
           </a>
           <a (click)="onLogout()" class="mobile-link logout-link" [class.loading]="isLoggingOut">
             <span class="nav-icon" *ngIf="!isLoggingOut">🚪</span>

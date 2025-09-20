@@ -1,7 +1,12 @@
 <div class="modern-product-card" (click)="onCardClick($event)" [class.out-of-stock]="!product.inStock">
   <!-- Professional Image Section -->
   <div class="card-image-section">
-    <span class="product-image">{{product.image}}</span>
+    <ng-container *ngIf="product.image && product.image.startsWith('http'); else textImage">
+      <img class="product-img" [src]="product.image" [alt]="product.name" />
+    </ng-container>
+    <ng-template #textImage>
+      <span class="product-image">{{product.image}}</span>
+    </ng-template>
     
     <!-- Status Badges -->
     <div class="status-badges">

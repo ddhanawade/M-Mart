@@ -47,8 +47,13 @@
           <!-- Product Images -->
           <div class="product-images">
             <div class="main-image">
-              <div class="image-container">
-                <span class="product-emoji">{{selectedImage}}</span>
+              <div class="image-container" (click)="openLightbox()" role="button" aria-label="View larger image">
+                <ng-container *ngIf="selectedImage && selectedImage.startsWith('http'); else textMainImg">
+                  <img class="product-main-img" [src]="selectedImage" [alt]="product.name" />
+                </ng-container>
+                <ng-template #textMainImg>
+                  <span class="product-emoji">{{selectedImage}}</span>
+                </ng-template>
                 
                 <!-- Product Badges -->
                 <div class="product-badges">
@@ -68,7 +73,12 @@
                 class="thumbnail-btn"
                 [class.active]="selectedImage === image"
                 (click)="selectImage(image)">
-                <span class="thumbnail-emoji">{{image}}</span>
+                <ng-container *ngIf="image && image.startsWith('http'); else textThumb">
+                  <img class="thumbnail-img" [src]="image" [alt]="product.name" />
+                </ng-container>
+                <ng-template #textThumb>
+                  <span class="thumbnail-emoji">{{image}}</span>
+                </ng-template>
               </button>
             </div>
           </div>
@@ -250,7 +260,12 @@
             class="related-item"
             (click)="navigateToProduct(relatedProduct.id)">
             <div class="related-image">
-              <span class="related-emoji">{{relatedProduct.image}}</span>
+              <ng-container *ngIf="relatedProduct.image && relatedProduct.image.startsWith('http'); else textRelated">
+                <img class="related-img" [src]="relatedProduct.image" [alt]="relatedProduct.name" />
+              </ng-container>
+              <ng-template #textRelated>
+                <span class="related-emoji">{{relatedProduct.image}}</span>
+              </ng-template>
             </div>
             <div class="related-info">
               <h4 class="related-title">{{relatedProduct.name}}</h4>
@@ -265,6 +280,15 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    
+    <!-- Lightbox Overlay -->
+    <div class="lightbox-overlay" *ngIf="isLightboxOpen" (click)="closeLightbox()">
+      <div class="lightbox-content" (click)="$event.stopPropagation()">
+        <button class="lightbox-close" (click)="closeLightbox($event)" aria-label="Close image">×</button>
+        <img *ngIf="selectedImage && selectedImage.startsWith('http')" [src]="selectedImage" [alt]="product?.name" class="lightbox-img" />
+        <span *ngIf="!selectedImage || !selectedImage.startsWith('http')" class="lightbox-emoji">{{selectedImage}}</span>
       </div>
     </div>
   </div>

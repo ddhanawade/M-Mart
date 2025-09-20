@@ -184,13 +184,14 @@
           background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
           border: 1px solid #e2e8f0;
           border-radius: 16px;
-          padding: 3rem;
+          padding: 0;
           text-align: center;
           aspect-ratio: 1;
           display: flex;
           align-items: center;
           justify-content: center;
           overflow: hidden;
+          box-shadow: 0 12px 40px rgba(26, 54, 93, 0.12);
 
           @media (max-width: 768px) {
             padding: 2rem;
@@ -218,8 +219,30 @@
             }
           }
 
+          .product-main-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.25s ease;
+          }
+
           &:hover .product-emoji {
             transform: scale(1.05);
+          }
+
+          &:hover .product-main-img {
+            transform: scale(1.05);
+          }
+
+          &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+              radial-gradient(600px 200px at 0% 0%, rgba(255,255,255,0.45), transparent 60%),
+              radial-gradient(400px 200px at 100% 100%, rgba(59,130,246,0.10), transparent 60%);
+            pointer-events: none;
           }
 
           .product-badges {
@@ -280,19 +303,30 @@
           display: flex;
           align-items: center;
           justify-content: center;
+            box-shadow: 0 4px 14px rgba(26, 54, 93, 0.08);
 
           &.active {
             border-color: #1a365d;
             background: #edf4ff;
+            box-shadow: 0 8px 22px rgba(26, 54, 93, 0.15);
           }
 
           &:hover {
             border-color: #cbd5e0;
             background: #edf2f7;
+            transform: translateY(-2px) scale(1.03);
           }
 
           .thumbnail-emoji {
             font-size: 1.5rem;
+          }
+
+          .thumbnail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            border-radius: 6px;
           }
         }
       }
@@ -378,11 +412,12 @@
       }
 
       .price-section {
-        background: #f8fafc;
+        background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
         border: 1px solid #e2e8f0;
-        border-radius: 12px;
+        border-radius: 14px;
         padding: 1.5rem;
         margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(26, 54, 93, 0.10);
 
         .price-main {
           display: flex;
@@ -425,11 +460,12 @@
       }
 
       .availability-section {
-        background: white;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
         border: 1px solid #e2e8f0;
         border-radius: 12px;
         padding: 1.5rem;
         margin-bottom: 2rem;
+        box-shadow: 0 8px 24px rgba(26, 54, 93, 0.08);
 
         .stock-status {
           display: flex;
@@ -664,6 +700,58 @@
     }
   }
 
+  // Lightbox styles
+  .lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+
+    .lightbox-content {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      background: #0f172a;
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .lightbox-img {
+        max-width: 100%;
+        max-height: 80vh;
+        object-fit: contain;
+        display: block;
+        border-radius: 8px;
+      }
+
+      .lightbox-emoji {
+        font-size: 6rem;
+        color: white;
+      }
+
+      .lightbox-close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(255,255,255,0.9);
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+        cursor: pointer;
+        line-height: 1;
+      }
+    }
+  }
+
   // Professional Product Tabs
   .product-tabs {
     background: white;
@@ -874,6 +962,13 @@
             @media (max-width: 480px) {
               font-size: 2rem;
             }
+          }
+
+          .related-img {
+            width: 100%;
+            height: 120px;
+            object-fit: contain;
+            display: block;
           }
         }
 
