@@ -1,0 +1,221 @@
+<div class="cart-page">
+  <!-- Professional Page Header -->
+  <div class="page-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="breadcrumb">
+          <a routerLink="/">Home</a>
+          <span class="separator">></span>
+          <span class="current">Shopping Cart</span>
+        </div>
+        <h1 class="page-title">Your Shopping Cart</h1>
+        <p class="cart-summary" *ngIf="cartItems.length > 0">
+          {{totalItems}} item{{totalItems !== 1 ? 's' : ''}} ready for checkout
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Content -->
+  <div class="cart-content">
+    <div class="container">
+      <!-- Empty Cart State -->
+      <div class="empty-cart" *ngIf="cartItems.length === 0">
+        <div class="empty-cart-content">
+          <div class="empty-cart-icon">🛒</div>
+          <h2>Your cart is empty</h2>
+          <p>Discover fresh, organic products and start building your healthy lifestyle today.</p>
+          <div class="empty-cart-actions">
+            <a routerLink="/products" class="btn btn-primary">
+              <span>🌿</span>
+              Start Shopping
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cart with Items -->
+      <div class="cart-with-items" *ngIf="cartItems.length > 0">
+        <div class="cart-main">
+          <!-- Cart Items Section -->
+          <div class="cart-items-section">
+            <div class="section-header">
+              <h2>Cart Items ({{totalItems}})</h2>
+              <button class="clear-cart-btn" (click)="clearCart()">
+                <span>🗑️</span>
+                Clear All
+              </button>
+            </div>
+
+          <div class="cart-items-list">
+              <div class="cart-item" *ngFor="let item of cartItems; trackBy: trackByItemId">
+                <!-- Product Image -->
+                <div class="item-image">
+                  <img *ngIf="item.product.image && item.product.image.startsWith('http')"
+                       [src]="item.product.image"
+                       alt="{{item.product.name}}"
+                       class="product-img" />
+                  <span *ngIf="!item.product.image || !item.product.image.startsWith('http')"
+                        class="product-emoji">{{item.product.image}}</span>
+                  <div class="item-badges">
+                    <span class="badge organic" *ngIf="item.product.organic">Organic</span>
+                    <span class="badge fresh" *ngIf="item.product.fresh">Fresh</span>
+                    <span class="badge discount" *ngIf="item.product.originalPrice">
+                      {{Math.round(((item.product.originalPrice - item.product.price) / item.product.originalPrice) * 100)}}% OFF
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Product Details -->
+                <div class="item-details">
+                  <h3 class="item-name">{{item.product.name}}</h3>
+                  <p class="item-description">{{item.product.description}}</p>
+                  
+                  <div class="item-price-info">
+                    <div class="price-container">
+                      <span class="current-price">₹{{item.product.price}}</span>
+                      <span class="original-price" *ngIf="item.product.originalPrice">₹{{item.product.originalPrice}}</span>
+                      <span class="unit">/ {{item.product.unit}}</span>
+                    </div>
+                    <div class="savings" *ngIf="item.product.originalPrice">
+                      Save ₹{{item.product.originalPrice - item.product.price}} per {{item.product.unit}}
+                    </div>
+                  </div>
+
+                  <!-- Stock Status -->
+                  <div class="stock-status">
+                    <span class="stock-indicator in-stock" *ngIf="item.product.inStock">
+                      ✅ In Stock
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Item Controls -->
+                <div class="item-controls">
+                  <!-- Quantity Controls -->
+                  <div class="quantity-section">
+                    <label>Quantity:</label>
+                    <div class="quantity-controls">
+                      <button 
+                        class="qty-btn" 
+                        (click)="decreaseQuantity(item.id)" 
+                        [disabled]="item.selectedQuantity <= 1">
+                        −
+                      </button>
+                      <span class="quantity">{{item.selectedQuantity}}</span>
+                      <button 
+                        class="qty-btn" 
+                        (click)="increaseQuantity(item.id)" 
+                        [disabled]="isLoading">
+                        +
+                      </button>
+                    </div>
+                    <span class="unit-text">{{item.product.unit}}</span>
+                  </div>
+
+                  <!-- Total Price for this item -->
+                  <div class="item-total">
+                    <div class="total-price">₹{{item.totalPrice}}</div>
+                    <div class="price-breakdown">
+                      ₹{{item.product.price}} × {{item.selectedQuantity}}
+                    </div>
+                  </div>
+
+                  <!-- Remove Button -->
+                  <button class="remove-btn" (click)="removeItem(item.id)">
+                    <span class="icon">🗑️</span>
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Professional Order Summary -->
+          <div class="order-summary-section">
+            <div class="order-summary-card">
+              <h3 class="summary-title">Order Summary</h3>
+
+              <div class="summary-details">
+                <div class="summary-row">
+                  <span>Subtotal ({{totalItems}} items)</span>
+                  <span>₹{{cartSummary?.subtotal}}</span>
+                </div>
+
+                <div class="summary-row savings" *ngIf="(cartSummary?.discount || 0) > 0">
+                  <span>You're saving</span>
+                  <span class="savings-amount">−₹{{cartSummary?.discount}}</span>
+                </div>
+
+                <div class="summary-row">
+                  <span>Delivery Charges</span>
+                  <span [class.free]="getDeliveryCharge() === 0">
+                    {{getDeliveryCharge() === 0 ? 'FREE' : '₹' + getDeliveryCharge()}}
+                  </span>
+                </div>
+
+                <div class="summary-row free-delivery-info" *ngIf="getDeliveryCharge() > 0 && (cartSummary?.subtotal || 0) > 0">
+                  <span class="info-text">
+                    🚚 Add ₹{{500 - (cartSummary?.subtotal || 0)}} more for free delivery!
+                  </span>
+                </div>
+
+                <div class="summary-row total">
+                  <span>Total Amount</span>
+                  <span class="total-amount">₹{{getTotalWithDelivery()}}</span>
+                </div>
+              </div>
+
+              <!-- Professional Checkout Actions -->
+              <div class="checkout-actions">
+                <button 
+                  class="btn btn-primary checkout-btn" 
+                  routerLink="/checkout"
+                  (click)="onCheckoutClick()">
+                  <span class="icon">💳</span>
+                  Proceed to Checkout
+                </button>
+
+                <div class="login-prompt" *ngIf="!isLoggedIn">
+                  <p>Please <a routerLink="/auth">login</a> to proceed with checkout</p>
+                </div>
+
+                <button class="btn btn-outline continue-shopping-btn" routerLink="/products">
+                  <span>🛍️</span>
+                  Continue Shopping
+                </button>
+              </div>
+
+              <!-- Professional Trust Badges -->
+              <div class="trust-badges">
+                <div class="trust-badge">
+                  <span class="badge-icon">🔒</span>
+                  <span class="badge-text">Secure Payment</span>
+                </div>
+                <div class="trust-badge">
+                  <span class="badge-icon">🚚</span>
+                  <span class="badge-text">Fast Delivery</span>
+                </div>
+                <div class="trust-badge">
+                  <span class="badge-icon">↩️</span>
+                  <span class="badge-text">Easy Returns</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Professional Related Products Section -->
+  <div class="related-products" *ngIf="cartItems.length > 0">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">You might also like</h2>
+        <p class="section-description">Complete your order with these popular organic products</p>
+      </div>
+      <!-- Related products would go here -->
+    </div>
+  </div>
+</div>

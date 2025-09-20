@@ -1,0 +1,268 @@
+<header class="professional-header">
+  <div class="container">
+    <div class="header-content">
+      
+      <!-- Left: Brand Section -->
+      <div class="brand-section">
+        <a routerLink="/" class="brand-link" (click)="closeMobileMenu()">
+          <picture>
+            <source srcset="assets/images/logo-mark.svg" media="(max-width: 640px)">
+            <img src="assets/images/logo-horizontal.svg" 
+                 alt="Mahabaleshwer Mart - Fresh from the Hills" 
+                 class="brand-logo"
+                 width="220" 
+                 height="56">
+          </picture>
+        </a>
+      </div>
+
+      <!-- Center: Navigation & Search -->
+      <div class="center-section">
+        <!-- Desktop Navigation -->
+        <nav class="main-navigation">
+          <a routerLink="/" 
+             routerLinkActive="active" 
+             [routerLinkActiveOptions]="{exact: true}" 
+             class="nav-link">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Home</span>
+          </a>
+
+          <!-- Products Dropdown -->
+          <div class="nav-dropdown">
+            <button class="nav-link dropdown-trigger" 
+                    (click)="toggleProductDropdown($event)"
+                    [class.active]="isProductDropdownOpen">
+              <span class="nav-icon">🛍️</span>
+              <span class="nav-label">Products</span>
+              <span class="dropdown-arrow" [class.rotated]="isProductDropdownOpen">▼</span>
+            </button>
+            
+            <div class="dropdown-panel" [class.show]="isProductDropdownOpen">
+              <a (click)="navigateToCategory('fruits')" class="dropdown-item">
+                <span class="item-icon">🍎</span>
+                <span class="item-label">Fresh Fruits</span>
+              </a>
+              <a (click)="navigateToCategory('vegetables')" class="dropdown-item">
+                <span class="item-icon">🥕</span>
+                <span class="item-label">Vegetables</span>
+              </a>
+              <a (click)="navigateToCategory('organic')" class="dropdown-item">
+                <span class="item-icon">🌿</span>
+                <span class="item-label">Organic Products</span>
+              </a>
+              <a (click)="navigateToCategory('groceries')" class="dropdown-item">
+                <span class="item-icon">🛒</span>
+                <span class="item-label">Groceries</span>
+              </a>
+            </div>
+          </div>
+
+          <a routerLink="/products" 
+             routerLinkActive="active" 
+             class="nav-link">
+            <span class="nav-icon">📦</span>
+            <span class="nav-label">All Products</span>
+          </a>
+
+          <a routerLink="/orders" 
+             routerLinkActive="active" 
+             class="nav-link">
+            <span class="nav-icon">📋</span>
+            <span class="nav-label">Orders</span>
+          </a>
+        </nav>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+          <form class="search-form" (ngSubmit)="onSearch()">
+            <div class="search-wrapper">
+              <input type="text" 
+                     class="search-input" 
+                     placeholder="Search fresh products..."
+                     [(ngModel)]="searchQuery"
+                     name="search">
+              <button type="submit" class="search-btn">
+                <span class="search-icon">🔍</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right: Action Buttons -->
+      <div class="actions-section">
+        
+        <!-- Cart Button -->
+        <a routerLink="/cart" class="action-btn cart-btn">
+          <span class="btn-icon">🛒</span>
+          <span class="btn-label">Cart</span>
+          <span class="cart-count" *ngIf="cartItemCount > 0">{{cartItemCount}}</span>
+        </a>
+
+        <!-- User Section -->
+        <div class="user-section">
+          <!-- Login Button (when not logged in) -->
+          <a *ngIf="!isLoggedIn" 
+             routerLink="/auth" 
+             class="action-btn login-btn">
+            <span class="btn-icon">👤</span>
+            <span class="btn-label">Login</span>
+          </a>
+
+          <!-- User Dropdown (when logged in) -->
+          <div *ngIf="isLoggedIn" class="user-dropdown">
+            <button class="action-btn user-btn" 
+                    (click)="toggleUserDropdown($event)"
+                    [class.active]="isUserDropdownOpen">
+              <span class="btn-icon">👤</span>
+              <span class="btn-label">{{userName}}</span>
+              <span class="dropdown-arrow" [class.rotated]="isUserDropdownOpen">▼</span>
+            </button>
+            
+            <div class="dropdown-panel user-menu" [class.show]="isUserDropdownOpen">
+              <a routerLink="/orders" class="dropdown-item">
+                <span class="item-icon">📋</span>
+                <span class="item-label">My Orders</span>
+              </a>
+              <a routerLink="/profile" class="dropdown-item">
+                <span class="item-icon">⚙️</span>
+                <span class="item-label">Settings</span>
+              </a>
+              <a (click)="onLogout()" class="dropdown-item logout-item" [class.loading]="isLoggingOut">
+                <span class="item-icon" *ngIf="!isLoggingOut">🚪</span>
+                <span class="item-icon loading-spinner" *ngIf="isLoggingOut">⏳</span>
+                <span class="item-label">{{ isLoggingOut ? 'Logging out...' : 'Logout' }}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-toggle" 
+                (click)="toggleMobileMenu()"
+                [class.active]="isMobileMenuOpen">
+          <span class="hamburger">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <div class="mobile-nav" [class.open]="isMobileMenuOpen">
+    <div class="mobile-content">
+      
+      <!-- Mobile Search -->
+      <div class="mobile-search">
+        <form class="search-form" (ngSubmit)="onSearch()">
+          <div class="search-wrapper">
+            <input type="text" 
+                   class="search-input" 
+                   placeholder="Search products..."
+                   [(ngModel)]="searchQuery"
+                   name="search">
+            <button type="submit" class="search-btn">
+              <span class="search-icon">🔍</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Mobile Menu Items -->
+      <nav class="mobile-menu">
+        <a routerLink="/" 
+           routerLinkActive="active" 
+           [routerLinkActiveOptions]="{exact: true}" 
+           class="mobile-link"
+           (click)="closeMobileMenu()">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Home</span>
+        </a>
+
+        <div class="mobile-dropdown">
+          <button class="mobile-link dropdown-trigger" 
+                  (click)="toggleProductDropdown($event)"
+                  [class.active]="isProductDropdownOpen">
+            <span class="nav-icon">🛍️</span>
+            <span class="nav-label">Products</span>
+            <span class="dropdown-arrow" [class.rotated]="isProductDropdownOpen">▼</span>
+          </button>
+          
+          <div class="mobile-submenu" [class.show]="isProductDropdownOpen">
+            <a (click)="navigateToCategory('fruits')" class="submenu-item">
+              <span class="item-icon">🍎</span>
+              <span class="item-label">Fresh Fruits</span>
+            </a>
+            <a (click)="navigateToCategory('vegetables')" class="submenu-item">
+              <span class="item-icon">🥕</span>
+              <span class="item-label">Vegetables</span>
+            </a>
+            <a (click)="navigateToCategory('organic')" class="submenu-item">
+              <span class="item-icon">🌿</span>
+              <span class="item-label">Organic Products</span>
+            </a>
+            <a (click)="navigateToCategory('groceries')" class="submenu-item">
+              <span class="item-icon">🛒</span>
+              <span class="item-label">Groceries</span>
+            </a>
+          </div>
+        </div>
+
+        <a routerLink="/products" 
+           routerLinkActive="active" 
+           class="mobile-link"
+           (click)="closeMobileMenu()">
+          <span class="nav-icon">📦</span>
+          <span class="nav-label">All Products</span>
+        </a>
+
+        <a routerLink="/cart" 
+           routerLinkActive="active" 
+           class="mobile-link"
+           (click)="closeMobileMenu()">
+          <span class="nav-icon">🛒</span>
+          <span class="nav-label">Cart</span>
+          <span class="cart-count" *ngIf="cartItemCount > 0">{{cartItemCount}}</span>
+        </a>
+
+        <a routerLink="/orders" 
+           routerLinkActive="active" 
+           class="mobile-link"
+           (click)="closeMobileMenu()">
+          <span class="nav-icon">📋</span>
+          <span class="nav-label">Orders</span>
+        </a>
+
+        <!-- Mobile User Section -->
+        <div class="mobile-user" *ngIf="isLoggedIn">
+          <div class="user-info">
+            <span class="user-icon">👤</span>
+            <span class="user-name">{{userName}}</span>
+          </div>
+          <a routerLink="/profile" class="mobile-link" (click)="closeMobileMenu()">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-label">Settings</span>
+          </a>
+          <a (click)="onLogout()" class="mobile-link logout-link" [class.loading]="isLoggingOut">
+            <span class="nav-icon" *ngIf="!isLoggingOut">🚪</span>
+            <span class="nav-icon loading-spinner" *ngIf="isLoggingOut">⏳</span>
+            <span class="nav-label">{{ isLoggingOut ? 'Logging out...' : 'Logout' }}</span>
+          </a>
+        </div>
+
+        <div class="mobile-login" *ngIf="!isLoggedIn">
+          <a routerLink="/auth" 
+             class="login-link"
+             (click)="closeMobileMenu()">
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Login / Register</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>

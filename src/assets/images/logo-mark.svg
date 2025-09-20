@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mahabaleshwer Mart emblem">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="50%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <radialGradient id="mg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fruitRed" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fca5a5"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <linearGradient id="fruitOrange" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="fruitGreen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#bbf7d0"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+    <linearGradient id="basket" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="60" height="60" rx="16" fill="url(#bg)"/>
+  <ellipse cx="36" cy="30" rx="28" ry="16" fill="url(#mg)"/>
+  <g transform="translate(14,22)">
+    <rect x="0" y="20" width="44" height="12" rx="6" fill="url(#basket)"/>
+    <path d="M8 20c0-10 8-18 18-18s18 8 18 18" fill="none" stroke="#b45309" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="10" cy="14" r="6" fill="url(#fruitRed)"/>
+    <circle cx="22" cy="10" r="7" fill="url(#fruitOrange)"/>
+    <circle cx="34" cy="12" r="6.5" fill="url(#fruitGreen)"/>
+    <path d="M9 8c4-6 10-8 12-6-1 4-6 7-12 7z" fill="#86efac"/>
+    <path d="M31 6c4-4 8-6 10-4-1 4-5 7-9 7z" fill="#86efac"/>
+    <circle cx="8" cy="10" r="2" fill="#fff" opacity="0.7"/>
+    <circle cx="21" cy="8" r="2" fill="#fff" opacity="0.7"/>
+    <circle cx="33" cy="10" r="2" fill="#fff" opacity="0.7"/>
+  </g>
+</svg>
+

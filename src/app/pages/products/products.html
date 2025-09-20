@@ -1,0 +1,182 @@
+<div class="products-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="breadcrumb">
+          <a routerLink="/">Home</a>
+          <span class="separator">></span>
+          <span>Products</span>
+          <span class="separator" *ngIf="selectedCategory">></span>
+          <span class="current-category" *ngIf="selectedCategory">{{getCategoryDisplayName()}}</span>
+        </div>
+        <h1 class="page-title">
+          {{selectedCategory ? getCategoryDisplayName() : 'All Products'}}
+        </h1>
+        <p class="page-description">
+          {{getCategoryDescription()}}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="filters-section">
+    <div class="container">
+      <div class="filters-content">
+        <!-- Category Filter -->
+        <div class="filter-group">
+          <label class="filter-label">Category:</label>
+          <div class="category-buttons">
+            <button 
+              class="category-btn" 
+              [class.active]="!selectedCategory"
+              (click)="filterByCategory('')">
+              All Products
+            </button>
+            <button 
+              class="category-btn" 
+              [class.active]="selectedCategory === 'fruits'"
+              (click)="filterByCategory('fruits')">
+              🍎 Fruits
+            </button>
+            <button 
+              class="category-btn" 
+              [class.active]="selectedCategory === 'vegetables'"
+              (click)="filterByCategory('vegetables')">
+              🥕 Vegetables
+            </button>
+            <button 
+              class="category-btn" 
+              [class.active]="selectedCategory === 'organic'"
+              (click)="filterByCategory('organic')">
+              🌿 Organic
+            </button>
+            <button 
+              class="category-btn" 
+              [class.active]="selectedCategory === 'groceries'"
+              (click)="filterByCategory('groceries')">
+              🛒 Groceries
+            </button>
+          </div>
+        </div>
+
+        <!-- Additional Filters -->
+        <div class="filter-group">
+          <label class="filter-label">Filter by:</label>
+          <div class="filter-buttons">
+            <button 
+              class="filter-btn" 
+              [class.active]="showOnlyOrganic"
+              (click)="toggleOrganicFilter()">
+              🌿 Organic Only
+            </button>
+            <button 
+              class="filter-btn" 
+              [class.active]="showOnlyDiscounted"
+              (click)="toggleDiscountFilter()">
+              🏷️ On Sale
+            </button>
+            <button 
+              class="filter-btn" 
+              [class.active]="showOnlyInStock"
+              (click)="toggleStockFilter()">
+              ✅ In Stock
+            </button>
+          </div>
+        </div>
+
+        <!-- Sort Options -->
+        <div class="filter-group">
+          <label class="filter-label">Sort by:</label>
+          <select class="sort-select" [(ngModel)]="sortBy" (change)="onSortChange()">
+            <option value="name">Name (A-Z)</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Rating</option>
+            <option value="discount">Discount</option>
+          </select>
+        </div>
+
+        <!-- Search -->
+        <div class="filter-group search-group">
+          <div class="search-box">
+            <input 
+              type="text" 
+              placeholder="Search products..." 
+              class="search-input"
+              [(ngModel)]="searchQuery"
+              (input)="onSearch()"
+            />
+            <button class="search-btn" (click)="onSearch()">
+              <i class="search-icon">🔍</i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="products-section">
+    <div class="container">
+      <!-- Results Summary -->
+      <div class="results-summary">
+        <h3>Showing {{filteredProducts.length}} products</h3>
+        <button class="clear-filters-btn" *ngIf="hasActiveFilters()" (click)="clearAllFilters()">
+          Clear All Filters
+        </button>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading-state" *ngIf="isLoading">
+        <div class="loading-spinner"></div>
+        <p>Loading products...</p>
+      </div>
+
+      <!-- No Products Found -->
+      <div class="no-products" *ngIf="!isLoading && filteredProducts.length === 0">
+        <div class="no-products-content">
+          <div class="no-products-icon">📦</div>
+          <h3>No products found</h3>
+          <p>Try adjusting your filters or search terms</p>
+          <button class="btn btn-primary" (click)="clearAllFilters()">
+            View All Products
+          </button>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="products-grid" *ngIf="!isLoading && filteredProducts.length > 0">
+        <app-product-card 
+          *ngFor="let product of filteredProducts; trackBy: trackByProductId"
+          [product]="product"
+          class="fade-in">
+        </app-product-card>
+      </div>
+
+      <!-- Load More Button -->
+      <div class="load-more-section" *ngIf="!isLoading && filteredProducts.length > 0 && hasMoreProducts">
+        <button class="btn btn-outline load-more-btn" (click)="loadMore()">
+          Load More Products
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured Products Section -->
+  <div class="featured-section" *ngIf="!selectedCategory && !searchQuery">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Featured Products</h2>
+        <p class="section-description">Hand-picked products with highest ratings</p>
+      </div>
+      <div class="featured-grid">
+        <app-product-card 
+          *ngFor="let product of featuredProducts"
+          [product]="product">
+        </app-product-card>
+      </div>
+    </div>
+  </div>
+</div>

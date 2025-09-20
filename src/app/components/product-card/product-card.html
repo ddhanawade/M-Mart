@@ -1,0 +1,87 @@
+<div class="modern-product-card" (click)="onCardClick($event)" [class.out-of-stock]="!product.inStock">
+  <!-- Professional Image Section -->
+  <div class="card-image-section">
+    <span class="product-image">{{product.image}}</span>
+    
+    <!-- Status Badges -->
+    <div class="status-badges">
+      <span class="badge organic-badge" *ngIf="product.organic">Organic</span>
+      <span class="badge fresh-badge" *ngIf="product.fresh">Fresh</span>
+      <span class="badge discount-badge" *ngIf="product.originalPrice">{{getDiscountPercentage()}}% OFF</span>
+    </div>
+    
+    <!-- Quick Action Buttons -->
+    <div class="quick-actions">
+      <button class="quick-btn wishlist-btn" (click)="toggleWishlist()" [class.active]="false">♡</button>
+      <button class="quick-btn view-btn" (click)="quickView()">👁</button>
+    </div>
+  </div>
+
+  <!-- Professional Content Section -->
+  <div class="card-content">
+    <!-- Rating & Reviews -->
+    <div class="rating-section">
+      <div class="stars">
+        <span class="star" *ngFor="let star of getStars()" [class.filled]="star">⭐</span>
+      </div>
+      <span class="review-count">({{product.reviewCount}})</span>
+    </div>
+
+    <!-- Product Details -->
+    <h3 class="product-title">{{product.name}}</h3>
+    <p class="product-description">{{product.description}}</p>
+
+    <!-- Nutrition Info -->
+    <div class="nutrition-info" *ngIf="product.nutritionalInfo?.vitamins">
+      <span class="nutrition-tag" *ngFor="let vitamin of product.nutritionalInfo?.vitamins?.slice(0, 2)">
+        {{vitamin}}
+      </span>
+    </div>
+
+    <!-- Price Section -->
+    <div class="price-section">
+      <div class="price-row">
+        <span class="current-price">₹{{product.price}}</span>
+        <span class="original-price" *ngIf="product.originalPrice">₹{{product.originalPrice}}</span>
+      </div>
+      <span class="unit-info">/ {{product.unit}}</span>
+      <div class="savings" *ngIf="product.originalPrice">
+        Save ₹{{product.originalPrice - product.price}}
+      </div>
+    </div>
+
+    <!-- Stock Status -->
+    <div class="stock-info">
+      <span class="stock-badge" [class.in-stock]="product.inStock" [class.out-of-stock]="!product.inStock">
+        {{product.inStock ? 'In Stock' : 'Out of Stock'}}
+      </span>
+      <span class="quantity-warning" *ngIf="product.inStock && product.quantity <= 10">
+        Only {{product.quantity}} left!
+      </span>
+    </div>
+
+    <!-- Quantity & Add to Cart -->
+    <div class="action-section">
+      <div class="quantity-selector">
+        <button class="qty-btn minus" (click)="decreaseQuantity()" [disabled]="quantity <= 1">-</button>
+        <span class="quantity-display">{{quantity}}</span>
+        <button class="qty-btn plus" (click)="increaseQuantity()" [disabled]="!product.inStock || quantity >= product.quantity">+</button>
+      </div>
+      
+      <button 
+        class="add-to-cart-btn"
+        [class.in-cart]="false"
+        (click)="addToCart()"
+        [disabled]="!product.inStock || isAddingToCart">
+        
+        <span class="btn-icon" *ngIf="!isAddingToCart">🛒</span>
+        
+        <div class="btn-loading" *ngIf="isAddingToCart">
+          <div class="loading-spinner"></div>
+        </div>
+        
+        <span class="btn-text">{{isAddingToCart ? 'Adding...' : 'Add to Cart'}}</span>
+      </button>
+    </div>
+  </div>
+</div>

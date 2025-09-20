@@ -1,0 +1,271 @@
+<div class="product-detail-page">
+  <!-- Loading State -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Loading product details...</p>
+  </div>
+
+  <!-- Product Not Found -->
+  <div class="product-not-found" *ngIf="!isLoading && !product">
+    <div class="container">
+      <div class="not-found-content">
+        <div class="not-found-icon">📦</div>
+        <h2>Product Not Found</h2>
+        <p>The product you're looking for doesn't exist or has been removed.</p>
+        <button class="btn btn-primary" (click)="goBack()">Go Back</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Details -->
+  <div class="product-content" *ngIf="!isLoading && product">
+    
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-section">
+      <div class="container">
+        <div class="breadcrumb">
+          <a routerLink="/">Home</a>
+          <span class="separator">></span>
+          <a routerLink="/products">Products</a>
+          <span class="separator">></span>
+          <a [routerLink]="['/products', product.category]">{{getCategoryDisplayName()}}</a>
+          <span class="separator">></span>
+          <span class="current">{{product.name}}</span>
+        </div>
+        <button class="back-btn" (click)="goBack()">
+          <span class="back-icon">←</span>
+          <span class="back-text">Back</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Product Section -->
+    <div class="product-main">
+      <div class="container">
+        <div class="product-layout">
+          
+          <!-- Product Images -->
+          <div class="product-images">
+            <div class="main-image">
+              <div class="image-container">
+                <span class="product-emoji">{{selectedImage}}</span>
+                
+                <!-- Product Badges -->
+                <div class="product-badges">
+                  <span class="badge organic-badge" *ngIf="product.organic">Organic</span>
+                  <span class="badge fresh-badge" *ngIf="product.fresh">Fresh</span>
+                  <span class="badge discount-badge" *ngIf="product.originalPrice">
+                    {{getDiscountPercentage()}}% OFF
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Image Thumbnails (if multiple images available) -->
+            <div class="image-thumbnails" *ngIf="product.images && product.images.length > 1">
+              <button 
+                *ngFor="let image of product.images" 
+                class="thumbnail-btn"
+                [class.active]="selectedImage === image"
+                (click)="selectImage(image)">
+                <span class="thumbnail-emoji">{{image}}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Product Information -->
+          <div class="product-info">
+            
+            <!-- Product Header -->
+            <div class="product-header">
+              <div class="category-tag">{{getCategoryDisplayName()}}</div>
+              <h1 class="product-title">{{product.name}}</h1>
+              <p class="product-description">{{product.description}}</p>
+              
+              <!-- Rating & Reviews -->
+              <div class="rating-section">
+                <div class="stars">
+                  <span class="star" *ngFor="let star of getStars()" [class.filled]="star">⭐</span>
+                </div>
+                <span class="rating-text">{{product.rating}}</span>
+                <span class="review-count">({{product.reviewCount}} reviews)</span>
+              </div>
+            </div>
+
+            <!-- Price Section -->
+            <div class="price-section">
+              <div class="price-main">
+                <span class="current-price">₹{{product.price}}</span>
+                <span class="original-price" *ngIf="product.originalPrice">₹{{product.originalPrice}}</span>
+                <span class="unit-text">/ {{product.unit}}</span>
+              </div>
+              <div class="savings" *ngIf="product.originalPrice">
+                You save ₹{{product.originalPrice - product.price}} ({{getDiscountPercentage()}}%)
+              </div>
+            </div>
+
+            <!-- Stock & Availability -->
+            <div class="availability-section">
+              <div class="stock-status" [class.in-stock]="product.inStock" [class.out-of-stock]="!product.inStock">
+                <span class="status-icon">{{product.inStock ? '✅' : '❌'}}</span>
+                <span class="status-text">{{product.inStock ? 'In Stock' : 'Out of Stock'}}</span>
+              </div>
+              <div class="quantity-info" *ngIf="product.inStock && product.quantity <= 10">
+                <span class="warning-icon">⚠️</span>
+                <span class="warning-text">Only {{product.quantity}} left in stock!</span>
+              </div>
+            </div>
+
+            <!-- Quantity Selector & Actions -->
+            <div class="purchase-section">
+              <div class="quantity-selector">
+                <label class="quantity-label">Quantity:</label>
+                <div class="quantity-controls">
+                  <button class="qty-btn minus" (click)="decreaseQuantity()" [disabled]="quantity <= 1">−</button>
+                  <span class="quantity-display">{{quantity}}</span>
+                  <button class="qty-btn plus" (click)="increaseQuantity()" [disabled]="!product.inStock || quantity >= product.quantity">+</button>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="action-buttons">
+                <button 
+                  class="btn btn-primary add-to-cart-btn"
+                  (click)="addToCart()"
+                  [disabled]="!product.inStock || isAddingToCart">
+                  <span class="btn-icon" *ngIf="!isAddingToCart">🛒</span>
+                  <div class="loading-spinner" *ngIf="isAddingToCart"></div>
+                  <span class="btn-text">{{isAddingToCart ? 'Adding...' : 'Add to Cart'}}</span>
+                </button>
+                
+                <button 
+                  class="btn btn-secondary buy-now-btn"
+                  (click)="buyNow()"
+                  [disabled]="!product.inStock">
+                  <span class="btn-icon">⚡</span>
+                  <span class="btn-text">Buy Now</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Product Features -->
+            <div class="features-section">
+              <h3 class="features-title">Product Features</h3>
+              <div class="features-grid">
+                <div class="feature-item" *ngIf="product.organic">
+                  <span class="feature-icon">🌿</span>
+                  <span class="feature-text">100% Organic</span>
+                </div>
+                <div class="feature-item" *ngIf="product.fresh">
+                  <span class="feature-icon">✨</span>
+                  <span class="feature-text">Farm Fresh</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">🚚</span>
+                  <span class="feature-text">Free Delivery</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">🔄</span>
+                  <span class="feature-text">Easy Returns</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Details Tabs -->
+    <div class="product-tabs">
+      <div class="container">
+        <div class="tabs-section">
+          
+          <!-- Nutritional Information -->
+          <div class="tab-content nutrition-tab" *ngIf="product.nutritionalInfo">
+            <h3 class="tab-title">Nutritional Information</h3>
+            <div class="nutrition-grid">
+              <div class="nutrition-item">
+                <span class="nutrition-label">Calories</span>
+                <span class="nutrition-value">{{product.nutritionalInfo.calories}} kcal</span>
+              </div>
+              <div class="nutrition-item">
+                <span class="nutrition-label">Protein</span>
+                <span class="nutrition-value">{{product.nutritionalInfo.protein}}g</span>
+              </div>
+              <div class="nutrition-item">
+                <span class="nutrition-label">Carbs</span>
+                <span class="nutrition-value">{{product.nutritionalInfo.carbs}}g</span>
+              </div>
+              <div class="nutrition-item">
+                <span class="nutrition-label">Fat</span>
+                <span class="nutrition-value">{{product.nutritionalInfo.fat}}g</span>
+              </div>
+              <div class="nutrition-item">
+                <span class="nutrition-label">Fiber</span>
+                <span class="nutrition-value">{{product.nutritionalInfo.fiber}}g</span>
+              </div>
+            </div>
+            
+            <!-- Vitamins -->
+            <div class="vitamins-section" *ngIf="product.nutritionalInfo.vitamins?.length">
+              <h4 class="vitamins-title">Rich in Vitamins</h4>
+              <div class="vitamins-list">
+                <span class="vitamin-tag" *ngFor="let vitamin of product.nutritionalInfo.vitamins">{{vitamin}}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Description -->
+          <div class="tab-content description-tab">
+            <h3 class="tab-title">Product Description</h3>
+            <div class="description-content">
+              <p>{{product.description}}</p>
+              <div class="product-highlights">
+                <h4>Why Choose This Product?</h4>
+                <ul class="highlights-list">
+                  <li *ngIf="product.organic">Certified organic and pesticide-free</li>
+                  <li *ngIf="product.fresh">Freshly harvested and delivered</li>
+                  <li>High quality and carefully selected</li>
+                  <li>Rich in essential nutrients and vitamins</li>
+                  <li>Perfect for healthy lifestyle</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="related-products" *ngIf="relatedProducts.length > 0">
+      <div class="container">
+        <div class="section-header">
+          <h3 class="section-title">You May Also Like</h3>
+          <p class="section-description">Similar products from {{getCategoryDisplayName()}}</p>
+        </div>
+        
+        <div class="related-grid">
+          <div 
+            *ngFor="let relatedProduct of relatedProducts" 
+            class="related-item"
+            (click)="navigateToProduct(relatedProduct.id)">
+            <div class="related-image">
+              <span class="related-emoji">{{relatedProduct.image}}</span>
+            </div>
+            <div class="related-info">
+              <h4 class="related-title">{{relatedProduct.name}}</h4>
+              <div class="related-price">
+                <span class="related-current">₹{{relatedProduct.price}}</span>
+                <span class="related-original" *ngIf="relatedProduct.originalPrice">₹{{relatedProduct.originalPrice}}</span>
+              </div>
+              <div class="related-rating">
+                <span class="rating-star">⭐</span>
+                <span class="rating-value">{{relatedProduct.rating}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

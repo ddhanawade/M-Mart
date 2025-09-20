@@ -1,0 +1,226 @@
+<div class="auth-page">
+  <!-- Professional Page Header -->
+  <div class="page-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="breadcrumb">
+          <a routerLink="/">Home</a>
+          <span class="separator">></span>
+          <span class="current">{{isLoginMode ? 'Login' : 'Register'}}</span>
+        </div>
+        <h1 class="page-title">{{isLoginMode ? 'Welcome Back!' : 'Join Mahabaleshwer Mart'}}</h1>
+        <p class="page-description">
+          {{isLoginMode ? 'Sign in to your account to continue your fresh food journey' : 'Create an account to start your organic shopping experience'}}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Content -->
+  <div class="auth-content">
+    <div class="container">
+      <div class="auth-container">
+        <!-- Professional Back Button -->
+        <button class="back-btn" (click)="goBack()">
+          <span class="back-icon">←</span>
+          Go Back
+        </button>
+
+        <!-- Professional Auth Card -->
+        <div class="auth-card">
+          <!-- Professional Form Header -->
+          <div class="form-header">
+            <div class="form-icon">{{isLoginMode ? '🔐' : '👤'}}</div>
+            <h2 class="form-title">{{isLoginMode ? 'Sign In' : 'Create Account'}}</h2>
+            <p class="form-subtitle">
+              {{isLoginMode ? 'Enter your credentials to access your account' : 'Fill in your details to get started with fresh, organic products'}}
+            </p>
+          </div>
+
+          <!-- Professional Success/Error Messages -->
+          <div class="message success" *ngIf="successMessage">
+            <div class="message-icon">✅</div>
+            <span>{{successMessage}}</span>
+          </div>
+
+          <div class="message error" *ngIf="errorMessage">
+            <div class="message-icon">❌</div>
+            <span>{{errorMessage}}</span>
+          </div>
+
+          <!-- Professional Auth Form -->
+          <form class="auth-form" (ngSubmit)="onSubmit()" #authForm="ngForm">
+            
+            <!-- Register Fields -->
+            <div class="form-group" *ngIf="!isLoginMode">
+              <label for="name">Full Name</label>
+              <div class="input-container">
+                <span class="input-icon">👤</span>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  [(ngModel)]="registerData.name"
+                  placeholder="Enter your full name"
+                  required
+                  #name="ngModel"
+                  class="form-control"
+                  [class.error]="name.invalid && name.touched">
+              </div>
+              <div class="field-error" *ngIf="name.invalid && name.touched">
+                <span *ngIf="name.errors?.['required']">Name is required</span>
+              </div>
+            </div>
+
+            <!-- Professional Email Field -->
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <div class="input-container">
+                <span class="input-icon">📧</span>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  [ngModel]="isLoginMode ? loginData.email : registerData.email"
+                  (ngModelChange)="isLoginMode ? (loginData.email = $event) : (registerData.email = $event)"
+                  placeholder="Enter your email address"
+                  required
+                  email
+                  #email="ngModel"
+                  class="form-control"
+                  [class.error]="email.invalid && email.touched">
+              </div>
+              <div class="field-error" *ngIf="email.invalid && email.touched">
+                <span *ngIf="email.errors?.['required']">Email is required</span>
+                <span *ngIf="email.errors?.['email']">Please enter a valid email address</span>
+              </div>
+            </div>
+
+            <!-- Professional Phone Field (Register only) -->
+            <div class="form-group" *ngIf="!isLoginMode">
+              <label for="phone">Phone Number (Optional)</label>
+              <div class="input-container">
+                <span class="input-icon">📱</span>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  [(ngModel)]="registerData.phone"
+                  placeholder="Enter your phone number"
+                  class="form-control">
+              </div>
+            </div>
+
+            <!-- Professional Password Field -->
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="input-container">
+                <span class="input-icon">🔒</span>
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  id="password"
+                  name="password"
+                  [ngModel]="isLoginMode ? loginData.password : registerData.password"
+                  (ngModelChange)="isLoginMode ? (loginData.password = $event) : (registerData.password = $event)"
+                  [placeholder]="isLoginMode ? 'Enter your password' : 'Create a strong password (min 6 characters)'"
+                  required
+                  [minlength]="isLoginMode ? 1 : 6"
+                  #password="ngModel"
+                  class="form-control"
+                  [class.error]="password.invalid && password.touched">
+                <button type="button" 
+                        class="password-toggle" 
+                        (click)="togglePasswordVisibility()">
+                  {{showPassword ? '👁️' : '👁️‍🗨️'}}
+                </button>
+              </div>
+              <div class="field-error" *ngIf="password.invalid && password.touched">
+                <span *ngIf="password.errors?.['required']">Password is required</span>
+                <span *ngIf="password.errors?.['minlength'] && !isLoginMode">Password must be at least 6 characters long</span>
+              </div>
+            </div>
+
+            <!-- Professional Submit Button -->
+            <button type="submit" 
+                    class="submit-btn"
+                    [disabled]="!authForm.form.valid || isLoading"
+                    [class.loading]="isLoading">
+              <span class="btn-icon" *ngIf="!isLoading">{{isLoginMode ? '🚀' : '🎉'}}</span>
+              <div class="btn-loading" *ngIf="isLoading">
+                <div class="loading-spinner"></div>
+              </div>
+              <span class="btn-text">
+                {{isLoading ? 'Please wait...' : (isLoginMode ? 'Sign In to Continue' : 'Create My Account')}}
+              </span>
+            </button>
+
+            <!-- Professional Quick Login (Demo) -->
+            <button type="button" 
+                    class="demo-btn"
+                    *ngIf="isLoginMode"
+                    (click)="quickLogin()"
+                    [disabled]="isLoading">
+              <span class="btn-icon">⚡</span>
+              Quick Demo Login
+            </button>
+          </form>
+
+          <!-- Professional Form Footer -->
+          <div class="form-footer">
+            <div class="switch-mode">
+              <span>{{isLoginMode ? "Don't have an account?" : "Already have an account?"}}</span>
+              <button type="button" class="switch-btn" (click)="toggleMode()">
+                {{isLoginMode ? 'Create Account' : 'Sign In'}}
+              </button>
+            </div>
+
+            <!-- Professional Features -->
+            <div class="auth-features">
+              <div class="feature">
+                <span class="feature-icon">🛡️</span>
+                <span>Secure & Safe</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">🚚</span>
+                <span>Fast Delivery</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">🌱</span>
+                <span>Fresh & Organic</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Professional Side Banner -->
+        <div class="auth-banner">
+          <div class="banner-content">
+            <div class="banner-icon">🛒</div>
+            <h3>{{isLoginMode ? 'Welcome Back!' : 'Join Our Community'}}</h3>
+            <p>
+              {{isLoginMode 
+                ? 'Continue your fresh, organic food journey with us. Access your cart, orders, and personalized recommendations for healthy living.' 
+                : 'Join thousands of satisfied customers who trust us for fresh, organic produce delivered directly to their doorstep. Start your healthy lifestyle today!'
+              }}
+            </p>
+            
+            <div class="banner-stats">
+              <div class="stat">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Happy Customers</div>
+              </div>
+              <div class="stat">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Fresh Products</div>
+              </div>
+              <div class="stat">
+                <div class="stat-number">99%</div>
+                <div class="stat-label">Satisfaction Rate</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

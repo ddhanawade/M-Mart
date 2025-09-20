@@ -1,0 +1,148 @@
+<div class="home-page">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title fade-in">
+            Fresh from Farm to <span class="highlight">Your Home</span>
+          </h1>
+          <p class="hero-description fade-in">
+            Get the freshest fruits, vegetables, and organic products delivered directly from local farmers. 
+            No chemicals, no compromises - just pure, natural goodness for your family.
+          </p>
+          <div class="hero-actions fade-in">
+            <a routerLink="/products" class="btn btn-primary">
+              Shop Now
+            </a>
+            <a routerLink="/products/organic" class="btn btn-outline">
+              Organic Products
+            </a>
+          </div>
+          <div class="hero-stats fade-in">
+            <div class="stat">
+              <span class="stat-number">500+</span>
+              <span class="stat-label">Fresh Products</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">1000+</span>
+              <span class="stat-label">Happy Customers</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">24/7</span>
+              <span class="stat-label">Delivery Service</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-image">
+          <div class="image-container">
+            <div class="fruit-emoji">🍎</div>
+            <div class="fruit-emoji">🥕</div>
+            <div class="fruit-emoji">🥬</div>
+            <div class="fruit-emoji">🍌</div>
+            <div class="fruit-emoji">🍇</div>
+            <div class="fruit-emoji">🥒</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Categories -->
+  <section class="categories">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Shop by Category</h2>
+        <p class="section-description">Discover our wide range of fresh and organic products</p>
+      </div>
+      <div class="categories-grid">
+        <div class="category-card" (click)="navigateToCategory('fruits')">
+          <div class="category-icon">🍎</div>
+          <h3 class="category-title">Fresh Fruits</h3>
+          <p class="category-description">Sweet, juicy, and packed with vitamins</p>
+          <span class="category-count">150+ Products</span>
+        </div>
+        <div class="category-card" (click)="navigateToCategory('vegetables')">
+          <div class="category-icon">🥕</div>
+          <h3 class="category-title">Vegetables</h3>
+          <p class="category-description">Farm-fresh vegetables for healthy meals</p>
+          <span class="category-count">200+ Products</span>
+        </div>
+        <div class="category-card" (click)="navigateToCategory('organic')">
+          <div class="category-icon">🌿</div>
+          <h3 class="category-title">Organic Products</h3>
+          <p class="category-description">Chemical-free, naturally grown products</p>
+          <span class="category-count">100+ Products</span>
+        </div>
+        <div class="category-card" (click)="navigateToCategory('groceries')">
+          <div class="category-icon">🛒</div>
+          <h3 class="category-title">Groceries</h3>
+          <p class="category-description">Daily essentials and pantry staples</p>
+          <span class="category-count">250+ Products</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Why Choose Mahabaleshwer Mart?</h2>
+        <p class="section-description">We're committed to bringing you the best quality products</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🚚</div>
+          <h3 class="feature-title">Fast Delivery</h3>
+          <p class="feature-description">Get your fresh products delivered within 24 hours</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌱</div>
+          <h3 class="feature-title">100% Organic</h3>
+          <p class="feature-description">Certified organic products free from harmful chemicals</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3 class="feature-title">Best Prices</h3>
+          <p class="feature-description">Direct from farmers means better prices for you</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3 class="feature-title">Quality Guaranteed</h3>
+          <p class="feature-description">Fresh quality guaranteed or your money back</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3 class="feature-title">Easy Ordering</h3>
+          <p class="feature-description">Simple, user-friendly ordering process</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🤝</div>
+          <h3 class="feature-title">24/7 Support</h3>
+          <p class="feature-description">Round-the-clock customer support</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2 class="cta-title">Ready to taste the freshness?</h2>
+        <p class="cta-description">
+          Join thousands of satisfied customers who trust us for their daily fresh produce needs.
+        </p>
+        <div class="cta-actions">
+          <a routerLink="/products" class="btn btn-primary">
+            Start Shopping
+          </a>
+          <a routerLink="/auth" class="btn btn-secondary" *ngIf="!isLoggedIn">
+            Create Account
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,404 @@
+<div class="checkout-page">
+  <!-- Professional Page Header -->
+  <div class="page-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="breadcrumb">
+          <a routerLink="/">Home</a>
+          <span class="separator">></span>
+          <a routerLink="/cart">Cart</a>
+          <span class="separator">></span>
+          <span class="current">Checkout</span>
+        </div>
+        <h1 class="page-title">Secure Checkout</h1>
+        
+        <!-- Professional Progress Steps -->
+        <div class="progress-steps">
+          <div class="step" [class.active]="currentStep === 'address'" [class.completed]="currentStep !== 'address' && currentStep !== 'payment'">
+            <div class="step-icon">📍</div>
+            <span>Address</span>
+          </div>
+          <div class="step" [class.active]="currentStep === 'payment'" [class.completed]="currentStep === 'processing' || currentStep === 'success' || currentStep === 'failed'">
+            <div class="step-icon">💳</div>
+            <span>Payment</span>
+          </div>
+          <div class="step" [class.active]="currentStep === 'processing' || currentStep === 'success' || currentStep === 'failed'">
+            <div class="step-icon">✅</div>
+            <span>Confirmation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Content -->
+  <div class="checkout-content">
+    <div class="container">
+      
+      <!-- Professional Login Required Section -->
+      <div class="login-required" *ngIf="!user">
+        <div class="login-required-content">
+          <div class="login-icon">🔐</div>
+          <h2>Login Required</h2>
+          <p>Please login to your account to proceed with secure checkout</p>
+          <div class="login-actions">
+            <a routerLink="/auth" class="btn btn-primary">
+              <span>🔑</span>
+              Login to Continue
+            </a>
+            <a routerLink="/cart" class="btn btn-outline">
+              <span>🛒</span>
+              Back to Cart
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Professional Checkout Flow -->
+      <div class="checkout-main" *ngIf="user">
+        
+        <!-- STEP 1: Professional Address Selection -->
+        <div class="checkout-section" *ngIf="currentStep === 'address'">
+          <div class="section-content">
+            <h2 class="section-title">Select Delivery Address</h2>
+            
+            <div class="address-list" *ngIf="hasAddresses()">
+              <div class="address-card" 
+                   *ngFor="let address of getUserAddresses()"
+                   [class.selected]="address?.id === selectedAddressId"
+                   (click)="selectedAddressId = address?.id || ''">
+                <div class="address-header">
+                  <div class="address-type">
+                    <span class="type-icon">{{address?.type === 'home' ? '🏠' : address?.type === 'work' ? '🏢' : '📍'}}</span>
+                    <span class="type-name">{{address?.type | titlecase}}</span>
+                    <span class="default-badge" *ngIf="address?.isDefault">Default</span>
+                  </div>
+                  <div class="radio-indicator">
+                    <div class="radio-dot" [class.selected]="address?.id === selectedAddressId"></div>
+                  </div>
+                </div>
+                <div class="address-details">
+                  <div class="address-name">{{address?.name}}</div>
+                  <div class="address-text">
+                    {{address?.street}}, {{address?.city}}, {{address?.state}} - {{address?.pincode}}
+                  </div>
+                  <div class="address-landmark" *ngIf="address?.landmark">
+                    Near {{address?.landmark}}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="no-address" *ngIf="!hasAddresses()">
+              <div class="no-address-content">
+                <div class="no-address-icon">📍</div>
+                <h3>No saved addresses</h3>
+                <p>Please add a delivery address to continue with your order</p>
+              </div>
+            </div>
+
+            <div class="section-actions">
+              <button class="btn btn-outline" (click)="backToCart()">
+                <span>🛒</span>
+                Back to Cart
+              </button>
+              <button class="btn btn-primary" 
+                      [disabled]="!selectedAddressId"
+                      (click)="proceedToPayment()">
+                <span>💳</span>
+                Proceed to Payment
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Professional Payment Selection -->
+        <div class="checkout-section" *ngIf="currentStep === 'payment'">
+          <div class="section-content">
+            <h2 class="section-title">Select Payment Method</h2>
+            
+            <div class="payment-methods">
+              <div class="payment-option"
+                   *ngFor="let option of paymentOptions"
+                   [class.selected]="option.id === selectedPaymentMethod"
+                   (click)="selectPaymentMethod(option.id)">
+                <div class="option-header">
+                  <div class="option-info">
+                    <span class="option-icon">{{option.icon}}</span>
+                    <div class="option-details">
+                      <div class="option-name">{{option.name}}</div>
+                      <div class="option-description">{{option.description}}</div>
+                    </div>
+                  </div>
+                  <div class="radio-indicator">
+                    <div class="radio-dot" [class.selected]="option.id === selectedPaymentMethod"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Professional Card Payment Form -->
+            <div class="payment-form" *ngIf="isCardPayment()">
+              <h3>💳 Card Details</h3>
+              <div class="form-grid">
+                <div class="form-group full-width">
+                  <label>Card Number</label>
+                  <input type="text" 
+                         placeholder="1234 5678 9012 3456"
+                         [(ngModel)]="cardDetails.number"
+                         maxlength="19"
+                         class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Expiry Month</label>
+                  <select [(ngModel)]="cardDetails.expiryMonth" class="form-control">
+                    <option value="">MM</option>
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Expiry Year</label>
+                  <select [(ngModel)]="cardDetails.expiryYear" class="form-control">
+                    <option value="">YYYY</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>CVV</label>
+                  <input type="text" 
+                         placeholder="123"
+                         [(ngModel)]="cardDetails.cvv"
+                         maxlength="4"
+                         class="form-control">
+                </div>
+                <div class="form-group full-width">
+                  <label>Cardholder Name</label>
+                  <input type="text" 
+                         placeholder="Full name as on card"
+                         [(ngModel)]="cardDetails.holderName"
+                         class="form-control">
+                </div>
+              </div>
+            </div>
+
+            <!-- Professional UPI Payment Form -->
+            <div class="payment-form" *ngIf="isUpiPayment()">
+              <h3>📱 UPI Payment</h3>
+              <div class="form-group">
+                <label>UPI ID</label>
+                <input type="text" 
+                       placeholder="yourname@paytm"
+                       [(ngModel)]="upiId"
+                       class="form-control">
+              </div>
+            </div>
+
+            <!-- Professional COD Info -->
+            <div class="payment-info" *ngIf="isCodPayment()">
+              <div class="info-card">
+                <div class="info-icon">💵</div>
+                <div class="info-content">
+                  <h4>Cash on Delivery</h4>
+                  <p>Pay ₹{{getTotalWithDelivery()}} when your fresh organic order is delivered to your doorstep.</p>
+                  <ul>
+                    <li>✅ No online payment required</li>
+                    <li>✅ Pay after receiving your order</li>
+                    <li>✅ Check products before payment</li>
+                    <li>✅ 100% secure and convenient</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-actions">
+              <button class="btn btn-outline" (click)="backToAddress()">
+                <span>📍</span>
+                Back to Address
+              </button>
+              <button class="btn btn-primary" 
+                      [disabled]="!selectedPaymentMethod || !isFormValid()"
+                      (click)="processPayment()">
+                <span>{{isCodPayment() ? '📦' : '💳'}}</span>
+                {{isCodPayment() ? 'Place Order' : 'Pay ₹' + getTotalWithDelivery()}}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: Professional Processing -->
+        <div class="checkout-section" *ngIf="currentStep === 'processing'">
+          <div class="section-content">
+            <div class="processing-state">
+              <div class="processing-animation">
+                <div class="spinner"></div>
+              </div>
+              <h2>Processing Your {{isCodPayment() ? 'Order' : 'Payment'}}...</h2>
+              <p>Please don't close this window or press the back button. We're securing your transaction.</p>
+              <div class="processing-steps">
+                <div class="processing-step">
+                  <span class="step-icon">🔒</span>
+                  <span>Securing your transaction</span>
+                </div>
+                <div class="processing-step">
+                  <span class="step-icon">💳</span>
+                  <span>{{isCodPayment() ? 'Confirming your order' : 'Processing payment'}}</span>
+                </div>
+                <div class="processing-step">
+                  <span class="step-icon">📦</span>
+                  <span>Preparing for dispatch</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4: Professional Success -->
+        <div class="checkout-section" *ngIf="currentStep === 'success'">
+          <div class="section-content">
+            <div class="success-state">
+              <div class="success-animation">
+                <div class="success-icon">✅</div>
+              </div>
+              <h2>{{isCodPayment() ? 'Order Placed Successfully!' : 'Payment Successful!'}}</h2>
+              <p>Thank you for choosing Mahabaleshwer Mart! We're preparing your fresh organic order for delivery.</p>
+              
+              <div class="transaction-details" *ngIf="transactionResult">
+                <div class="detail-card">
+                  <div class="detail-row">
+                    <span>Transaction ID:</span>
+                    <span class="transaction-id">{{transactionResult.transactionId}}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span>Amount:</span>
+                    <span class="amount">₹{{getTotalWithDelivery()}}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span>Payment Method:</span>
+                    <span>{{getSelectedPaymentOption()?.name}}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span>Delivery Address:</span>
+                    <span>{{getSelectedAddress()?.name}}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="success-actions">
+                <button class="btn btn-primary" (click)="goToOrders()">
+                  <span>📋</span>
+                  View Orders
+                </button>
+                <button class="btn btn-outline" (click)="continueShopping()">
+                  <span>🛍️</span>
+                  Continue Shopping
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5: Professional Failed -->
+        <div class="checkout-section" *ngIf="currentStep === 'failed'">
+          <div class="section-content">
+            <div class="failed-state">
+              <div class="failed-animation">
+                <div class="failed-icon">❌</div>
+              </div>
+              <h2>Payment Failed</h2>
+              <p>We encountered an issue processing your payment. Please try again with a different method.</p>
+              
+              <div class="error-details" *ngIf="transactionResult">
+                <div class="error-card">
+                  <div class="error-message">
+                    <strong>Error:</strong> {{transactionResult.errorMessage}}
+                  </div>
+                  <div class="error-code">
+                    <strong>Error Code:</strong> {{transactionResult.errorCode}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="failed-actions">
+                <button class="btn btn-primary" (click)="retryPayment()">
+                  <span>🔄</span>
+                  Retry Payment
+                </button>
+                <button class="btn btn-outline" (click)="cancelTransaction()">
+                  <span>💳</span>
+                  Try Different Method
+                </button>
+                <button class="btn btn-secondary" (click)="backToCart()">
+                  <span>🛒</span>
+                  Back to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Professional Order Summary Sidebar -->
+        <div class="order-summary-sidebar" *ngIf="currentStep === 'address' || currentStep === 'payment'">
+          <div class="summary-card">
+            <h3 class="summary-title">Order Summary</h3>
+            
+            <div class="summary-items">
+              <div class="summary-item" *ngFor="let item of cartItems">
+                <div class="item-info">
+                  <span class="item-emoji">{{item.product.image}}</span>
+                  <div class="item-details">
+                    <div class="item-name">{{item.product.name}}</div>
+                    <div class="item-quantity">Qty: {{item.selectedQuantity}} {{item.product.unit}}</div>
+                  </div>
+                </div>
+                <div class="item-price">₹{{item.totalPrice}}</div>
+              </div>
+            </div>
+
+            <div class="summary-calculations">
+              <div class="calc-row">
+                <span>Subtotal</span>
+                <span>₹{{totalAmount}}</span>
+              </div>
+              <div class="calc-row">
+                <span>Delivery</span>
+                <span [class.free]="getDeliveryCharge() === 0">
+                  {{getDeliveryCharge() === 0 ? 'FREE' : '₹' + getDeliveryCharge()}}
+                </span>
+              </div>
+              <div class="calc-row total">
+                <span>Total</span>
+                <span>₹{{getTotalWithDelivery()}}</span>
+              </div>
+            </div>
+
+            <div class="delivery-info" *ngIf="getSelectedAddress()">
+              <h4>🚚 Delivery Address</h4>
+              <div class="address-preview">
+                <div class="address-name">{{getSelectedAddress()?.name}}</div>
+                <div class="address-text">
+                  {{getSelectedAddress()?.street}}, {{getSelectedAddress()?.city}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

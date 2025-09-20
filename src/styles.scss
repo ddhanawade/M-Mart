@@ -1,1 +1,335 @@
-/* You can add global styles to this file, and also import other style files */
+// Professional Corporate Color Palette
+$primary-navy: #1a365d; // Deep Navy - Professional & Trustworthy
+$secondary-navy: #2d3748; // Charcoal Navy - Sophisticated
+$accent-blue: #4a5568; // Steel Blue - Modern Professional
+
+$primary-emerald: #065f46; // Deep Emerald - Premium & Natural
+$secondary-emerald: #047857; // Forest Emerald - Sophisticated
+$accent-emerald: #10b981; // Fresh Emerald - Subtle Accent
+
+$neutral-100: #f7fafc; // Pure Clean White
+$neutral-200: #edf2f7; // Soft Gray White
+$neutral-300: #e2e8f0; // Light Professional Gray
+$neutral-400: #cbd5e0; // Medium Gray
+$neutral-500: #718096; // Professional Gray
+$neutral-600: #4a5568; // Dark Professional Gray
+$neutral-700: #2d3748; // Charcoal
+$neutral-800: #1a202c; // Deep Charcoal
+$neutral-900: #171923; // Almost Black
+
+$success: #065f46; // Professional Success Green
+$warning: #d69e2e; // Refined Gold Warning
+$error: #c53030; // Professional Error Red
+$info: #3182ce; // Professional Info Blue
+
+// Sophisticated Typography
+$font-primary: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+$font-secondary: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+
+// Professional spacing scale
+$spacing-xs: 0.25rem;  // 4px
+$spacing-sm: 0.5rem;   // 8px
+$spacing-md: 1rem;     // 16px
+$spacing-lg: 1.5rem;   // 24px
+$spacing-xl: 2rem;     // 32px
+$spacing-2xl: 3rem;    // 48px
+$spacing-3xl: 4rem;    // 64px
+
+// Professional shadows
+$shadow-sm: 0 1px 3px rgba(26, 54, 93, 0.08);
+$shadow-md: 0 4px 12px rgba(26, 54, 93, 0.10);
+$shadow-lg: 0 8px 25px rgba(26, 54, 93, 0.12);
+$shadow-xl: 0 16px 40px rgba(26, 54, 93, 0.15);
+
+// Subtle professional gradients
+$gradient-professional: linear-gradient(135deg, $primary-navy 0%, $secondary-navy 100%);
+$gradient-emerald: linear-gradient(135deg, $primary-emerald 0%, $secondary-emerald 100%);
+$gradient-subtle: linear-gradient(135deg, $neutral-100 0%, $neutral-200 100%);
+
+// Global reset and professional base styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-primary;
+  line-height: 1.6;
+  color: $neutral-700;
+  background-color: $neutral-100;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+// Professional typography hierarchy
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-primary;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: $neutral-800;
+  margin-bottom: $spacing-md;
+}
+
+h1 { font-size: 2.5rem; font-weight: 700; }
+h2 { font-size: 2rem; font-weight: 600; }
+h3 { font-size: 1.5rem; font-weight: 600; }
+h4 { font-size: 1.25rem; font-weight: 600; }
+h5 { font-size: 1.125rem; font-weight: 500; }
+h6 { font-size: 1rem; font-weight: 500; }
+
+p {
+  margin-bottom: $spacing-md;
+  color: $neutral-600;
+  line-height: 1.7;
+}
+
+// Professional button system
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: $font-primary;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+  
+  &.btn-primary {
+    background: $gradient-professional;
+    color: white;
+    box-shadow: $shadow-md;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: $shadow-lg;
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  &.btn-secondary {
+    background: white;
+    color: $primary-navy;
+    border: 1px solid $neutral-300;
+    box-shadow: $shadow-sm;
+    
+    &:hover:not(:disabled) {
+      background: $neutral-100;
+      border-color: $primary-navy;
+      transform: translateY(-1px);
+      box-shadow: $shadow-md;
+    }
+  }
+  
+  &.btn-success {
+    background: $gradient-emerald;
+    color: white;
+    box-shadow: $shadow-md;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: $shadow-lg;
+    }
+  }
+  
+  &.btn-outline {
+    background: transparent;
+    color: $primary-emerald;
+    border: 1px solid $primary-emerald;
+    
+    &:hover:not(:disabled) {
+      background: $primary-emerald;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: $shadow-md;
+    }
+  }
+  
+  &.btn-lg {
+    padding: 16px 32px;
+    font-size: 16px;
+  }
+  
+  &.btn-sm {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}
+
+// Professional card system
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: $shadow-sm;
+  border: 1px solid $neutral-200;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+    border-color: $neutral-300;
+  }
+  
+  &.card-elevated {
+    box-shadow: $shadow-md;
+    
+    &:hover {
+      box-shadow: $shadow-lg;
+    }
+  }
+}
+
+// Professional form elements
+input, select, textarea {
+  font-family: $font-primary;
+  font-size: 14px;
+  color: $neutral-700;
+  background: white;
+  border: 1px solid $neutral-300;
+  border-radius: 6px;
+  padding: 10px 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-navy;
+    box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.1);
+  }
+  
+  &::placeholder {
+    color: $neutral-500;
+  }
+}
+
+// Professional utility classes
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $spacing-lg;
+  
+  @media (max-width: 768px) {
+    padding: 0 $spacing-md;
+  }
+}
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.font-weight-normal { font-weight: 400; }
+.font-weight-medium { font-weight: 500; }
+.font-weight-semibold { font-weight: 600; }
+.font-weight-bold { font-weight: 700; }
+
+.text-primary { color: $primary-navy; }
+.text-success { color: $success; }
+.text-warning { color: $warning; }
+.text-error { color: $error; }
+.text-muted { color: $neutral-500; }
+
+// Professional spacing utilities
+.mt-sm { margin-top: $spacing-sm; }
+.mt-md { margin-top: $spacing-md; }
+.mt-lg { margin-top: $spacing-lg; }
+.mt-xl { margin-top: $spacing-xl; }
+
+.mb-sm { margin-bottom: $spacing-sm; }
+.mb-md { margin-bottom: $spacing-md; }
+.mb-lg { margin-bottom: $spacing-lg; }
+.mb-xl { margin-bottom: $spacing-xl; }
+
+.p-sm { padding: $spacing-sm; }
+.p-md { padding: $spacing-md; }
+.p-lg { padding: $spacing-lg; }
+.p-xl { padding: $spacing-xl; }
+
+// Loading spinner - professional
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid $neutral-300;
+  border-radius: 50%;
+  border-top-color: $primary-navy;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Professional selection and focus states
+::selection {
+  background: rgba(26, 54, 93, 0.1);
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid $primary-navy;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+// Smooth animations
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+}
+
+// Professional scrollbar (webkit)
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $neutral-200;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $neutral-400;
+  border-radius: 4px;
+  
+  &:hover {
+    background: $neutral-500;
+  }
+}
+
+// Print styles
+@media print {
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+  
+  .btn {
+    border: 1px solid #000 !important;
+  }
+}
