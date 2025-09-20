@@ -76,6 +76,129 @@ export class OrderService {
     });
   }
 
+  // Map backend OrderDto → frontend Order model
+  private mapOrderDtoToOrder(dto: any): Order {
+    const mapStatus = (s: string): Order['status'] => {
+      const key = (s || '').toUpperCase();
+      switch (key) {
+        case 'PENDING': return 'pending';
+        case 'CONFIRMED': return 'confirmed';
+        case 'PROCESSING': return 'processing';
+        case 'SHIPPED': return 'shipped';
+        case 'DELIVERED': return 'delivered';
+        case 'CANCELLED': return 'cancelled';
+        default: return 'pending';
+      }
+    };
+
+    const mapPaymentStatus = (s: string): Order['paymentStatus'] => {
+      const key = (s || '').toUpperCase();
+      switch (key) {
+        case 'COMPLETED': return 'paid';
+        case 'PAID': return 'paid';
+        case 'PENDING': return 'pending';
+        case 'FAILED': return 'failed';
+        case 'REFUNDED': return 'refunded';
+        default: return 'pending';
+      }
+    };
+
+    const mapPaymentState = (s: string): 'success' | 'failed' | 'pending' => {
+      const key = (s || '').toUpperCase();
+      switch (key) {
+        case 'COMPLETED':
+        case 'PAID':
+        case 'REFUNDED':
+          return 'success';
+        case 'FAILED':
+          return 'failed';
+        case 'PENDING':
+        default:
+          return 'pending';
+      }
+    };
+
+    const mapPaymentMethod = (s: string): 'card' | 'upi' | 'cod' => {
+      const key = (s || '').toUpperCase();
+      switch (key) {
+        case 'CREDIT_CARD':
+        case 'DEBIT_CARD':
+        case 'CARD':
+          return 'card';
+        case 'UPI':
+          return 'upi';
+        case 'CASH_ON_DELIVERY':
+        case 'COD':
+          return 'cod';
+        default:
+          return 'cod';
+      }
+    };
+
+    const items: OrderItem[] = Array.isArray(dto?.items) ? dto.items.map((it: any) => ({
+      id: String(it?.id ?? ''),
+      productId: String(it?.productId ?? ''),
+      productName: String(it?.productName ?? ''),
+      productImage: String(it?.productImage ?? ''),
+      price: Number(it?.unitPrice ?? it?.price ?? 0),
+      originalPrice: Number(it?.originalPrice ?? it?.unitPrice ?? 0),
+      quantity: Number(it?.quantity ?? 0),
+      total: Number(it?.totalPrice ?? it?.total ?? 0),
+      category: String(it?.productCategory ?? it?.category ?? 'groceries')
+    })) : [];
+
+    const deliveryAddress = {
+      id: '',
+      type: (String(dto?.deliveryAddress?.addressType ?? 'home').toLowerCase() as any),
+      name: String(dto?.deliveryAddress?.addressName ?? ''),
+      street: String(dto?.deliveryAddress?.street ?? ''),
+      city: String(dto?.deliveryAddress?.city ?? ''),
+      state: String(dto?.deliveryAddress?.state ?? ''),
+      pincode: String(dto?.deliveryAddress?.pincode ?? ''),
+      landmark: dto?.deliveryAddress?.landmark ?? undefined
+    };
+
+    const payment = {
+      method: mapPaymentMethod(dto?.payment?.paymentMethod ?? dto?.paymentMethod),
+      transactionId: String(dto?.payment?.transactionId ?? dto?.transactionId ?? ''),
+      status: mapPaymentState(dto?.paymentStatus ?? ''),
+      amount: Number(dto?.payment?.paidAmount ?? dto?.totalAmount ?? 0),
+      cardLast4: dto?.payment?.cardLastFour ?? undefined,
+      upiId: dto?.payment?.upiId ?? undefined
+    };
+
+    const timeline: OrderTimeline[] = Array.isArray(dto?.timeline) ? dto.timeline.map((ev: any) => ({
+      id: String(ev?.id ?? ''),
+      status: String(ev?.orderStatus ?? ev?.eventType ?? ''),
+      message: String(ev?.description ?? ev?.title ?? ''),
+      timestamp: new Date(ev?.createdAt ?? Date.now()),
+      location: ev?.location ?? undefined
+    })) : [];
+
+    const order: Order = {
+      id: String(dto?.id ?? ''),
+      userId: String(dto?.userId ?? ''),
+      orderNumber: String(dto?.orderNumber ?? ''),
+      items,
+      subtotal: Number(dto?.subtotal ?? 0),
+      deliveryCharge: Number(dto?.deliveryCharge ?? 0),
+      discount: Number(dto?.discountAmount ?? 0),
+      total: Number(dto?.totalAmount ?? 0),
+      status: mapStatus(dto?.orderStatus ?? ''),
+      paymentStatus: mapPaymentStatus(dto?.paymentStatus ?? ''),
+      deliveryAddress,
+      payment,
+      orderDate: new Date(dto?.createdAt ?? Date.now()),
+      estimatedDelivery: dto?.estimatedDelivery ? new Date(dto.estimatedDelivery) : new Date(),
+      actualDelivery: dto?.actualDelivery ? new Date(dto.actualDelivery) : undefined,
+      trackingNumber: dto?.trackingNumber ?? undefined,
+      notes: dto?.specialInstructions ?? undefined,
+      timeline
+    };
+
+    return order;
+  }
+
   private setLoading(loading: boolean) {
     this.loadingSubject.next(loading);
   }
@@ -94,7 +217,8 @@ export class OrderService {
   createOrder(orderRequest: CreateOrderRequest): Observable<Order> {
     this.setLoading(true);
     
-    return this.apiService.post<Order>('orderService', '/api/orders', orderRequest).pipe(
+    return this.apiService.post<any>('orderService', '/api/orders', orderRequest).pipe(
+      map(dto => this.mapOrderDtoToOrder(dto)),
       tap(order => {
         // Add new order to local state
         const currentOrders = this.ordersSubject.value;
@@ -111,15 +235,21 @@ export class OrderService {
   }
 
   getOrderById(orderId: string): Observable<Order> {
-    return this.apiService.get<Order>('orderService', `/api/orders/${orderId}`);
+    return this.apiService.get<any>('orderService', `/api/orders/${orderId}`).pipe(
+      map(dto => this.mapOrderDtoToOrder(dto))
+    );
   }
 
   getOrderByNumber(orderNumber: string): Observable<Order> {
-    return this.apiService.get<Order>('orderService', `/api/orders/number/${orderNumber}`);
+    return this.apiService.get<any>('orderService', `/api/orders/number/${orderNumber}`).pipe(
+      map(dto => this.mapOrderDtoToOrder(dto))
+    );
   }
 
   trackOrder(orderNumber: string): Observable<Order> {
-    return this.apiService.get<Order>('orderService', `/api/orders/track/${orderNumber}`);
+    return this.apiService.get<any>('orderService', `/api/orders/track/${orderNumber}`).pipe(
+      map(dto => this.mapOrderDtoToOrder(dto))
+    );
   }
 
   loadUserOrders(page: number = 0, size: number = 10): Observable<PageResponse<Order>> {
@@ -127,10 +257,14 @@ export class OrderService {
     
     const params = { page, size, sortDirection: 'desc' };
     
-    return this.apiService.get<PageResponse<Order>>('orderService', '/api/orders/my-orders', params).pipe(
-      tap(response => {
-        this.ordersSubject.next(response.content);
-        this.updateOrderSummary(response.content);
+    return this.apiService.get<PageResponse<any>>('orderService', '/api/orders/my-orders', params).pipe(
+      map(response => ({
+        ...response,
+        content: (response.content || []).map((dto: any) => this.mapOrderDtoToOrder(dto))
+      })),
+      tap(mapped => {
+        this.ordersSubject.next(mapped.content);
+        this.updateOrderSummary(mapped.content);
         this.setLoading(false);
       }),
       catchError(error => {
@@ -150,9 +284,10 @@ export class OrderService {
   cancelOrder(orderId: string, reason: string): Observable<Order> {
     this.setLoading(true);
     
-    return this.apiService.post<Order>('orderService', `/api/orders/${orderId}/cancel`, {
+    return this.apiService.post<any>('orderService', `/api/orders/${orderId}/cancel`, {
       reason: reason
     }).pipe(
+      map(dto => this.mapOrderDtoToOrder(dto)),
       tap(updatedOrder => {
         // Update order in local state
         const currentOrders = this.ordersSubject.value;
@@ -176,10 +311,11 @@ export class OrderService {
   updateOrderStatus(orderId: string, newStatus: Order['status'], notes?: string): Observable<Order> {
     this.setLoading(true);
     
-    return this.apiService.put<Order>('orderService', `/api/orders/${orderId}/status`, {
+    return this.apiService.put<any>('orderService', `/api/orders/${orderId}/status`, {
       orderStatus: newStatus,
       notes: notes
     }).pipe(
+      map(dto => this.mapOrderDtoToOrder(dto)),
       tap(updatedOrder => {
         // Update order in local state if it exists
         const currentOrders = this.ordersSubject.value;
@@ -202,13 +338,23 @@ export class OrderService {
   getOrdersByStatus(status: Order['status'], page: number = 0, size: number = 20): Observable<PageResponse<Order>> {
     const params = { page, size };
     
-    return this.apiService.get<PageResponse<Order>>('orderService', `/api/orders/status/${status}`, params);
+    return this.apiService.get<PageResponse<any>>('orderService', `/api/orders/status/${status}`, params).pipe(
+      map(response => ({
+        ...response,
+        content: (response.content || []).map((dto: any) => this.mapOrderDtoToOrder(dto))
+      }))
+    );
   }
 
   searchOrders(query: string, page: number = 0, size: number = 20): Observable<PageResponse<Order>> {
     const params = { q: query, page, size };
     
-    return this.apiService.get<PageResponse<Order>>('orderService', '/api/orders/search', params);
+    return this.apiService.get<PageResponse<any>>('orderService', '/api/orders/search', params).pipe(
+      map(response => ({
+        ...response,
+        content: (response.content || []).map((dto: any) => this.mapOrderDtoToOrder(dto))
+      }))
+    );
   }
 
   getOrderStatistics(days: number = 30): Observable<OrderStatistics> {

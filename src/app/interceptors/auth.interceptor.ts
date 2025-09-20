@@ -20,8 +20,35 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem(environment.auth.tokenKey);
   
   if (token) {
-    const authReq = req.clone({
-      headers: req.headers.set('Authorization', `Bearer ${token}`)
+    const userRaw = localStorage.getItem(environment.auth.userKey);
+    let authReq = req;
+    if (userRaw) {
+      try {
+        const user = JSON.parse(userRaw);
+        if (user?.id) {
+          authReq = authReq.clone({
+            headers: authReq.headers.set('X-User-Id', user.id)
+          });
+        }
+        if (user?.email) {
+          authReq = authReq.clone({
+            headers: authReq.headers.set('X-User-Email', user.email)
+          });
+        }
+        if (user?.name) {
+          authReq = authReq.clone({
+            headers: authReq.headers.set('X-User-Name', user.name)
+          });
+        }
+        if (user?.phone) {
+          authReq = authReq.clone({
+            headers: authReq.headers.set('X-User-Phone', user.phone)
+          });
+        }
+      } catch {}
+    }
+    authReq = authReq.clone({
+      headers: authReq.headers.set('Authorization', `Bearer ${token}`)
     });
     
     return next(authReq).pipe(
@@ -54,8 +81,35 @@ function handle401Error(request: HttpRequest<any>, next: HttpHandlerFn) {
           refreshTokenSubject.next(authResponse.accessToken);
           
           // Retry the original request with new token
-          const newAuthReq = request.clone({
-            headers: request.headers.set('Authorization', `Bearer ${authResponse.accessToken}`)
+          const userRaw = localStorage.getItem(environment.auth.userKey);
+          let newAuthReq = request;
+          if (userRaw) {
+            try {
+              const user = JSON.parse(userRaw);
+              if (user?.id) {
+                newAuthReq = newAuthReq.clone({
+                  headers: newAuthReq.headers.set('X-User-Id', user.id)
+                });
+              }
+              if (user?.email) {
+                newAuthReq = newAuthReq.clone({
+                  headers: newAuthReq.headers.set('X-User-Email', user.email)
+                });
+              }
+              if (user?.name) {
+                newAuthReq = newAuthReq.clone({
+                  headers: newAuthReq.headers.set('X-User-Name', user.name)
+                });
+              }
+              if (user?.phone) {
+                newAuthReq = newAuthReq.clone({
+                  headers: newAuthReq.headers.set('X-User-Phone', user.phone)
+                });
+              }
+            } catch {}
+          }
+          newAuthReq = newAuthReq.clone({
+            headers: newAuthReq.headers.set('Authorization', `Bearer ${authResponse.accessToken}`)
           });
           
           return next(newAuthReq);
@@ -90,8 +144,35 @@ function handle401Error(request: HttpRequest<any>, next: HttpHandlerFn) {
       filter(token => token != null),
       take(1),
       switchMap(jwt => {
-        const newAuthReq = request.clone({
-          headers: request.headers.set('Authorization', `Bearer ${jwt}`)
+        const userRaw = localStorage.getItem(environment.auth.userKey);
+        let newAuthReq = request;
+        if (userRaw) {
+          try {
+            const user = JSON.parse(userRaw);
+            if (user?.id) {
+              newAuthReq = newAuthReq.clone({
+                headers: newAuthReq.headers.set('X-User-Id', user.id)
+              });
+            }
+            if (user?.email) {
+              newAuthReq = newAuthReq.clone({
+                headers: newAuthReq.headers.set('X-User-Email', user.email)
+              });
+            }
+            if (user?.name) {
+              newAuthReq = newAuthReq.clone({
+                headers: newAuthReq.headers.set('X-User-Name', user.name)
+              });
+            }
+            if (user?.phone) {
+              newAuthReq = newAuthReq.clone({
+                headers: newAuthReq.headers.set('X-User-Phone', user.phone)
+              });
+            }
+          } catch {}
+        }
+        newAuthReq = newAuthReq.clone({
+          headers: newAuthReq.headers.set('Authorization', `Bearer ${jwt}`)
         });
         return next(newAuthReq);
       })

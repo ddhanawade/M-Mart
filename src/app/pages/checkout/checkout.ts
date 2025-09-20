@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth';
 import { OrderService, CreateOrderRequest } from '../../services/order';
 import { CartItem } from '../../models/cart-item.model';
 import { User, Address } from '../../models/user.model';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 
 interface PaymentOption {
   id: string;
@@ -97,6 +98,7 @@ export class Checkout implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private orderService = inject(OrderService);
   private router = inject(Router);
+  private errorHandler = inject(ErrorHandlerService);
   
   private subscriptions: Subscription[] = [];
 
@@ -262,6 +264,12 @@ export class Checkout implements OnInit, OnDestroy {
       this.orderService.createOrder(orderRequest).subscribe({
         next: (order) => {
           console.log('Order created successfully:', order);
+          this.errorHandler.showSuccess('Order placed successfully');
+          // After successful order creation, load latest orders and navigate
+          this.orderService.loadUserOrders().subscribe({
+            next: () => this.router.navigate(['/orders']),
+            error: () => this.router.navigate(['/orders'])
+          });
         },
         error: (error) => {
           console.error('Failed to create order:', error);
