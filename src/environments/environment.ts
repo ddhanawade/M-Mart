@@ -1,11 +1,11 @@
 export const environment = {
   production: false,
   api: {
-    userService: 'http://localhost:8081',
-    productService: 'http://localhost:8082', 
-    cartService: 'http://localhost:8083',
-    orderService: 'http://localhost:8084',
-    notificationService: 'http://localhost:8085'
+    userService: 'http://localhost:8080/user-service',
+    productService: 'http://localhost:8080/product-service', 
+    cartService: 'http://localhost:8080/cart-service',
+    orderService: 'http://localhost:8080/order-service',
+    notificationService: 'http://localhost:8080/notification-service'
   },
   auth: {
     tokenKey: 'mahabaleshwer_mart_token',

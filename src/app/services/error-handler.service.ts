@@ -67,6 +67,7 @@ export class ErrorHandlerService {
   // Handle HTTP errors
   handleHttpError(error: any): void {
     let message = 'An unexpected error occurred';
+    const correlationId = error?.headers?.get?.('X-Correlation-Id') || error?.error?.correlationId || sessionStorage.getItem('x-correlation-id');
     
     if (error?.error?.message) {
       message = error.error.message;
@@ -74,6 +75,10 @@ export class ErrorHandlerService {
       message = error.message;
     } else if (typeof error === 'string') {
       message = error;
+    }
+
+    if (correlationId) {
+      message = `${message} (Ref: ${correlationId})`;
     }
 
     // Handle specific HTTP status codes

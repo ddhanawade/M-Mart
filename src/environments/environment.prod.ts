@@ -1,11 +1,12 @@
 export const environment = {
   production: true,
   api: {
-    userService: 'https://api.mahabaleshwermart.com/user-service',
-    productService: 'https://api.mahabaleshwermart.com/product-service',
-    cartService: 'https://api.mahabaleshwermart.com/cart-service',
-    orderService: 'https://api.mahabaleshwermart.com/order-service',
-    notificationService: 'https://api.mahabaleshwermart.com/notification-service'
+    // Use relative paths so the app works under any domain behind the API Gateway
+    userService: '/user-service',
+    productService: '/product-service',
+    cartService: '/cart-service',
+    orderService: '/order-service',
+    notificationService: '/notification-service'
   },
   auth: {
     tokenKey: 'mahabaleshwer_mart_token',
