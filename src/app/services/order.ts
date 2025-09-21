@@ -217,7 +217,13 @@ export class OrderService {
   createOrder(orderRequest: CreateOrderRequest): Observable<Order> {
     this.setLoading(true);
     
-    return this.apiService.post<any>('orderService', '/api/orders', orderRequest).pipe(
+    // Always include current guest session so order-service can fallback if needed
+    const headers: any = {};
+    const guest = sessionStorage.getItem('guestCartSession');
+    if (guest) headers['X-Guest-Session'] = guest;
+    
+    // Also include Authorization via interceptor; X-User-Id added by gateway. This just propagates guest.
+    return this.apiService.post<any>('orderService', '/api/orders', orderRequest, { headers }).pipe(
       map(dto => this.mapOrderDtoToOrder(dto)),
       tap(order => {
         // Add new order to local state

@@ -51,7 +51,7 @@ export class Cart implements OnInit, OnDestroy {
     });
     this.subscriptions.push(authSubscription);
 
-    // Load cart data
+    // Load cart data on page entry only (not at app start)
     this.cartService.loadCart().subscribe();
   }
 

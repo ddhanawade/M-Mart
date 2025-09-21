@@ -3,6 +3,8 @@ import { BehaviorSubject, Observable, tap, map, catchError, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { User, LoginRequest, RegisterRequest } from '../models/user.model';
 import { ApiService } from './api.service';
+import { NotificationService } from './notification';
+import { AppEventsService } from './app-events';
 import { environment } from '../../environments/environment';
 
 export interface AuthResponse {
@@ -26,7 +28,9 @@ export class AuthService {
 
   constructor(
     private apiService: ApiService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService,
+    private appEvents: AppEventsService
   ) {
     // Check if user is already logged in (from localStorage)
     this.checkAuthState();
@@ -94,11 +98,21 @@ export class AuthService {
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authResponse.accessToken}`
+            'Authorization': `Bearer ${authResponse.accessToken}`,
+            // Help downstream identify user even if gateway decoration is unavailable locally
+            'X-User-Id': authResponse.user?.id || '',
+            'X-Guest-Session': sessionId
           },
           body: JSON.stringify({ sessionId, mergeWithExisting: true })
-        }).then(() => {
-          sessionStorage.removeItem('guestCartSession');
+        }).then(async (res) => {
+          if (res.ok) {
+            sessionStorage.removeItem('guestCartSession');
+            this.notificationService.showSuccess('Cart merged', 'Your guest cart was merged into your account');
+            // Ask any interested services/components to refresh cart
+            this.appEvents.requestCartRefresh();
+          } else {
+            this.notificationService.showError('Cart merge failed', 'We could not merge your guest cart. Please try again.');
+          }
         }).catch(() => {});
       } catch {}
     }

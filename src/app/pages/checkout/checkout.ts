@@ -9,6 +9,8 @@ import { OrderService, CreateOrderRequest } from '../../services/order';
 import { CartItem } from '../../models/cart-item.model';
 import { User, Address } from '../../models/user.model';
 import { ErrorHandlerService } from '../../services/error-handler.service';
+import { NotificationService } from '../../services/notification';
+import { AppEventsService } from '../../services/app-events';
 
 interface PaymentOption {
   id: string;
@@ -99,6 +101,8 @@ export class Checkout implements OnInit, OnDestroy {
   private orderService = inject(OrderService);
   private router = inject(Router);
   private errorHandler = inject(ErrorHandlerService);
+  private notificationService = inject(NotificationService);
+  private appEvents = inject(AppEventsService);
   
   private subscriptions: Subscription[] = [];
 
@@ -137,7 +141,7 @@ export class Checkout implements OnInit, OnDestroy {
     });
     this.subscriptions.push(loadingSubscription);
 
-    // Load cart data
+    // Load cart data on checkout entry
     this.cartService.loadCart().subscribe();
   }
 
@@ -205,11 +209,6 @@ export class Checkout implements OnInit, OnDestroy {
       await this.createOrder(transactionId);
       
       this.currentStep = 'success';
-      
-      // Clear cart on successful payment
-      setTimeout(() => {
-        this.cartService.clearCart();
-      }, 1000);
     } else {
       this.transactionResult = {
         success: false,
@@ -265,14 +264,20 @@ export class Checkout implements OnInit, OnDestroy {
         next: (order) => {
           console.log('Order created successfully:', order);
           this.errorHandler.showSuccess('Order placed successfully');
+          this.notificationService.showSuccess('Order Success', 'Your order has been placed');
           // After successful order creation, load latest orders and navigate
           this.orderService.loadUserOrders().subscribe({
             next: () => this.router.navigate(['/orders']),
             error: () => this.router.navigate(['/orders'])
           });
+          // Clear cart after success
+          setTimeout(() => this.appEvents.requestCartRefresh(), 0);
         },
         error: (error) => {
           console.error('Failed to create order:', error);
+          const message = error?.error?.message || 'Failed to place order. Please try again.';
+          this.notificationService.showError('Order Failed', message, true);
+          this.errorHandler.handleHttpError(error);
         }
       });
     } catch (error) {

@@ -4,10 +4,12 @@ import { CartItem } from '../models/cart-item.model';
 import { Product } from '../models/product.model';
 import { ApiService } from './api.service';
 import { AuthService } from './auth';
+import { AppEventsService } from './app-events';
 
 export interface CartSummary {
   items: CartItem[];
   totalItems: number;
+  totalQuantity: number;
   subtotal: number;
   deliveryCharge: number;
   discount: number;
@@ -24,6 +26,7 @@ export class CartService {
   private cartSummarySubject = new BehaviorSubject<CartSummary>({
     items: [],
     totalItems: 0,
+    totalQuantity: 0,
     subtotal: 0,
     deliveryCharge: 0,
     discount: 0,
@@ -44,16 +47,14 @@ export class CartService {
 
   constructor(
     private apiService: ApiService,
-    private authService: AuthService
+    private authService: AuthService,
+    private appEvents: AppEventsService
   ) {
-    // Load cart when service initializes
-    this.loadCart();
-    
-    // Listen to auth changes to transfer guest cart to user
-    this.authService.currentUser$.subscribe(user => {
-      if (user) {
-        this.transferGuestCartToUser();
-      }
+    // Lazy-load cart: do not auto load on service init
+
+    // Respond to cross-service cart refresh requests
+    this.appEvents.cartRefresh$.subscribe(() => {
+      this.loadCart().subscribe();
     });
   }
 
@@ -114,6 +115,10 @@ export class CartService {
       items: mappedItems,
       // Prefer backend totals if provided
       totalItems: Number(cartSummary?.totalItems ?? (Array.isArray(mappedItems) ? mappedItems.length : 0)),
+      totalQuantity: Number(
+        cartSummary?.totalQuantity ??
+        (Array.isArray(mappedItems) ? mappedItems.reduce((sum, it) => sum + (Number(it.selectedQuantity ?? it.quantity ?? 0)), 0) : 0)
+      ),
       subtotal: Number(cartSummary?.subtotal ?? 0),
       deliveryCharge: Number(cartSummary?.deliveryCharge ?? 0),
       // Map backend totalSavings → discount
@@ -135,6 +140,10 @@ export class CartService {
     return this.apiService.get<CartSummary>('cartService', '/api/cart', undefined, { headers }).pipe(
       tap(cartSummary => {
         this.updateCartSummary(cartSummary);
+        // If user is authenticated and cart has items, drop guest session to avoid ambiguity
+        if (this.authService.isAuthenticated() && Array.isArray(cartSummary?.items) && cartSummary.items.length > 0) {
+          sessionStorage.removeItem('guestCartSession');
+        }
         this.setLoading(false);
       }),
       catchError(error => {
@@ -143,6 +152,7 @@ export class CartService {
         const emptyCart: CartSummary = {
           items: [],
           totalItems: 0,
+          totalQuantity: 0,
           subtotal: 0,
           deliveryCharge: 0,
           discount: 0,
@@ -169,6 +179,7 @@ export class CartService {
         const emptyCart: CartSummary = {
           items: [],
           totalItems: 0,
+          totalQuantity: 0,
           subtotal: 0,
           deliveryCharge: 0,
           discount: 0,
@@ -195,6 +206,7 @@ export class CartService {
         const emptyCart: CartSummary = {
           items: [],
           totalItems: 0,
+          totalQuantity: 0,
           subtotal: 0,
           deliveryCharge: 0,
           discount: 0,
@@ -220,8 +232,17 @@ export class CartService {
     const headers = { 'X-Guest-Session': this.getSessionId() } as any;
     return this.apiService.post<CartItem>('cartService', '/api/cart/add', request, { headers }).pipe(
       tap(() => {
-        // Reload cart to get updated summary
-        this.loadCart().subscribe();
+        // Avoid extra API call; optimistically update count locally
+        const current = this.cartSummarySubject.value;
+        const newTotalQuantity = Number(current.totalQuantity || 0) + Number(quantity || 0);
+        const updated: CartSummary = {
+          ...current,
+          totalQuantity: newTotalQuantity,
+          // Keep totalItems as-is to avoid incorrect distinct count without full cart
+          subtotal: Number(current.subtotal || 0) + Number(product.price || 0) * Number(quantity || 0),
+          total: Number(current.total || 0) + Number(product.price || 0) * Number(quantity || 0)
+        };
+        this.cartSummarySubject.next(updated);
         this.setLoading(false);
       }),
       catchError(error => {
@@ -246,8 +267,21 @@ export class CartService {
       quantity: newQuantity
     }, { headers }).pipe(
       tap(() => {
-        // Reload cart to get updated summary
-        this.loadCart().subscribe();
+        // Optimistically update local items and summary
+        const items = [...this.cartItemsSubject.value];
+        const index = items.findIndex(it => it.id === itemId);
+        if (index > -1) {
+          const item = { ...items[index] };
+          const delta = Number(newQuantity) - Number(item.selectedQuantity || item.quantity || 0);
+          item.selectedQuantity = Number(newQuantity);
+          item.totalPrice = Number(item.product.price || 0) * Number(newQuantity);
+          items[index] = item;
+          this.cartItemsSubject.next(items);
+          const current = this.cartSummarySubject.value;
+          const recomputed = this.recalculateSummaryFromItems(current);
+          // Adjust total by price delta if recompute is not desired: we recompute for consistency
+          this.cartSummarySubject.next(recomputed);
+        }
         this.setLoading(false);
       }),
       catchError(error => {
@@ -264,8 +298,12 @@ export class CartService {
     const headers = { 'X-Guest-Session': this.getSessionId() } as any;
     return this.apiService.delete<void>('cartService', `/api/cart/items/${itemId}`, { headers }).pipe(
       tap(() => {
-        // Reload cart to get updated summary
-        this.loadCart().subscribe();
+        // Optimistically update local items and summary
+        const items = this.cartItemsSubject.value.filter(it => it.id !== itemId);
+        this.cartItemsSubject.next(items);
+        const current = this.cartSummarySubject.value;
+        const recomputed = this.recalculateSummaryFromItems(current);
+        this.cartSummarySubject.next(recomputed);
         this.setLoading(false);
       }),
       catchError(error => {
@@ -285,6 +323,7 @@ export class CartService {
         const emptyCart: CartSummary = {
           items: [],
           totalItems: 0,
+          totalQuantity: 0,
           subtotal: 0,
           deliveryCharge: 0,
           discount: 0,
@@ -405,5 +444,33 @@ export class CartService {
         throw error;
       })
     );
+  }
+
+  private recalculateSummaryFromItems(base?: Partial<CartSummary>): CartSummary {
+    const items = this.cartItemsSubject.value;
+    const totalItems = items.length;
+    const totalQuantity = items.reduce((sum, it) => sum + Number(it.selectedQuantity ?? it.quantity ?? 0), 0);
+    const subtotal = items.reduce((sum, it) => sum + Number(it.product.price || 0) * Number(it.selectedQuantity ?? it.quantity ?? 0), 0);
+    const discount = items.reduce((sum, it) => {
+      const original = Number(it.product.originalPrice ?? it.product.price ?? 0);
+      const price = Number(it.product.price ?? 0);
+      const qty = Number(it.selectedQuantity ?? it.quantity ?? 0);
+      return sum + Math.max(0, original - price) * qty;
+    }, 0);
+    const deliveryCharge = subtotal >= 500 ? 0 : 50;
+    const total = subtotal + deliveryCharge - discount;
+
+    const current = this.cartSummarySubject.value;
+    return {
+      items,
+      totalItems,
+      totalQuantity,
+      subtotal,
+      deliveryCharge,
+      discount,
+      total,
+      isValid: base?.isValid ?? current.isValid,
+      validationMessages: base?.validationMessages ?? current.validationMessages ?? []
+    };
   }
 }

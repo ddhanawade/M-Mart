@@ -35,13 +35,24 @@ export class Header implements OnInit {
       this.userName = user?.name || 'User';
     });
 
-    // Subscribe to cart summary to reflect item count (distinct items)
+    // Subscribe to cart summary to reflect item count (use totalQuantity when available)
     this.cartService.cartSummary$.subscribe(summary => {
+      if (summary && typeof summary.totalQuantity === 'number' && summary.totalQuantity > 0) {
+        this.cartItemCount = summary.totalQuantity;
+        return;
+      }
       if (summary && typeof summary.totalItems === 'number') {
         this.cartItemCount = summary.totalItems;
-      } else {
-        const items = Array.isArray(summary?.items) ? summary.items : [];
-        this.cartItemCount = items.length;
+        return;
+      }
+      const items = Array.isArray(summary?.items) ? summary.items : [];
+      this.cartItemCount = items.reduce((sum, it: any) => sum + Number(it?.selectedQuantity ?? it?.quantity ?? 0), 0) || items.length;
+    });
+
+    // Fetch lightweight count on header init to handle page refresh
+    this.cartService.getCartItemCount().subscribe(count => {
+      if (typeof count === 'number') {
+        this.cartItemCount = count;
       }
     });
   }
