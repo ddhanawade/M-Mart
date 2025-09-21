@@ -83,6 +83,25 @@ export class AuthService {
     
     this.currentUserSubject.next(authResponse.user);
     this.isLoggedInSubject.next(true);
+
+    // Merge guest cart into user cart after login
+    const sessionId = sessionStorage.getItem('guestCartSession');
+    if (sessionId) {
+      try {
+        // fire-and-forget; cart service endpoint will merge
+        fetch(`${environment.api.cartService}/api/cart/transfer`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authResponse.accessToken}`
+          },
+          body: JSON.stringify({ sessionId, mergeWithExisting: true })
+        }).then(() => {
+          sessionStorage.removeItem('guestCartSession');
+        }).catch(() => {});
+      } catch {}
+    }
   }
 
   login(loginData: LoginRequest): Observable<AuthResponse> {

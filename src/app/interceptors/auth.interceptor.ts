@@ -22,6 +22,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (token) {
     const userRaw = localStorage.getItem(environment.auth.userKey);
     let authReq = req;
+    // Always include guest session header for cart and order flows; backend ignores it for logged-in users
+    const guestSession = sessionStorage.getItem('guestCartSession');
+    if (guestSession) {
+      authReq = authReq.clone({ headers: authReq.headers.set('X-Guest-Session', guestSession) });
+    }
     if (userRaw) {
       try {
         const user = JSON.parse(userRaw);

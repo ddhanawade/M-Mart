@@ -131,7 +131,8 @@ export class CartService {
   loadCart(): Observable<CartSummary> {
     this.setLoading(true);
     // Always hit unified endpoint which handles both user and guest via session/auth
-    return this.apiService.get<CartSummary>('cartService', '/api/cart').pipe(
+    const headers = { 'X-Guest-Session': this.getSessionId() } as any;
+    return this.apiService.get<CartSummary>('cartService', '/api/cart', undefined, { headers }).pipe(
       tap(cartSummary => {
         this.updateCartSummary(cartSummary);
         this.setLoading(false);
@@ -156,7 +157,8 @@ export class CartService {
   }
 
   private getUserCart(): Observable<CartSummary> {
-    return this.apiService.get<CartSummary>('cartService', '/api/cart').pipe(
+    const headers = { 'X-Guest-Session': this.getSessionId() } as any;
+    return this.apiService.get<CartSummary>('cartService', '/api/cart', undefined, { headers }).pipe(
       tap(cartSummary => {
         this.updateCartSummary(cartSummary);
         this.setLoading(false);
@@ -181,9 +183,8 @@ export class CartService {
   }
 
   private getGuestCart(): Observable<CartSummary> {
-    return this.apiService.get<CartSummary>('cartService', '/api/cart/guest', {
-      sessionId: this.getSessionId()
-    }).pipe(
+    const headers = { 'X-Guest-Session': this.getSessionId() } as any;
+    return this.apiService.get<CartSummary>('cartService', '/api/cart/guest', undefined, { headers }).pipe(
       tap(cartSummary => {
         this.updateCartSummary(cartSummary);
         this.setLoading(false);
@@ -216,7 +217,8 @@ export class CartService {
       sessionId: this.authService.isAuthenticated() ? undefined : this.getSessionId()
     };
 
-    return this.apiService.post<CartItem>('cartService', '/api/cart/add', request).pipe(
+    const headers = { 'X-Guest-Session': this.getSessionId() } as any;
+    return this.apiService.post<CartItem>('cartService', '/api/cart/add', request, { headers }).pipe(
       tap(() => {
         // Reload cart to get updated summary
         this.loadCart().subscribe();
@@ -239,9 +241,10 @@ export class CartService {
 
     this.setLoading(true);
 
+    const headers = { 'X-Guest-Session': this.getSessionId() } as any;
     return this.apiService.put<CartItem>('cartService', `/api/cart/items/${itemId}/quantity`, {
       quantity: newQuantity
-    }).pipe(
+    }, { headers }).pipe(
       tap(() => {
         // Reload cart to get updated summary
         this.loadCart().subscribe();
@@ -258,7 +261,8 @@ export class CartService {
   removeFromCart(itemId: string): Observable<void> {
     this.setLoading(true);
 
-    return this.apiService.delete<void>('cartService', `/api/cart/items/${itemId}`).pipe(
+    const headers = { 'X-Guest-Session': this.getSessionId() } as any;
+    return this.apiService.delete<void>('cartService', `/api/cart/items/${itemId}`, { headers }).pipe(
       tap(() => {
         // Reload cart to get updated summary
         this.loadCart().subscribe();
@@ -275,7 +279,8 @@ export class CartService {
   clearCart(): Observable<void> {
     this.setLoading(true);
 
-    return this.apiService.delete<void>('cartService', '/api/cart/clear').pipe(
+    const headers = { 'X-Guest-Session': this.getSessionId() } as any;
+    return this.apiService.delete<void>('cartService', '/api/cart/clear', { headers }).pipe(
       tap(() => {
         const emptyCart: CartSummary = {
           items: [],
@@ -299,7 +304,8 @@ export class CartService {
   }
 
   getCartItemCount(): Observable<number> {
-    return this.apiService.get<number>('cartService', '/api/cart/count').pipe(
+    const headers = { 'X-Guest-Session': this.getSessionId() } as any;
+    return this.apiService.get<number>('cartService', '/api/cart/count', undefined, { headers }).pipe(
       catchError(error => {
         console.error('Error getting cart item count:', error);
         return of(0);
@@ -310,7 +316,8 @@ export class CartService {
   validateCart(): Observable<CartSummary> {
     this.setLoading(true);
 
-    return this.apiService.post<CartSummary>('cartService', '/api/cart/validate', {}).pipe(
+    const headers = { 'X-Guest-Session': this.getSessionId() } as any;
+    return this.apiService.post<CartSummary>('cartService', '/api/cart/validate', {}, { headers }).pipe(
       tap(cartSummary => {
         this.updateCartSummary(cartSummary);
         this.setLoading(false);
@@ -322,6 +329,8 @@ export class CartService {
       })
     );
   }
+
+  // (removed helper methods)
 
   private transferGuestCartToUser(): Observable<CartSummary> {
     const sessionId = sessionStorage.getItem('guestCartSession');
