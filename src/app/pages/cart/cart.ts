@@ -8,6 +8,7 @@ import { CartItem } from '../../models/cart-item.model';
 
 @Component({
   selector: 'app-cart',
+  standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './cart.html',
   styleUrl: './cart.scss'

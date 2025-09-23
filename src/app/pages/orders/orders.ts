@@ -10,6 +10,7 @@ import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-orders',
+  standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './orders.html',
   styleUrl: './orders.scss'

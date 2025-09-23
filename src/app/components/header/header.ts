@@ -7,6 +7,7 @@ import { CartService } from '../../services/cart';
 
 @Component({
   selector: 'app-header',
+  standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './header.html',
   styleUrl: './header.scss'
@@ -20,6 +21,7 @@ export class Header implements OnInit {
   isUserDropdownOpen: boolean = false;
   isProductDropdownOpen: boolean = false;
   isLoggingOut: boolean = false;
+  isScrolled: boolean = false;
 
   private authService = inject(AuthService);
   private cartService = inject(CartService);
@@ -55,6 +57,12 @@ export class Header implements OnInit {
         this.cartItemCount = count;
       }
     });
+  }
+
+  // Handle scroll events for header styling
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isScrolled = window.pageYOffset > 50;
   }
 
   // Close dropdowns when clicking outside

@@ -10,6 +10,7 @@ import { PageResponse } from '../../services/api.service';
 
 @Component({
   selector: 'app-products',
+  standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, ProductCard],
   templateUrl: './products.html',
   styleUrl: './products.scss'
@@ -28,12 +29,13 @@ export class Products implements OnInit, OnDestroy {
   showOnlyInStock: boolean = false;
   
   isLoading: boolean = true;
+  totalProducts: number = 0;
+  categoriesCount: number = 5;
   hasMoreProducts: boolean = false;
   
   // Pagination
   currentPage: number = 0;
   pageSize: number = 20;
-  totalProducts: number = 0;
   totalPages: number = 0;
   
   private productService = inject(ProductService);
@@ -187,9 +189,6 @@ export class Products implements OnInit, OnDestroy {
            this.showOnlyInStock;
   }
 
-  loadMore() {
-    this.nextPage();
-  }
 
   trackByProductId(index: number, product: Product): string {
     return product.id;
@@ -288,5 +287,15 @@ export class Products implements OnInit, OnDestroy {
       this.currentPage = page;
       this.loadProducts();
     }
+  }
+
+  clearSearch() {
+    this.searchQuery = '';
+    this.onSearch();
+  }
+
+  loadMore() {
+    this.currentPage++;
+    this.loadProducts();
   }
 }

@@ -9,10 +9,15 @@
   <div class="product-not-found" *ngIf="!isLoading && !product">
     <div class="container">
       <div class="not-found-content">
-        <div class="not-found-icon">📦</div>
+        <div class="not-found-icon">
+          <img src="assets/images/icons/package.svg" alt="Product not found" class="not-found-svg">
+        </div>
         <h2>Product Not Found</h2>
         <p>The product you're looking for doesn't exist or has been removed.</p>
-        <button class="btn btn-primary" (click)="goBack()">Go Back</button>
+        <button class="btn btn-primary" (click)="goBack()">
+          <img src="assets/images/icons/arrow-left.svg" alt="Back" class="btn-icon">
+          Go Back
+        </button>
       </div>
     </div>
   </div>
@@ -24,16 +29,25 @@
     <div class="breadcrumb-section">
       <div class="container">
         <div class="breadcrumb">
-          <a routerLink="/">Home</a>
-          <span class="separator">></span>
-          <a routerLink="/products">Products</a>
-          <span class="separator">></span>
-          <a [routerLink]="['/products', product.category]">{{getCategoryDisplayName()}}</a>
-          <span class="separator">></span>
+          <a routerLink="/" class="breadcrumb-item">
+            <img src="assets/images/icons/home.svg" alt="Home" class="breadcrumb-icon">
+            Home
+          </a>
+          <img src="assets/images/icons/chevron-right.svg" alt=">" class="separator">
+          <a routerLink="/products" class="breadcrumb-item">
+            <img src="assets/images/icons/package.svg" alt="Products" class="breadcrumb-icon">
+            Products
+          </a>
+          <img src="assets/images/icons/chevron-right.svg" alt=">" class="separator">
+          <a [routerLink]="['/products', product.category]" class="breadcrumb-item">
+            <img [src]="getCategoryIcon()" [alt]="getCategoryDisplayName()" class="breadcrumb-icon">
+            {{getCategoryDisplayName()}}
+          </a>
+          <img src="assets/images/icons/chevron-right.svg" alt=">" class="separator">
           <span class="current">{{product.name}}</span>
         </div>
         <button class="back-btn" (click)="goBack()">
-          <span class="back-icon">←</span>
+          <img src="assets/images/icons/arrow-left.svg" alt="Back" class="back-icon">
           <span class="back-text">Back</span>
         </button>
       </div>
@@ -95,7 +109,10 @@
               <!-- Rating & Reviews -->
               <div class="rating-section">
                 <div class="stars">
-                  <span class="star" *ngFor="let star of getStars()" [class.filled]="star">⭐</span>
+                  <img *ngFor="let star of getStars()" 
+                       [src]="star ? 'assets/images/icons/star-filled.svg' : 'assets/images/icons/star.svg'" 
+                       [alt]="star ? 'Filled star' : 'Empty star'" 
+                       class="star">
                 </div>
                 <span class="rating-text">{{product.rating}}</span>
                 <span class="review-count">({{product.reviewCount}} reviews)</span>
@@ -117,11 +134,13 @@
             <!-- Stock & Availability -->
             <div class="availability-section">
               <div class="stock-status" [class.in-stock]="product.inStock" [class.out-of-stock]="!product.inStock">
-                <span class="status-icon">{{product.inStock ? '✅' : '❌'}}</span>
+                <img [src]="product.inStock ? 'assets/images/icons/check-circle.svg' : 'assets/images/icons/x-circle.svg'" 
+                     [alt]="product.inStock ? 'In Stock' : 'Out of Stock'" 
+                     class="status-icon">
                 <span class="status-text">{{product.inStock ? 'In Stock' : 'Out of Stock'}}</span>
               </div>
               <div class="quantity-info" *ngIf="product.inStock && product.quantity <= 10">
-                <span class="warning-icon">⚠️</span>
+                <img src="assets/images/icons/alert-triangle.svg" alt="Warning" class="warning-icon">
                 <span class="warning-text">Only {{product.quantity}} left in stock!</span>
               </div>
             </div>
@@ -143,7 +162,7 @@
                   class="btn btn-primary add-to-cart-btn"
                   (click)="addToCart()"
                   [disabled]="!product.inStock || isAddingToCart">
-                  <span class="btn-icon" *ngIf="!isAddingToCart">🛒</span>
+                  <img src="assets/images/icons/shopping-cart.svg" alt="Add to Cart" class="btn-icon" *ngIf="!isAddingToCart">
                   <div class="loading-spinner" *ngIf="isAddingToCart"></div>
                   <span class="btn-text">{{isAddingToCart ? 'Adding...' : 'Add to Cart'}}</span>
                 </button>
@@ -152,7 +171,7 @@
                   class="btn btn-secondary buy-now-btn"
                   (click)="buyNow()"
                   [disabled]="!product.inStock">
-                  <span class="btn-icon">⚡</span>
+                  <img src="assets/images/icons/zap.svg" alt="Buy Now" class="btn-icon">
                   <span class="btn-text">Buy Now</span>
                 </button>
               </div>
@@ -163,19 +182,19 @@
               <h3 class="features-title">Product Features</h3>
               <div class="features-grid">
                 <div class="feature-item" *ngIf="product.organic">
-                  <span class="feature-icon">🌿</span>
+                  <img src="assets/images/icons/leaf.svg" alt="Organic" class="feature-icon">
                   <span class="feature-text">100% Organic</span>
                 </div>
                 <div class="feature-item" *ngIf="product.fresh">
-                  <span class="feature-icon">✨</span>
+                  <img src="assets/images/icons/sparkles.svg" alt="Fresh" class="feature-icon">
                   <span class="feature-text">Farm Fresh</span>
                 </div>
                 <div class="feature-item">
-                  <span class="feature-icon">🚚</span>
+                  <img src="assets/images/icons/truck.svg" alt="Delivery" class="feature-icon">
                   <span class="feature-text">Free Delivery</span>
                 </div>
                 <div class="feature-item">
-                  <span class="feature-icon">🔄</span>
+                  <img src="assets/images/icons/refresh-cw.svg" alt="Returns" class="feature-icon">
                   <span class="feature-text">Easy Returns</span>
                 </div>
               </div>
@@ -274,7 +293,7 @@
                 <span class="related-original" *ngIf="relatedProduct.originalPrice">₹{{relatedProduct.originalPrice}}</span>
               </div>
               <div class="related-rating">
-                <span class="rating-star">⭐</span>
+                <img src="assets/images/icons/star-filled.svg" alt="Rating" class="rating-star">
                 <span class="rating-value">{{relatedProduct.rating}}</span>
               </div>
             </div>

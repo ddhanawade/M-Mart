@@ -9,6 +9,7 @@ import { Product } from '../../models/product.model';
 
 @Component({
   selector: 'app-product-detail',
+  standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss'
@@ -159,6 +160,19 @@ export class ProductDetail implements OnInit, OnDestroy {
     };
     
     return categoryMap[this.product.category] || this.product.category;
+  }
+
+  getCategoryIcon(): string {
+    if (!this.product) return 'assets/images/icons/package.svg';
+    
+    const iconMap: { [key: string]: string } = {
+      'fruits': 'assets/images/icons/apple.svg',
+      'vegetables': 'assets/images/icons/vegetables.svg',
+      'organic': 'assets/images/icons/organic.svg',
+      'groceries': 'assets/images/icons/groceries.svg'
+    };
+    
+    return iconMap[this.product.category] || 'assets/images/icons/package.svg';
   }
 
   getDiscountPercentage(): number {

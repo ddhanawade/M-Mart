@@ -29,6 +29,7 @@ interface TransactionResult {
 
 @Component({
   selector: 'app-checkout',
+  standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './checkout.html',
   styleUrl: './checkout.scss'

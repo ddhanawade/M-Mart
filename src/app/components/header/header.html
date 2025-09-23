@@ -1,4 +1,4 @@
-<header class="professional-header">
+<header class="header" [class.scrolled]="isScrolled">
   <div class="container">
     <div class="header-content">
       
@@ -8,7 +8,7 @@
           <picture>
             <source srcset="assets/images/logo-mark.svg" media="(max-width: 640px)">
             <img src="assets/images/logo-horizontal.svg" 
-                 alt="Mahabaleshwer Mart - Fresh from the Hills" 
+                 alt="Mahabaleshwer Mart - Premium Fresh Produce" 
                  class="brand-logo"
                  width="220" 
                  height="56">
@@ -24,7 +24,7 @@
              routerLinkActive="active" 
              [routerLinkActiveOptions]="{exact: true}" 
              class="nav-link">
-            <span class="nav-icon">🏠</span>
+            <img src="assets/images/icons/home.svg" alt="Home" class="nav-icon">
             <span class="nav-label">Home</span>
           </a>
 
@@ -33,26 +33,28 @@
             <button class="nav-link dropdown-trigger" 
                     (click)="toggleProductDropdown($event)"
                     [class.active]="isProductDropdownOpen">
-              <span class="nav-icon">🛍️</span>
+              <img src="assets/images/icons/shopping-bag.svg" alt="Products" class="nav-icon">
               <span class="nav-label">Products</span>
-              <span class="dropdown-arrow" [class.rotated]="isProductDropdownOpen">▼</span>
+              <svg class="dropdown-arrow" [class.rotated]="isProductDropdownOpen" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </button>
             
             <div class="dropdown-panel" [class.show]="isProductDropdownOpen">
               <a (click)="navigateToCategory('fruits')" class="dropdown-item">
-                <span class="item-icon">🍎</span>
+                <img src="assets/images/icons/apple.svg" alt="Fruits" class="item-icon">
                 <span class="item-label">Fresh Fruits</span>
               </a>
               <a (click)="navigateToCategory('vegetables')" class="dropdown-item">
-                <span class="item-icon">🥕</span>
+                <img src="assets/images/icons/vegetables.svg" alt="Vegetables" class="item-icon">
                 <span class="item-label">Vegetables</span>
               </a>
               <a (click)="navigateToCategory('organic')" class="dropdown-item">
-                <span class="item-icon">🌿</span>
+                <img src="assets/images/icons/organic.svg" alt="Organic" class="item-icon">
                 <span class="item-label">Organic Products</span>
               </a>
               <a (click)="navigateToCategory('groceries')" class="dropdown-item">
-                <span class="item-icon">🛒</span>
+                <img src="assets/images/icons/shopping-cart.svg" alt="Groceries" class="item-icon">
                 <span class="item-label">Groceries</span>
               </a>
             </div>
@@ -61,14 +63,14 @@
           <a routerLink="/products" 
              routerLinkActive="active" 
              class="nav-link">
-            <span class="nav-icon">📦</span>
+            <img src="assets/images/icons/package.svg" alt="All Products" class="nav-icon">
             <span class="nav-label">All Products</span>
           </a>
 
           <a routerLink="/orders" 
              routerLinkActive="active" 
              class="nav-link">
-            <span class="nav-icon">📋</span>
+            <img src="assets/images/icons/clipboard-list.svg" alt="Orders" class="nav-icon">
             <span class="nav-label">Orders</span>
           </a>
         </nav>
@@ -77,13 +79,14 @@
         <div class="search-container">
           <form class="search-form" (ngSubmit)="onSearch()">
             <div class="search-wrapper">
+              <img src="assets/images/icons/search.svg" alt="Search" class="search-icon-left">
               <input type="text" 
                      class="search-input" 
                      placeholder="Search fresh products..."
                      [(ngModel)]="searchQuery"
                      name="search">
               <button type="submit" class="search-btn">
-                <span class="search-icon">🔍</span>
+                <img src="assets/images/icons/search.svg" alt="Search" class="search-icon">
               </button>
             </div>
           </form>
@@ -95,7 +98,7 @@
         
         <!-- Cart Button -->
         <a routerLink="/cart" class="action-btn cart-btn">
-          <span class="btn-icon">🛒</span>
+          <img src="assets/images/icons/shopping-cart.svg" alt="Cart" class="btn-icon">
           <span class="btn-label">Cart</span>
           <span class="cart-count" *ngIf="cartItemCount > 0">{{cartItemCount}}</span>
         </a>
@@ -106,7 +109,7 @@
           <a *ngIf="!isLoggedIn" 
              routerLink="/auth" 
              class="action-btn login-btn">
-            <span class="btn-icon">👤</span>
+            <img src="assets/images/icons/user.svg" alt="Login" class="btn-icon">
             <span class="btn-label">Login</span>
           </a>
 
@@ -115,23 +118,32 @@
             <button class="action-btn user-btn" 
                     (click)="toggleUserDropdown($event)"
                     [class.active]="isUserDropdownOpen">
-              <span class="btn-icon">👤</span>
+              <img src="assets/images/icons/user.svg" alt="User" class="btn-icon">
               <span class="btn-label">{{userName}}</span>
-              <span class="dropdown-arrow" [class.rotated]="isUserDropdownOpen">▼</span>
+              <svg class="dropdown-arrow" [class.rotated]="isUserDropdownOpen" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </button>
             
             <div class="dropdown-panel user-menu" [class.show]="isUserDropdownOpen">
               <a routerLink="/orders" class="dropdown-item">
-                <span class="item-icon">📋</span>
+                <img src="assets/images/icons/clipboard-list.svg" alt="Orders" class="item-icon">
                 <span class="item-label">My Orders</span>
               </a>
               <a routerLink="/profile" class="dropdown-item">
-                <span class="item-icon">👤</span>
+                <img src="assets/images/icons/user.svg" alt="Profile" class="item-icon">
                 <span class="item-label">Profile</span>
               </a>
               <a (click)="onLogout()" class="dropdown-item logout-item" [class.loading]="isLoggingOut">
-                <span class="item-icon" *ngIf="!isLoggingOut">🚪</span>
-                <span class="item-icon loading-spinner" *ngIf="isLoggingOut">⏳</span>
+                <svg *ngIf="!isLoggingOut" class="item-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M16 17L21 12L16 7" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M21 12H9" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg *ngIf="isLoggingOut" class="item-icon loading-spinner" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="#dc2626" stroke-width="2"/>
+                  <path d="M12 6V12L16 14" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
                 <span class="item-label">{{ isLoggingOut ? 'Logging out...' : 'Logout' }}</span>
               </a>
             </div>
@@ -160,13 +172,14 @@
       <div class="mobile-search">
         <form class="search-form" (ngSubmit)="onSearch()">
           <div class="search-wrapper">
+            <img src="assets/images/icons/search.svg" alt="Search" class="search-icon-left">
             <input type="text" 
                    class="search-input" 
                    placeholder="Search products..."
                    [(ngModel)]="searchQuery"
                    name="search">
             <button type="submit" class="search-btn">
-              <span class="search-icon">🔍</span>
+              <img src="assets/images/icons/search.svg" alt="Search" class="search-icon">
             </button>
           </div>
         </form>
@@ -179,7 +192,7 @@
            [routerLinkActiveOptions]="{exact: true}" 
            class="mobile-link"
            (click)="closeMobileMenu()">
-          <span class="nav-icon">🏠</span>
+          <img src="assets/images/icons/home.svg" alt="Home" class="nav-icon">
           <span class="nav-label">Home</span>
         </a>
 
@@ -187,26 +200,44 @@
           <button class="mobile-link dropdown-trigger" 
                   (click)="toggleProductDropdown($event)"
                   [class.active]="isProductDropdownOpen">
-            <span class="nav-icon">🛍️</span>
+            <img src="assets/images/icons/shopping-bag.svg" alt="Products" class="nav-icon">
             <span class="nav-label">Products</span>
-            <span class="dropdown-arrow" [class.rotated]="isProductDropdownOpen">▼</span>
+            <svg class="dropdown-arrow" [class.rotated]="isProductDropdownOpen" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </button>
           
           <div class="mobile-submenu" [class.show]="isProductDropdownOpen">
             <a (click)="navigateToCategory('fruits')" class="submenu-item">
-              <span class="item-icon">🍎</span>
+              <img src="assets/images/icons/apple.svg" alt="Fruits" class="item-icon">
               <span class="item-label">Fresh Fruits</span>
             </a>
             <a (click)="navigateToCategory('vegetables')" class="submenu-item">
-              <span class="item-icon">🥕</span>
+              <svg class="item-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M2 21L12 17L22 21V3L12 7L2 3V21Z" stroke="url(#vegetableGradientMobile)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                  <linearGradient id="vegetableGradientMobile" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#22c55e;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#16a34a;stop-opacity:1" />
+                  </linearGradient>
+                </defs>
+              </svg>
               <span class="item-label">Vegetables</span>
             </a>
             <a (click)="navigateToCategory('organic')" class="submenu-item">
-              <span class="item-icon">🌿</span>
+              <svg class="item-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M7 20L17 10M17 20C17 20 20 16 20 11C20 6 17 4 12 4S4 6 4 11C4 16 7 20 7 20Z" stroke="url(#organicGradientMobile)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                  <linearGradient id="organicGradientMobile" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#22c55e;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#16a34a;stop-opacity:1" />
+                  </linearGradient>
+                </defs>
+              </svg>
               <span class="item-label">Organic Products</span>
             </a>
             <a (click)="navigateToCategory('groceries')" class="submenu-item">
-              <span class="item-icon">🛒</span>
+              <img src="assets/images/icons/shopping-cart.svg" alt="Groceries" class="item-icon">
               <span class="item-label">Groceries</span>
             </a>
           </div>
@@ -216,7 +247,7 @@
            routerLinkActive="active" 
            class="mobile-link"
            (click)="closeMobileMenu()">
-          <span class="nav-icon">📦</span>
+          <img src="assets/images/icons/package.svg" alt="All Products" class="nav-icon">
           <span class="nav-label">All Products</span>
         </a>
 
@@ -224,7 +255,7 @@
            routerLinkActive="active" 
            class="mobile-link"
            (click)="closeMobileMenu()">
-          <span class="nav-icon">🛒</span>
+          <img src="assets/images/icons/shopping-cart.svg" alt="Cart" class="nav-icon">
           <span class="nav-label">Cart</span>
           <span class="cart-count" *ngIf="cartItemCount > 0">{{cartItemCount}}</span>
         </a>
@@ -233,23 +264,30 @@
            routerLinkActive="active" 
            class="mobile-link"
            (click)="closeMobileMenu()">
-          <span class="nav-icon">📋</span>
+          <img src="assets/images/icons/clipboard-list.svg" alt="Orders" class="nav-icon">
           <span class="nav-label">Orders</span>
         </a>
 
         <!-- Mobile User Section -->
         <div class="mobile-user" *ngIf="isLoggedIn">
           <div class="user-info">
-            <span class="user-icon">👤</span>
+            <img src="assets/images/icons/user.svg" alt="User" class="user-icon">
             <span class="user-name">{{userName}}</span>
           </div>
           <a routerLink="/profile" class="mobile-link" (click)="closeMobileMenu()">
-            <span class="nav-icon">👤</span>
+            <img src="assets/images/icons/user.svg" alt="Profile" class="nav-icon">
             <span class="nav-label">Profile</span>
           </a>
           <a (click)="onLogout()" class="mobile-link logout-link" [class.loading]="isLoggingOut">
-            <span class="nav-icon" *ngIf="!isLoggingOut">🚪</span>
-            <span class="nav-icon loading-spinner" *ngIf="isLoggingOut">⏳</span>
+            <svg *ngIf="!isLoggingOut" class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16 17L21 12L16 7" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 12H9" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <svg *ngIf="isLoggingOut" class="nav-icon loading-spinner" width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="#dc2626" stroke-width="2"/>
+              <path d="M12 6V12L16 14" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
             <span class="nav-label">{{ isLoggingOut ? 'Logging out...' : 'Logout' }}</span>
           </a>
         </div>
@@ -258,7 +296,7 @@
           <a routerLink="/auth" 
              class="login-link"
              (click)="closeMobileMenu()">
-            <span class="nav-icon">👤</span>
+            <img src="assets/images/icons/user.svg" alt="Login" class="nav-icon">
             <span class="nav-label">Login / Register</span>
           </a>
         </div>

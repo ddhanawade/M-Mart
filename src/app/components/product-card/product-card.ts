@@ -7,6 +7,7 @@ import { CartService } from '../../services/cart';
 
 @Component({
   selector: 'app-product-card',
+  standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './product-card.html',
   styleUrl: './product-card.scss'

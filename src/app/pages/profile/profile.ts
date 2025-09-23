@@ -7,6 +7,7 @@ import { User, Address } from '../../models/user.model';
 
 @Component({
   selector: 'app-profile',
+  standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './profile.html',
   styleUrl: './profile.scss'

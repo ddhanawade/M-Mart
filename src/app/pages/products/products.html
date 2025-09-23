@@ -1,116 +1,207 @@
 <div class="products-page">
-  <!-- Page Header -->
+  <!-- Modern Page Header -->
   <div class="page-header">
     <div class="container">
       <div class="header-content">
         <div class="breadcrumb">
-          <a routerLink="/">Home</a>
-          <span class="separator">></span>
-          <span>Products</span>
-          <span class="separator" *ngIf="selectedCategory">></span>
-          <span class="current-category" *ngIf="selectedCategory">{{getCategoryDisplayName()}}</span>
+          <a routerLink="/" class="breadcrumb-link">
+            <img src="assets/images/icons/home.svg" alt="Home" class="breadcrumb-icon">
+            <span>Home</span>
+          </a>
+          <svg class="breadcrumb-separator" width="6" height="10" viewBox="0 0 6 10" fill="none">
+            <path d="M1 1L5 5L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="breadcrumb-current">Products</span>
+          <svg class="breadcrumb-separator" *ngIf="selectedCategory" width="6" height="10" viewBox="0 0 6 10" fill="none">
+            <path d="M1 1L5 5L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="breadcrumb-current" *ngIf="selectedCategory">{{getCategoryDisplayName()}}</span>
         </div>
-        <h1 class="page-title">
-          {{selectedCategory ? getCategoryDisplayName() : 'All Products'}}
-        </h1>
+        <div class="header-main">
+          <h1 class="page-title">
+            {{selectedCategory ? getCategoryDisplayName() : 'All Products'}}
+          </h1>
+          <div class="title-decoration"></div>
+        </div>
         <p class="page-description">
           {{getCategoryDescription()}}
         </p>
+        <div class="header-stats">
+          <div class="stat-item">
+            <span class="stat-number">{{totalProducts}}</span>
+            <span class="stat-label">Products</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">{{categoriesCount}}</span>
+            <span class="stat-label">Categories</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Fresh</span>
+          </div>
+        </div>
       </div>
     </div>
+    <div class="header-decoration"></div>
   </div>
 
-  <!-- Filters and Search -->
+  <!-- Modern Filters and Search -->
   <div class="filters-section">
     <div class="container">
+      <div class="filters-header">
+        <h2 class="filters-title">Find Your Perfect Products</h2>
+        <p class="filters-subtitle">Use our smart filters to discover exactly what you need</p>
+      </div>
+      
       <div class="filters-content">
         <!-- Category Filter -->
-        <div class="filter-group">
-          <label class="filter-label">Category:</label>
+        <div class="filter-group category-filter">
+          <label class="filter-label">
+            <img src="assets/images/icons/package.svg" alt="Category" class="filter-icon">
+            <span>Categories</span>
+          </label>
           <div class="category-buttons">
             <button 
-              class="category-btn" 
+              class="category-btn modern-btn" 
               [class.active]="!selectedCategory"
               (click)="filterByCategory('')">
-              All Products
+              <div class="btn-content">
+                <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M3 7V5C3 3.89 3.89 3 5 3H19C20.11 3 21 3.89 21 5V7M3 7V19C3 20.11 3.89 21 5 21H19C20.11 21 19 20.11 19 19V7M3 7H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>All Products</span>
+              </div>
             </button>
             <button 
-              class="category-btn" 
+              class="category-btn modern-btn" 
               [class.active]="selectedCategory === 'fruits'"
               (click)="filterByCategory('fruits')">
-              🍎 Fruits
+              <div class="btn-content">
+                <img src="assets/images/icons/apple.svg" alt="Fruits" class="btn-icon">
+                <span>Fresh Fruits</span>
+              </div>
             </button>
             <button 
-              class="category-btn" 
+              class="category-btn modern-btn" 
               [class.active]="selectedCategory === 'vegetables'"
               (click)="filterByCategory('vegetables')">
-              🥕 Vegetables
+              <div class="btn-content">
+                <img src="assets/images/icons/vegetables.svg" alt="Vegetables" class="btn-icon">
+                <span>Vegetables</span>
+              </div>
             </button>
             <button 
-              class="category-btn" 
+              class="category-btn modern-btn" 
               [class.active]="selectedCategory === 'organic'"
               (click)="filterByCategory('organic')">
-              🌿 Organic
+              <div class="btn-content">
+                <img src="assets/images/icons/organic.svg" alt="Organic" class="btn-icon">
+                <span>Organic</span>
+              </div>
             </button>
             <button 
-              class="category-btn" 
+              class="category-btn modern-btn" 
               [class.active]="selectedCategory === 'groceries'"
               (click)="filterByCategory('groceries')">
-              🛒 Groceries
+              <div class="btn-content">
+                <img src="assets/images/icons/shopping-cart.svg" alt="Groceries" class="btn-icon">
+                <span>Groceries</span>
+              </div>
             </button>
           </div>
         </div>
 
-        <!-- Additional Filters -->
-        <div class="filter-group">
-          <label class="filter-label">Filter by:</label>
+        <!-- Smart Filters -->
+        <div class="filter-group smart-filters">
+          <label class="filter-label">
+            <svg class="filter-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M22 3H2L10 12.46V19L14 21V12.46L22 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Smart Filters</span>
+          </label>
           <div class="filter-buttons">
             <button 
-              class="filter-btn" 
+              class="filter-btn modern-filter-btn" 
               [class.active]="showOnlyOrganic"
               (click)="toggleOrganicFilter()">
-              🌿 Organic Only
+              <div class="filter-btn-content">
+                <img src="assets/images/icons/organic.svg" alt="Organic" class="filter-btn-icon">
+                <span>Organic Only</span>
+                <div class="filter-badge" *ngIf="showOnlyOrganic">✓</div>
+              </div>
             </button>
             <button 
-              class="filter-btn" 
+              class="filter-btn modern-filter-btn" 
               [class.active]="showOnlyDiscounted"
               (click)="toggleDiscountFilter()">
-              🏷️ On Sale
+              <div class="filter-btn-content">
+                <svg class="filter-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M20.59 13.41L13.42 20.58C13.05 20.95 12.55 21.16 12.02 21.16C11.49 21.16 10.99 20.95 10.62 20.58L2.42 12.38C2.05 12.01 1.84 11.51 1.84 10.98V4.84C1.84 3.75 2.75 2.84 3.84 2.84H9.98C10.51 2.84 11.01 3.05 11.38 3.42L19.58 11.62C20.35 12.39 20.35 13.64 19.58 14.41L20.59 13.41Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="6.84" cy="6.84" r="1" fill="currentColor"/>
+                </svg>
+                <span>On Sale</span>
+                <div class="filter-badge" *ngIf="showOnlyDiscounted">✓</div>
+              </div>
             </button>
             <button 
-              class="filter-btn" 
+              class="filter-btn modern-filter-btn" 
               [class.active]="showOnlyInStock"
               (click)="toggleStockFilter()">
-              ✅ In Stock
+              <div class="filter-btn-content">
+                <svg class="filter-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 12L11 14L15 10M21 12C21 16.97 16.97 21 12 21C7.03 21 3 16.97 3 12C3 7.03 7.03 3 12 3C16.97 3 21 7.03 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>In Stock</span>
+                <div class="filter-badge" *ngIf="showOnlyInStock">✓</div>
+              </div>
             </button>
           </div>
         </div>
 
-        <!-- Sort Options -->
-        <div class="filter-group">
-          <label class="filter-label">Sort by:</label>
-          <select class="sort-select" [(ngModel)]="sortBy" (change)="onSortChange()">
-            <option value="name">Name (A-Z)</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-            <option value="rating">Rating</option>
-            <option value="discount">Discount</option>
-          </select>
-        </div>
+        <!-- Sort and Search -->
+        <div class="filter-group sort-search-group">
+          <div class="sort-container">
+            <label class="filter-label">
+              <svg class="filter-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M3 6H21M7 12H17M11 18H13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Sort by</span>
+            </label>
+            <div class="custom-select">
+              <select class="sort-select" [(ngModel)]="sortBy" (change)="onSortChange()">
+                <option value="name">Name (A-Z)</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+                <option value="discount">Best Deals</option>
+                <option value="newest">Newest First</option>
+              </select>
+              <svg class="select-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
 
-        <!-- Search -->
-        <div class="filter-group search-group">
-          <div class="search-box">
-            <input 
-              type="text" 
-              placeholder="Search products..." 
-              class="search-input"
-              [(ngModel)]="searchQuery"
-              (input)="onSearch()"
-            />
-            <button class="search-btn" (click)="onSearch()">
-              <i class="search-icon">🔍</i>
-            </button>
+          <div class="search-container">
+            <label class="filter-label">
+              <img src="assets/images/icons/search.svg" alt="Search" class="filter-icon">
+              <span>Search</span>
+            </label>
+            <div class="search-box">
+              <img src="assets/images/icons/search.svg" alt="Search" class="search-icon-left">
+              <input 
+                type="text" 
+                placeholder="Search fresh products..." 
+                class="search-input"
+                [(ngModel)]="searchQuery"
+                (input)="onSearch()"
+              />
+              <button class="search-btn" (click)="onSearch()" *ngIf="searchQuery">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -137,12 +228,33 @@
       <!-- No Products Found -->
       <div class="no-products" *ngIf="!isLoading && filteredProducts.length === 0">
         <div class="no-products-content">
-          <div class="no-products-icon">📦</div>
-          <h3>No products found</h3>
-          <p>Try adjusting your filters or search terms</p>
-          <button class="btn btn-primary" (click)="clearAllFilters()">
-            View All Products
-          </button>
+          <div class="no-products-illustration">
+            <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+              <circle cx="60" cy="60" r="50" fill="url(#noProductsGradient)" opacity="0.1"/>
+              <path d="M40 45H80V75H40V45Z" stroke="url(#noProductsGradient)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M50 35V45M70 35V45" stroke="url(#noProductsGradient)" stroke-width="2" stroke-linecap="round"/>
+              <path d="M50 55H70M50 65H65" stroke="url(#noProductsGradient)" stroke-width="2" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="noProductsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#22c55e;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#16a34a;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h3 class="no-products-title">No products found</h3>
+          <p class="no-products-description">We couldn't find any products matching your criteria. Try adjusting your filters or search terms.</p>
+          <div class="no-products-actions">
+            <button class="btn btn-primary" (click)="clearAllFilters()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M3 7V5C3 3.89 3.89 3 5 3H19C20.11 3 21 3.89 21 5V7M3 7V19C3 20.11 3.89 21 5 21H19C20.11 21 19 20.11 19 19V7M3 7H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              View All Products
+            </button>
+            <button class="btn btn-outline" (click)="clearSearch()">
+              Clear Search
+            </button>
+          </div>
         </div>
       </div>
 
@@ -150,8 +262,7 @@
       <div class="products-grid" *ngIf="!isLoading && filteredProducts.length > 0">
         <app-product-card 
           *ngFor="let product of filteredProducts; trackBy: trackByProductId"
-          [product]="product"
-          class="fade-in">
+          [product]="product">
         </app-product-card>
       </div>
 
