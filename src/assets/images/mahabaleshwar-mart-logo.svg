@@ -1,0 +1,92 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#f8f9fa"/>
+  
+  <!-- Main Circle Container -->
+  <circle cx="200" cy="120" r="80" fill="none" stroke="#2d5016" stroke-width="4"/>
+  
+  <!-- Hills/Landscape -->
+  <path d="M 140 160 Q 160 140 180 150 Q 200 135 220 145 Q 240 140 260 160 L 260 180 L 140 180 Z" 
+        fill="#6ba644" opacity="0.8"/>
+  <path d="M 150 170 Q 170 155 190 165 Q 210 150 230 160 Q 250 155 270 170 L 270 185 L 150 185 Z" 
+        fill="#4a7c2a" opacity="0.9"/>
+  
+  <!-- Strawberry -->
+  <ellipse cx="200" cy="100" rx="12" ry="15" fill="#dc143c"/>
+  <!-- Strawberry seeds -->
+  <circle cx="195" cy="95" r="1" fill="#fff"/>
+  <circle cx="205" cy="95" r="1" fill="#fff"/>
+  <circle cx="198" cy="102" r="1" fill="#fff"/>
+  <circle cx="202" cy="102" r="1" fill="#fff"/>
+  <circle cx="195" cy="108" r="1" fill="#fff"/>
+  <circle cx="205" cy="108" r="1" fill="#fff"/>
+  
+  <!-- Strawberry leaves/stem -->
+  <path d="M 195 85 Q 190 80 195 75 Q 200 80 205 75 Q 210 80 205 85" 
+        fill="#4a7c2a" stroke="#2d5016" stroke-width="1"/>
+  
+  <!-- Crown leaves at top -->
+  <g transform="translate(200, 40)">
+    <!-- Center leaf -->
+    <path d="M 0 0 Q -3 -15 0 -25 Q 3 -15 0 0" fill="#6ba644"/>
+    <!-- Left leaves -->
+    <path d="M -8 5 Q -15 -8 -12 -18 Q -5 -10 -8 5" fill="#6ba644"/>
+    <path d="M -15 12 Q -25 -2 -20 -12 Q -12 -5 -15 12" fill="#6ba644"/>
+    <!-- Right leaves -->
+    <path d="M 8 5 Q 15 -8 12 -18 Q 5 -10 8 5" fill="#6ba644"/>
+    <path d="M 15 12 Q 25 -2 20 -12 Q 12 -5 15 12" fill="#6ba644"/>
+  </g>
+  
+  <!-- Small decorative elements (fruits/vegetables) -->
+  <circle cx="170" cy="130" r="4" fill="#ff8c00"/> <!-- Orange -->
+  <circle cx="230" cy="125" r="4" fill="#6ba644"/> <!-- Green -->
+  
+  <!-- Delivery arrow -->
+  <path d="M 240 110 L 250 105 L 245 100 M 250 105 L 245 110" 
+        stroke="#2d5016" stroke-width="2" fill="none"/>
+  <path d="M 230 115 Q 240 110 250 105" 
+        stroke="#2d5016" stroke-width="2" fill="none"/>
+  
+  <!-- Circular arrow for freshness cycle -->
+  <path d="M 160 110 Q 150 100 155 90" 
+        stroke="#4a7c2a" stroke-width="2" fill="none"/>
+  <path d="M 155 90 L 150 95 L 160 95" fill="#4a7c2a"/>
+  
+  <!-- Brand Name -->
+  <text x="200" y="230" 
+        font-family="'Poppins', sans-serif" 
+        font-size="28" 
+        font-weight="700" 
+        text-anchor="middle" 
+        fill="#2d5016">
+    Mahabaleshwar Mart
+  </text>
+  
+  <!-- Tagline -->
+  <text x="200" y="255" 
+        font-family="'Inter', sans-serif" 
+        font-size="12" 
+        font-weight="500" 
+        text-anchor="middle" 
+        fill="#8b4513">
+    Freshness from the Hills, Delivered Swiftly
+  </text>
+  
+  <!-- Decorative underline -->
+  <line x1="120" y1="265" x2="280" y2="265" 
+        stroke="#6ba644" stroke-width="2" opacity="0.6"/>
+  
+  <!-- Additional leaf decorations around the circle -->
+  <g transform="translate(120, 80) rotate(-30)">
+    <path d="M 0 0 Q -2 -8 0 -12 Q 2 -8 0 0" fill="#6ba644" opacity="0.7"/>
+  </g>
+  <g transform="translate(280, 90) rotate(45)">
+    <path d="M 0 0 Q -2 -8 0 -12 Q 2 -8 0 0" fill="#6ba644" opacity="0.7"/>
+  </g>
+  <g transform="translate(130, 160) rotate(-60)">
+    <path d="M 0 0 Q -2 -8 0 -12 Q 2 -8 0 0" fill="#6ba644" opacity="0.7"/>
+  </g>
+  <g transform="translate(270, 150) rotate(60)">
+    <path d="M 0 0 Q -2 -8 0 -12 Q 2 -8 0 0" fill="#6ba644" opacity="0.7"/>
+  </g>
+</svg>

@@ -1,0 +1,177 @@
+<svg width="500" height="200" viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Definitions for gradients and patterns -->
+  <defs>
+    <!-- Hill gradient -->
+    <linearGradient id="hillGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6ba644;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a7c2a;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Strawberry gradient -->
+    <radialGradient id="strawberryGradient" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#dc143c;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Leaf gradient -->
+    <linearGradient id="leafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8bc34a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a7c2a;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Brand name gradient -->
+    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2d5016;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4a7c2a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6ba644;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main circular container with subtle shadow -->
+  <circle cx="100" cy="100" r="85" fill="#f8f9fa" stroke="#e9ecef" stroke-width="2" opacity="0.3"/>
+  <circle cx="100" cy="100" r="80" fill="none" stroke="#2d5016" stroke-width="3"/>
+  
+  <!-- Background hills/landscape -->
+  <g clip-path="circle(75px at 100px 100px)">
+    <!-- Back hills -->
+    <path d="M 30 130 Q 50 110 70 120 Q 90 105 110 115 Q 130 110 150 120 Q 170 115 190 130 L 190 170 L 30 170 Z" 
+          fill="url(#hillGradient)" opacity="0.7"/>
+    
+    <!-- Front hills -->
+    <path d="M 40 140 Q 60 125 80 135 Q 100 120 120 130 Q 140 125 160 135 Q 180 130 200 145 L 200 170 L 40 170 Z" 
+          fill="url(#hillGradient)" opacity="0.9"/>
+    
+    <!-- Farm fields -->
+    <path d="M 50 150 L 150 150 L 150 155 L 50 155 Z" fill="#8bc34a" opacity="0.6"/>
+    <path d="M 60 155 L 140 155 L 140 160 L 60 160 Z" fill="#6ba644" opacity="0.6"/>
+  </g>
+  
+  <!-- Central strawberry (Mahabaleshwar specialty) -->
+  <ellipse cx="100" cy="85" rx="15" ry="18" fill="url(#strawberryGradient)"/>
+  
+  <!-- Strawberry seeds -->
+  <circle cx="92" cy="78" r="1.5" fill="#fff" opacity="0.8"/>
+  <circle cx="108" cy="78" r="1.5" fill="#fff" opacity="0.8"/>
+  <circle cx="96" cy="87" r="1.5" fill="#fff" opacity="0.8"/>
+  <circle cx="104" cy="87" r="1.5" fill="#fff" opacity="0.8"/>
+  <circle cx="92" cy="96" r="1.5" fill="#fff" opacity="0.8"/>
+  <circle cx="108" cy="96" r="1.5" fill="#fff" opacity="0.8"/>
+  <circle cx="100" cy="92" r="1.5" fill="#fff" opacity="0.8"/>
+  
+  <!-- Strawberry leaves/crown -->
+  <g transform="translate(100, 65)">
+    <path d="M 0 0 Q -4 -12 0 -18 Q 4 -12 0 0" fill="url(#leafGradient)"/>
+    <path d="M -6 3 Q -12 -8 -8 -15 Q -3 -8 -6 3" fill="url(#leafGradient)"/>
+    <path d="M 6 3 Q 12 -8 8 -15 Q 3 -8 6 3" fill="url(#leafGradient)"/>
+    <path d="M -10 6 Q -18 -4 -14 -12 Q -8 -5 -10 6" fill="url(#leafGradient)"/>
+    <path d="M 10 6 Q 18 -4 14 -12 Q 8 -5 10 6" fill="url(#leafGradient)"/>
+  </g>
+  
+  <!-- Fresh produce elements -->
+  <!-- Orange -->
+  <circle cx="70" cy="110" r="6" fill="#ff8c00"/>
+  <path d="M 70 104 Q 68 102 70 100 Q 72 102 70 104" fill="#4a7c2a"/>
+  
+  <!-- Apple -->
+  <ellipse cx="130" cy="105" rx="5" ry="6" fill="#ff6b6b"/>
+  <path d="M 130 99 Q 128 97 130 95 Q 132 97 130 99" fill="#4a7c2a"/>
+  
+  <!-- Carrot -->
+  <path d="M 75 135 L 78 145 L 72 145 Z" fill="#ff8c00"/>
+  <path d="M 75 135 Q 73 133 75 131 Q 77 133 75 135" fill="#4a7c2a"/>
+  
+  <!-- Leafy vegetable -->
+  <ellipse cx="125" cy="135" rx="4" ry="3" fill="#6ba644"/>
+  <path d="M 125 132 Q 123 130 125 128 Q 127 130 125 132" fill="#4a7c2a"/>
+  
+  <!-- Farm basket -->
+  <g transform="translate(60, 120)">
+    <ellipse cx="0" cy="8" rx="12" ry="4" fill="#8b4513"/>
+    <path d="M -12 8 Q -12 0 0 0 Q 12 0 12 8" fill="none" stroke="#8b4513" stroke-width="2"/>
+    <path d="M -8 4 L -8 12 M -4 2 L -4 14 M 0 2 L 0 14 M 4 2 L 4 14 M 8 4 L 8 12" 
+          stroke="#a0522d" stroke-width="1"/>
+  </g>
+  
+  <!-- Delivery truck icon -->
+  <g transform="translate(140, 115)">
+    <rect x="0" y="0" width="12" height="8" fill="#2d5016" rx="1"/>
+    <rect x="12" y="2" width="8" height="6" fill="#4a7c2a" rx="1"/>
+    <circle cx="4" cy="10" r="2" fill="#333"/>
+    <circle cx="16" cy="10" r="2" fill="#333"/>
+    <path d="M 20 4 L 25 4 L 23 2 M 25 4 L 23 6" stroke="#2d5016" stroke-width="1.5" fill="none"/>
+  </g>
+  
+  <!-- Freshness cycle arrows -->
+  <g transform="translate(100, 100)">
+    <path d="M -35 -20 Q -45 -30 -35 -35" stroke="#4a7c2a" stroke-width="2" fill="none"/>
+    <path d="M -35 -35 L -40 -30 L -30 -30" fill="#4a7c2a"/>
+    
+    <path d="M 35 20 Q 45 30 35 35" stroke="#4a7c2a" stroke-width="2" fill="none"/>
+    <path d="M 35 35 L 40 30 L 30 30" fill="#4a7c2a"/>
+  </g>
+  
+  <!-- Decorative leaves around the circle -->
+  <g transform="translate(45, 60) rotate(-45)">
+    <path d="M 0 0 Q -3 -10 0 -15 Q 3 -10 0 0" fill="url(#leafGradient)" opacity="0.6"/>
+  </g>
+  <g transform="translate(155, 70) rotate(45)">
+    <path d="M 0 0 Q -3 -10 0 -15 Q 3 -10 0 0" fill="url(#leafGradient)" opacity="0.6"/>
+  </g>
+  <g transform="translate(50, 140) rotate(-135)">
+    <path d="M 0 0 Q -3 -10 0 -15 Q 3 -10 0 0" fill="url(#leafGradient)" opacity="0.6"/>
+  </g>
+  <g transform="translate(150, 140) rotate(135)">
+    <path d="M 0 0 Q -3 -10 0 -15 Q 3 -10 0 0" fill="url(#leafGradient)" opacity="0.6"/>
+  </g>
+  
+  <!-- Brand Name -->
+  <text x="250" y="80" 
+        font-family="'Poppins', 'Arial', sans-serif" 
+        font-size="36" 
+        font-weight="700" 
+        fill="url(#brandGradient)"
+        letter-spacing="-1px">
+    Mahabaleshwar
+  </text>
+  
+  <text x="250" y="115" 
+        font-family="'Poppins', 'Arial', sans-serif" 
+        font-size="36" 
+        font-weight="700" 
+        fill="url(#brandGradient)"
+        letter-spacing="-1px">
+    Mart
+  </text>
+  
+  <!-- Tagline -->
+  <text x="250" y="140" 
+        font-family="'Inter', 'Arial', sans-serif" 
+        font-size="14" 
+        font-weight="500" 
+        fill="#8b4513"
+        letter-spacing="0.5px">
+    Freshness from the Hills, Delivered Swiftly
+  </text>
+  
+  <!-- Decorative underline -->
+  <line x1="250" y1="150" x2="480" y2="150" 
+        stroke="#6ba644" stroke-width="2" opacity="0.7"/>
+  
+  <!-- Quality badges -->
+  <g transform="translate(250, 160)">
+    <!-- Farm Fresh badge -->
+    <rect x="0" y="0" width="60" height="18" fill="#4a7c2a" rx="9"/>
+    <text x="30" y="12" font-family="'Inter', sans-serif" font-size="10" font-weight="600" 
+          fill="white" text-anchor="middle">FARM FRESH</text>
+    
+    <!-- Organic badge -->
+    <rect x="70" y="0" width="50" height="18" fill="#6ba644" rx="9"/>
+    <text x="95" y="12" font-family="'Inter', sans-serif" font-size="10" font-weight="600" 
+          fill="white" text-anchor="middle">ORGANIC</text>
+    
+    <!-- Quick delivery badge -->
+    <rect x="130" y="0" width="80" height="18" fill="#ff8c00" rx="9"/>
+    <text x="170" y="12" font-family="'Inter', sans-serif" font-size="10" font-weight="600" 
+          fill="white" text-anchor="middle">QUICK DELIVERY</text>
+  </g>
+</svg>
