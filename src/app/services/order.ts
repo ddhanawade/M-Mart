@@ -78,6 +78,30 @@ export class OrderService {
 
   // Map backend OrderDto → frontend Order model
   private mapOrderDtoToOrder(dto: any): Order {
+    const parseDate = (input: any): Date => {
+      if (!input) return new Date();
+      if (input instanceof Date) return input;
+      if (typeof input === 'number') return new Date(input);
+      if (Array.isArray(input)) {
+        // Handle LocalDateTime serialized as array: [year, month, day, hour, minute, second, ...]
+        const [year, month, day, hour = 0, minute = 0, second = 0] = input;
+        return new Date(Number(year || 0), Number((month || 1) - 1), Number(day || 1), Number(hour), Number(minute), Number(second));
+      }
+      if (typeof input === 'string') {
+        let value = input.trim();
+        // Numeric string timestamp
+        if (/^\d+$/.test(value)) {
+          return new Date(Number(value));
+        }
+        // Replace space between date and time with 'T' for Safari compatibility
+        if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(value) && value.indexOf('T') === -1) {
+          value = value.replace(' ', 'T');
+        }
+        const d = new Date(value);
+        if (!isNaN(d.getTime())) return d;
+      }
+      return new Date();
+    };
     const mapStatus = (s: string): Order['status'] => {
       const key = (s || '').toUpperCase();
       switch (key) {
@@ -171,7 +195,7 @@ export class OrderService {
       id: String(ev?.id ?? ''),
       status: String(ev?.orderStatus ?? ev?.eventType ?? ''),
       message: String(ev?.description ?? ev?.title ?? ''),
-      timestamp: new Date(ev?.createdAt ?? Date.now()),
+      timestamp: parseDate(ev?.createdAt ?? Date.now()),
       location: ev?.location ?? undefined
     })) : [];
 
@@ -188,9 +212,9 @@ export class OrderService {
       paymentStatus: mapPaymentStatus(dto?.paymentStatus ?? ''),
       deliveryAddress,
       payment,
-      orderDate: new Date(dto?.createdAt ?? Date.now()),
-      estimatedDelivery: dto?.estimatedDelivery ? new Date(dto.estimatedDelivery) : new Date(),
-      actualDelivery: dto?.actualDelivery ? new Date(dto.actualDelivery) : undefined,
+      orderDate: parseDate(dto?.createdAt ?? Date.now()),
+      estimatedDelivery: dto?.estimatedDelivery ? parseDate(dto.estimatedDelivery) : new Date(),
+      actualDelivery: dto?.actualDelivery ? parseDate(dto.actualDelivery) : undefined,
       trackingNumber: dto?.trackingNumber ?? undefined,
       notes: dto?.specialInstructions ?? undefined,
       timeline
