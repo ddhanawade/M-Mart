@@ -1,0 +1,14 @@
+.wishlist-page {
+  h1 { margin: 16px 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .card { background: #fff; border: 1px solid #eef2f7; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+  .img { background: #f8fafc; display: flex; align-items: center; justify-content: center; height: 160px; }
+  .img img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .info { padding: 12px; }
+  .actions { display: flex; gap: 8px; }
+  .btn { padding: 8px 12px; border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; }
+  .btn-primary { background: #16a34a; color: #fff; border-color: #16a34a; }
+  .btn-outline { background: #fff; color: #111827; }
+}
+
+

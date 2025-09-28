@@ -125,6 +125,15 @@
                 <span class="rating-text">{{product.rating}}</span>
                 <span class="review-count">({{product.reviewCount}} reviews)</span>
               </div>
+
+              <div class="utility-row">
+                <button class="btn small" (click)="toggleWishlist()">
+                  <img src="assets/images/icons/star.svg" alt="Wishlist" class="btn-icon">
+                  <span>{{ isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist' }}</span>
+                </button>
+                <a class="btn small" [href]="getShareUrl()" target="_blank" rel="noopener">Share</a>
+                <a class="btn small" routerLink="/wishlist">Wishlist</a>
+              </div>
             </div>
 
             <!-- Price Section -->
@@ -136,6 +145,15 @@
               </div>
               <div class="savings" *ngIf="product.originalPrice">
                 You save ₹{{product.originalPrice - product.price}} ({{getDiscountPercentage()}}%)
+              </div>
+              <div class="delivery-row">
+                <div class="eta">
+                  <img src="assets/images/icons/truck.svg" alt="Delivery" class="eta-icon">
+                  Delivery: <strong>{{ getEstimatedDelivery() }}</strong>
+                </div>
+                <div class="origin">
+                  Origin: <strong>{{ getOriginCountry() }}</strong>
+                </div>
               </div>
             </div>
 
@@ -166,6 +184,7 @@
 
               <!-- Action Buttons -->
               <div class="action-buttons">
+                <a class="btn btn-secondary" routerLink="/wishlist">Go to Wishlist</a>
                 <button 
                   class="btn btn-primary add-to-cart-btn"
                   (click)="addToCart()"
@@ -204,6 +223,42 @@
                 <div class="feature-item">
                   <img src="assets/images/icons/refresh-cw.svg" alt="Returns" class="feature-icon">
                   <span class="feature-text">Easy Returns</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trust & Seller Info -->
+            <div class="trust-seller">
+              <div class="trust-badges">
+                <div class="badge-item">
+                  <img src="assets/images/icons/check-circle.svg" class="badge-icon" alt="Quality">
+                  <div class="badge-text">
+                    <strong>Premium Quality</strong>
+                    <span>Carefully sourced & inspected</span>
+                  </div>
+                </div>
+                <div class="badge-item">
+                  <img src="assets/images/icons/refresh-cw.svg" class="badge-icon" alt="Returns">
+                  <div class="badge-text">
+                    <strong>Easy Returns</strong>
+                    <span>7-day return policy</span>
+                  </div>
+                </div>
+                <div class="badge-item">
+                  <img src="assets/images/icons/truck.svg" class="badge-icon" alt="Delivery">
+                  <div class="badge-text">
+                    <strong>Fast Delivery</strong>
+                    <span>Reliable, on-time delivery</span>
+                  </div>
+                </div>
+              </div>
+              <div class="seller-card">
+                <div class="seller-row">
+                  <div>
+                    <div class="seller-label">Sold by</div>
+                    <div class="seller-name">{{ getSupplierName() }}</div>
+                  </div>
+                  <a class="seller-link" routerLink="/products">View more</a>
                 </div>
               </div>
             </div>
@@ -269,6 +324,62 @@
               </div>
             </div>
           </div>
+
+          <!-- Reviews -->
+          <div class="tab-content reviews-tab">
+            <h3 class="tab-title">Customer Reviews</h3>
+            <div class="reviews-list" *ngIf="reviews.length > 0; else noReviews">
+              <div class="review-item" *ngFor="let r of reviews">
+                <div class="review-header">
+                  <strong>{{r.userName}}</strong>
+                  <span class="review-rating">{{r.rating}}/5</span>
+                  <span class="review-date">{{r.createdAt | date:'mediumDate'}}</span>
+                </div>
+                <div class="review-title" *ngIf="r.title">{{r.title}}</div>
+                <div class="review-comment" *ngIf="r.comment">{{r.comment}}</div>
+              </div>
+            </div>
+            <ng-template #noReviews>
+              <p>No reviews yet. Be the first to review this product.</p>
+            </ng-template>
+
+            <div class="review-form">
+              <h4 class="review-title-row">
+                <span>Write a review</span>
+                <span class="review-subtitle">Share your experience to help others</span>
+              </h4>
+
+              <div class="rating-picker" aria-label="Select rating">
+                <button type="button"
+                        class="star"
+                        *ngFor="let idx of [1,2,3,4,5]"
+                        [class.active]="idx <= getActiveRating()"
+                        (mouseenter)="onStarEnter(idx)"
+                        (mouseleave)="onStarLeave()"
+                        (click)="setRating(idx)">
+                  ★
+                </button>
+                <span class="rating-value">{{ getActiveRating() }}/5</span>
+              </div>
+
+              <div class="review-grid">
+                <div class="field">
+                  <label>Title</label>
+                  <input type="text" [(ngModel)]="reviewForm.title" placeholder="Great quality and fresh!"/>
+                </div>
+                <div class="field">
+                  <label>Comment</label>
+                  <textarea rows="4" [(ngModel)]="reviewForm.comment" placeholder="Tell us what you liked or what could be better"></textarea>
+                </div>
+              </div>
+
+              <div class="review-actions">
+                <button class="btn btn-primary" (click)="submitReview()" [disabled]="isSubmittingReview">
+                  {{ isSubmittingReview ? 'Submitting...' : 'Submit Review' }}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -314,9 +425,21 @@
     <div class="lightbox-overlay" *ngIf="isLightboxOpen" (click)="closeLightbox()">
       <div class="lightbox-content" (click)="$event.stopPropagation()">
         <button class="lightbox-close" (click)="closeLightbox($event)" aria-label="Close image">×</button>
-        <img *ngIf="selectedImage && selectedImage.startsWith('http')" [src]="selectedImage" [alt]="product?.name" class="lightbox-img" />
+        <img *ngIf="selectedImage && selectedImage.startsWith('http')" [src]="selectedImage" [alt]="product.name" class="lightbox-img" />
         <span *ngIf="!selectedImage || !selectedImage.startsWith('http')" class="lightbox-emoji">{{selectedImage}}</span>
       </div>
     </div>
   </div>
-</div> 
+</div>
+
+<!-- Sticky Mobile Action Bar -->
+<!-- <div class="mobile-sticky-bar" *ngIf="!isLoading && product">
+  <div class="sticky-content">
+    <div class="sticky-price">₹{{product.price}} <span class="unit" *ngIf="product.unit">/ {{product.unit}}</span></div>
+    <div class="sticky-actions">
+      <button class="btn wishlist" (click)="toggleWishlist()">{{ isInWishlist ? 'Wishlisted' : 'Wishlist' }}</button>
+      <button class="btn primary" (click)="addToCart()" [disabled]="!product.inStock || isAddingToCart">{{ isAddingToCart ? 'Adding...' : 'Add to Cart' }}</button>
+    </div>
+  </div>
+  <div class="sticky-safe-area"></div>
+</div> -->

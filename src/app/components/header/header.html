@@ -74,6 +74,13 @@
             <span class="nav-label">Orders</span>
           </a>
 
+          <a routerLink="/wishlist" 
+             routerLinkActive="active" 
+             class="nav-link">
+            <img src="assets/images/icons/star.svg" alt="Wishlist" class="nav-icon">
+            <span class="nav-label">Wishlist</span>
+          </a>
+
           <!-- Temporary: Create Product link -->
           <a routerLink="/create-product"
              routerLinkActive="active"
@@ -274,6 +281,14 @@
            (click)="closeMobileMenu()">
           <img src="assets/images/icons/clipboard-list.svg" alt="Orders" class="nav-icon">
           <span class="nav-label">Orders</span>
+        </a>
+
+        <a routerLink="/wishlist" 
+           routerLinkActive="active" 
+           class="mobile-link"
+           (click)="closeMobileMenu()">
+          <img src="assets/images/icons/star.svg" alt="Wishlist" class="nav-icon">
+          <span class="nav-label">Wishlist</span>
         </a>
 
         <!-- Temporary: Create Product link -->

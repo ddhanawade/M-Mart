@@ -274,6 +274,19 @@ export class ProductService {
     return this.apiService.delete<string>('productService', `/api/products/${id}`);
   }
 
+  // Reviews
+  getProductReviews(productId: string, page: number = 0, size: number = 10): Observable<any[]> {
+    return this.apiService.get<any[]>('productService', `/api/products/${productId}/reviews`, { page, size });
+  }
+
+  addProductReview(productId: string, review: { userId: string; userName: string; rating: number; title?: string; comment?: string; }): Observable<any> {
+    return this.apiService.post<any>('productService', `/api/products/${productId}/reviews`, review);
+  }
+
+  getProductsByIds(ids: string[]): Observable<Product[]> {
+    return this.apiService.post<Product[]>('productService', `/api/products/by-ids`, ids);
+  }
+
   // Helper methods for backward compatibility with existing frontend code
   getDiscountedProducts(): Observable<Product[]> {
     return this.getProductsOnSale(0, 50).pipe(

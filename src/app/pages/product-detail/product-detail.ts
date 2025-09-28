@@ -1,18 +1,19 @@
 import { Component, OnInit, inject, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf, NgFor } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ProductService } from '../../services/product';
+import { WishlistService } from '../../services/wishlist';
 import { CartService } from '../../services/cart';
 import { Product } from '../../models/product.model';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, NgIf, NgFor, RouterModule, FormsModule],
   templateUrl: './product-detail.html',
-  styleUrl: './product-detail.scss'
+  styleUrls: ['./product-detail.scss']
 })
 export class ProductDetail implements OnInit, OnDestroy {
   product: Product | null = null;
@@ -23,11 +24,21 @@ export class ProductDetail implements OnInit, OnDestroy {
   isAddingToCart: boolean = false;
   isLightboxOpen: boolean = false;
   isDeleting: boolean = false;
+  reviews: any[] = [];
+  reviewForm = {
+    rating: 5,
+    title: '',
+    comment: ''
+  };
+  isSubmittingReview: boolean = false;
+  isInWishlist: boolean = false;
+  hoveredRating: number | null = null;
   
   private productService = inject(ProductService);
   private cartService = inject(CartService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private wishlist = inject(WishlistService);
   
   private subscriptions: Subscription[] = [];
 
@@ -55,6 +66,8 @@ export class ProductDetail implements OnInit, OnDestroy {
         if (product) {
           this.selectedImage = product.image;
           this.loadRelatedProducts(product.category, product.id);
+          this.loadReviews(product.id);
+          this.isInWishlist = this.wishlist.has(product.id);
         } else {
           console.error('Product not found');
           this.router.navigate(['/products']);
@@ -68,6 +81,14 @@ export class ProductDetail implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(productSubscription);
+  }
+
+  loadReviews(productId: string) {
+    const sub = this.productService.getProductReviews(productId, 0, 10).subscribe({
+      next: (list) => this.reviews = list,
+      error: () => this.reviews = []
+    });
+    this.subscriptions.push(sub);
   }
 
   loadRelatedProducts(category: string, currentProductId: string) {
@@ -163,6 +184,29 @@ export class ProductDetail implements OnInit, OnDestroy {
     });
   }
 
+  submitReview() {
+    if (!this.product || this.isSubmittingReview) return;
+    this.isSubmittingReview = true;
+    const payload = {
+      userId: 'guest',
+      userName: 'Guest',
+      rating: Number(this.reviewForm.rating),
+      title: this.reviewForm.title || undefined,
+      comment: this.reviewForm.comment || undefined
+    };
+    const sub = this.productService.addProductReview(this.product.id, payload).subscribe({
+      next: () => {
+        this.isSubmittingReview = false;
+        this.reviewForm = { rating: 5, title: '', comment: '' };
+        this.loadReviews(this.product!.id);
+      },
+      error: () => {
+        this.isSubmittingReview = false;
+      }
+    });
+    this.subscriptions.push(sub);
+  }
+
   goBack() {
     window.history.back();
   }
@@ -216,5 +260,63 @@ export class ProductDetail implements OnInit, OnDestroy {
       event.stopPropagation();
     }
     this.isLightboxOpen = false;
+  }
+
+  toggleWishlist() {
+    if (!this.product) return;
+    this.wishlist.toggle(this.product.id);
+    this.isInWishlist = this.wishlist.has(this.product.id);
+  }
+
+  getShareUrl(): string {
+    const name = this.product?.name || '';
+    const img = this.product?.image || '';
+    const text = `${name} - ${img}`;
+    return 'https://wa.me/?text=' + encodeURIComponent(text);
+  }
+
+  // Review star rating interactions
+  getActiveRating(): number {
+    return this.hoveredRating != null ? this.hoveredRating : this.reviewForm.rating;
+  }
+
+  setRating(value: number) {
+    this.reviewForm.rating = value;
+  }
+
+  onStarEnter(value: number) {
+    this.hoveredRating = value;
+  }
+
+  onStarLeave() {
+    this.hoveredRating = null;
+  }
+
+  getSupplierName(): string {
+    return ((this.product as any)?.supplierName) || 'Mahabaleshwer Mart Sellers';
+  }
+
+  getOriginCountry(): string {
+    return ((this.product as any)?.originCountry) || 'India';
+  }
+
+  getEstimatedDelivery(): string {
+    // Simple ETA: 2-4 days
+    const today = new Date();
+    const min = new Date(today.getTime() + 2 * 24 * 60 * 60 * 1000);
+    const max = new Date(today.getTime() + 4 * 24 * 60 * 60 * 1000);
+    const fmt = (d: Date) => d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    return `${fmt(min)} - ${fmt(max)}`;
+  }
+
+  getSpecs(): Array<{ label: string; value: string }> {
+    const p: any = this.product || {};
+    const specs: Array<{ label: string; value: string }> = [];
+    if (p.sku) specs.push({ label: 'SKU', value: String(p.sku) });
+    if (p.unit) specs.push({ label: 'Unit', value: String(p.unit) });
+    if (p.weightKg) specs.push({ label: 'Weight', value: `${p.weightKg} kg` });
+    if (p.shelfLifeDays) specs.push({ label: 'Shelf Life', value: `${p.shelfLifeDays} days` });
+    if (p.storageInstructions) specs.push({ label: 'Storage', value: String(p.storageInstructions) });
+    return specs;
   }
 } 

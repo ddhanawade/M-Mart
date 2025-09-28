@@ -8,6 +8,7 @@ import { Checkout } from './pages/checkout/checkout';
 import { Profile } from './pages/profile/profile';
 import { Orders } from './pages/orders/orders';
 import { CreateProduct } from './pages/create-product/create-product';
+import { Wishlist } from './pages/wishlist/wishlist';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -19,6 +20,7 @@ export const routes: Routes = [
   { path: 'checkout', component: Checkout },
   { path: 'orders', component: Orders },
   { path: 'create-product', component: CreateProduct },
+  { path: 'wishlist', component: Wishlist },
   { path: 'profile', component: Profile },
   { path: 'auth', component: Auth },
   { path: 'login', component: Auth },
