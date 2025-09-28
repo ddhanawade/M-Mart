@@ -73,6 +73,14 @@
             <img src="assets/images/icons/clipboard-list.svg" alt="Orders" class="nav-icon">
             <span class="nav-label">Orders</span>
           </a>
+
+          <!-- Temporary: Create Product link -->
+          <a routerLink="/create-product"
+             routerLinkActive="active"
+             class="nav-link">
+            <img src="assets/images/icons/package.svg" alt="Create Product" class="nav-icon">
+            <span class="nav-label">Create Product</span>
+          </a>
         </nav>
 
         <!-- Search Bar -->
@@ -266,6 +274,15 @@
            (click)="closeMobileMenu()">
           <img src="assets/images/icons/clipboard-list.svg" alt="Orders" class="nav-icon">
           <span class="nav-label">Orders</span>
+        </a>
+
+        <!-- Temporary: Create Product link -->
+        <a routerLink="/create-product"
+           routerLinkActive="active"
+           class="mobile-link"
+           (click)="closeMobileMenu()">
+          <img src="assets/images/icons/package.svg" alt="Create Product" class="nav-icon">
+          <span class="nav-label">Create Product</span>
         </a>
 
         <!-- Mobile User Section -->

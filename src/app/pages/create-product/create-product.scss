@@ -1,0 +1,76 @@
+.create-product {
+  .title-row { display: flex; align-items: center; justify-content: space-between; }
+  .subtitle { color: #6b7280; margin-top: 4px; }
+  .title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 24px 0;
+  }
+
+  .product-form {
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid #eef2f7;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+      h2 {
+        margin: 0 0 12px 0;
+        font-size: 18px;
+      }
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      label { font-weight: 600; }
+      input[type="text"], input[type="url"], input[type="number"], select, textarea {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 14px;
+        background: #fafafa;
+        transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      }
+      input:focus, select:focus, textarea:focus {
+        outline: none;
+        background: #fff;
+        border-color: #16a34a;
+        box-shadow: 0 0 0 3px rgba(22,163,74,0.12);
+      }
+      textarea { resize: vertical; }
+      &.checkbox { flex-direction: row; align-items: center; gap: 8px; }
+      .error { color: #dc2626; font-size: 13px; }
+      .req { color: #dc2626; margin-left: 4px; }
+    }
+    .actions {
+      margin: 16px 0;
+      display: flex;
+      gap: 12px;
+    }
+    .btn {
+      padding: 10px 16px; border-radius: 10px; border: 1px solid #e5e7eb; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      transition: transform 0.05s ease, box-shadow 0.2s ease;
+      &:active { transform: translateY(1px); }
+      &.btn-primary { background: #16a34a; color: #fff; border-color: #16a34a; box-shadow: 0 6px 14px rgba(22,163,74,0.25); }
+      &.btn-outline { background: #fff; color: #111827; }
+    }
+    .submit-error { margin-top: 8px; }
+  }
+
+  @media (min-width: 900px) {
+    .product-form .grid { grid-template-columns: 1fr 1fr; }
+  }
+}
+
+

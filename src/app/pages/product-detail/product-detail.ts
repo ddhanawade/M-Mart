@@ -22,6 +22,7 @@ export class ProductDetail implements OnInit, OnDestroy {
   isLoading: boolean = true;
   isAddingToCart: boolean = false;
   isLightboxOpen: boolean = false;
+  isDeleting: boolean = false;
   
   private productService = inject(ProductService);
   private cartService = inject(CartService);
@@ -138,6 +139,28 @@ export class ProductDetail implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(addToCartSubscription);
+  }
+
+  editProduct() {
+    if (!this.product) return;
+    this.router.navigate(['/create-product'], { queryParams: { id: this.product.id } });
+  }
+
+  deleteProduct() {
+    if (!this.product || this.isDeleting) return;
+    const confirmed = confirm('Are you sure you want to delete this product?');
+    if (!confirmed) return;
+    this.isDeleting = true;
+    this.productService.deleteProduct(this.product.id).subscribe({
+      next: () => {
+        this.isDeleting = false;
+        this.router.navigate(['/products']);
+      },
+      error: (e) => {
+        console.error('Failed to delete product', e);
+        this.isDeleting = false;
+      }
+    });
   }
 
   goBack() {

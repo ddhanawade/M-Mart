@@ -50,6 +50,14 @@
           <img src="assets/images/icons/arrow-left.svg" alt="Back" class="back-icon">
           <span class="back-text">Back</span>
         </button>
+        <div class="manage-actions">
+          <a class="btn btn-outline" (click)="editProduct()">
+            Edit
+          </a>
+          <button class="btn btn-danger" (click)="deleteProduct()" [disabled]="isDeleting">
+            {{ isDeleting ? 'Deleting...' : 'Delete' }}
+          </button>
+        </div>
       </div>
     </div>
 

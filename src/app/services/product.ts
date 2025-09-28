@@ -20,6 +20,41 @@ export interface ProductSearchFilters {
   sortDirection?: string;
 }
 
+export interface CreateProductRequest {
+  name: string;
+  description?: string;
+  price: number;
+  originalPrice?: number;
+  category: string; // backend expects lowercase enum name
+  subcategory?: string;
+  image: string;
+  images?: string[];
+  inStock?: boolean;
+  quantity?: number;
+  unit?: string;
+  rating?: number;
+  reviewCount?: number;
+  organic?: boolean;
+  fresh?: boolean;
+  discount?: number;
+  featured?: boolean;
+  sku?: string;
+  barcode?: string;
+  weightKg?: number;
+  shelfLifeDays?: number;
+  storageInstructions?: string;
+  originCountry?: string;
+  supplierName?: string;
+  nutritionalInfo?: {
+    caloriesPer100g?: number;
+    proteinG?: number;
+    carbsG?: number;
+    fatG?: number;
+    fiberG?: number;
+    vitamins?: string[];
+  };
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -225,6 +260,18 @@ export class ProductService {
 
   getProductCountByCategory(): Observable<any[]> {
     return this.apiService.get<any[]>('productService', '/api/products/category-counts');
+  }
+
+  createProduct(payload: CreateProductRequest): Observable<Product> {
+    return this.apiService.post<Product>('productService', '/api/products', payload);
+  }
+
+  updateProduct(id: string, payload: Partial<CreateProductRequest>): Observable<Product> {
+    return this.apiService.put<Product>('productService', `/api/products/${id}`, payload);
+  }
+
+  deleteProduct(id: string): Observable<string> {
+    return this.apiService.delete<string>('productService', `/api/products/${id}`);
   }
 
   // Helper methods for backward compatibility with existing frontend code

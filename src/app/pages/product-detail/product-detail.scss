@@ -180,6 +180,22 @@
         font-size: 0.85rem;
       }
     }
+
+    .manage-actions {
+      display: flex;
+      gap: 8px;
+
+      .btn {
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        cursor: pointer;
+      }
+
+      .btn.btn-outline { background: #fff; }
+      .btn.btn-danger { background: #dc2626; border-color: #dc2626; color: #fff; }
+    }
   }
 
   // Professional Main Product Section
