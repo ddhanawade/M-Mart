@@ -25,4 +25,12 @@ export class Home implements OnInit {
   navigateToCategory(category: string) {
     this.router.navigate(['/products', category]);
   }
+
+  navigateToProducts() {
+    this.router.navigate(['/products']);
+  }
+
+  navigateToFarmers() {
+    this.router.navigate(['/products']);
+  }
 }

@@ -1,8 +1,18 @@
 // Modern E-commerce Design System
 .home-page {
+  // Earthy palette tokens (override accents subtly on homepage)
+  --green-forest: #1B5E20;
+  --green-leaf: #2E7D32;
+  --soil: #6D4C41;
+  --clay: #8D6E63;
+  --cream: #FAF7F2;
+  --mist: #ECEBE8;
+  --strawberry: #E53935;
+  --mango: #FF8F00;
+  --golden: #FBC02D;
   // Modern Hero Section with Enhanced Visuals
   .hero {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    background: linear-gradient(135deg, var(--green-forest) 0%, #264d27 50%, #325b31 100%);
     color: white;
     padding: 120px 0 100px;
     overflow: hidden;
@@ -155,7 +165,7 @@
           }
 
           &.btn-primary {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            background: linear-gradient(135deg, var(--green-leaf) 0%, #21843a 100%);
             color: white;
             box-shadow: 0 10px 25px rgba(34, 197, 94, 0.3);
 
@@ -166,9 +176,9 @@
           }
 
           &.btn-outline {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(10px);
 
             &:hover {
@@ -305,7 +315,90 @@
         }
       }
     }
+
+    .hero-trust {
+      display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; align-items: center;
+      .trust-item { display: inline-flex; gap: 8px; align-items: center; padding: 6px 12px; border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; background: rgba(255,255,255,0.06); font-weight: 600; }
+      .trust-icon { width: 16px; height: 16px; filter: brightness(0) invert(1); opacity: 0.9; }
+      @media (max-width: 640px) { justify-content: center; }
+    }
   }
+  // Seasonal section
+  .seasonal {
+    padding: 80px 0;
+    background: linear-gradient(180deg, var(--cream) 0%, #ffffff 100%);
+    .section-header { text-align: center; margin-bottom: 2rem; }
+    .eyebrow { display: inline-block; color: var(--soil); background: var(--mist); padding: 4px 10px; border-radius: 999px; font-weight: 700; margin-bottom: 10px; }
+    .section-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: #1e293b; margin-bottom: 0.5rem; }
+    .section-description { color: #64748b; }
+    .seasonal-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+    @media (max-width: 1024px) { .seasonal-grid { grid-template-columns: 1fr; } }
+    .seasonal-lead { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden; display: grid; grid-template-columns: 1.1fr 1fr; }
+    @media (max-width: 768px) { .seasonal-lead { grid-template-columns: 1fr; } }
+    .lead-image { min-height: 280px; background: url('/assets/images/seasonal-strawberries.jpg') center/cover no-repeat; }
+    .lead-info { padding: 1.25rem; display: grid; gap: 10px; }
+    .pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pill { background: var(--mist); color: var(--soil); border-radius: 999px; padding: 4px 10px; font-weight: 700; font-size: 0.85rem; }
+    .pill.warn { background: #fff3cd; color: #92400e; }
+    .seasonal-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 768px) { .seasonal-cards { grid-template-columns: 1fr 1fr; } }
+    .seasonal-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden; transition: transform .2s ease; }
+    .seasonal-card:hover { transform: translateY(-3px); }
+    .seasonal-card .img { height: 140px; background: #f3f4f6; }
+    .img-mango { background: url('/assets/images/seasonal-mango.jpg') center/cover no-repeat; }
+    .img-mulberry { background: url('/assets/images/seasonal-mulberry.jpg') center/cover no-repeat; }
+    .img-berries { background: url('/assets/images/seasonal-berries.jpg') center/cover no-repeat; }
+    .img-guava { background: url('/assets/images/seasonal-guava.jpg') center/cover no-repeat; }
+    .seasonal-card .info { padding: 10px 12px; }
+  }
+  // Brands section
+  .brands { padding: 80px 0; background: #ffffff; }
+  .brands .brand-strip { display: flex; gap: 10px; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  .brand-chip { padding: 8px 14px; border: 1px solid #e5e7eb; border-radius: 999px; background: var(--mist); font-weight: 700; color: var(--soil); }
+  .brand-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 1200px; margin: 0 auto; }
+  @media (max-width: 900px) { .brand-cards { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .brand-cards { grid-template-columns: 1fr; } }
+  .brand-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden; }
+  .brand-card .img { height: 160px; background: #f9fafb; }
+  .brand-mapro { background: url('/assets/images/brand-mapro.jpg') center/cover no-repeat; }
+  .brand-malas { background: url('/assets/images/brand-malas.jpg') center/cover no-repeat; }
+  .brand-madhusagar { background: url('/assets/images/brand-madhusagar.jpg') center/cover no-repeat; }
+  .brand-card .info { padding: 12px; }
+  // Artisanal stories
+  .artisanal { padding: 80px 0; background: var(--cream); }
+  .story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 1200px; margin: 0 auto; }
+  @media (max-width: 900px) { .story-grid { grid-template-columns: 1fr; } }
+  .story-card { display: grid; grid-template-columns: 1.2fr 1fr; background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden; }
+  @media (max-width: 768px) { .story-card { grid-template-columns: 1fr; } }
+  .story-img { min-height: 220px; background: #f3f4f6; }
+  .story-pedhe { background: url('/assets/images/artisanal-pedhe.jpg') center/cover no-repeat; }
+  .story-dhananjay { background: url('/assets/images/artisanal-dhananjay.jpg') center/cover no-repeat; }
+  .story-body { padding: 16px; }
+  .story-body .link { color: var(--green-leaf); font-weight: 700; cursor: pointer; }
+  // Nursery
+  .nursery { padding: 80px 0; background: #ffffff; }
+  .filter-chips { display: flex; gap: 8px; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  .chip { padding: 8px 12px; border-radius: 999px; border: 1px solid #e5e7eb; background: var(--mist); font-weight: 700; color: var(--soil); }
+  .nursery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; max-width: 1200px; margin: 0 auto; }
+  @media (max-width: 1024px) { .nursery-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .nursery-grid { grid-template-columns: 1fr; } }
+  .nursery-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden; text-align: center; }
+  .nursery-card .img { height: 180px; background: #f9fafb; }
+  .plant-1 { background: url('/assets/images/plant-1.jpg') center/cover no-repeat; }
+  .plant-2 { background: url('/assets/images/plant-2.jpg') center/cover no-repeat; }
+  .plant-3 { background: url('/assets/images/plant-3.jpg') center/cover no-repeat; }
+  .plant-4 { background: url('/assets/images/plant-4.jpg') center/cover no-repeat; }
+  // Farmers
+  .farmers { padding: 80px 0; background: linear-gradient(180deg, #ffffff 0%, var(--cream) 100%); }
+  .farmer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; max-width: 1200px; margin: 0 auto; }
+  @media (max-width: 1024px) { .farmer-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .farmer-grid { grid-template-columns: 1fr; } }
+  .farmer-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 12px; display: flex; gap: 12px; align-items: center; }
+  .avatar { width: 56px; height: 56px; border-radius: 50%; background: #f3f4f6; }
+  .farmer-1 { background: url('/assets/images/farmer-1.jpg') center/cover no-repeat; }
+  .farmer-2 { background: url('/assets/images/farmer-2.jpg') center/cover no-repeat; }
+  .farmer-3 { background: url('/assets/images/farmer-3.jpg') center/cover no-repeat; }
+  .farmer-4 { background: url('/assets/images/farmer-4.jpg') center/cover no-repeat; }
 
   // Modern Categories Section
   .categories {

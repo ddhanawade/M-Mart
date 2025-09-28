@@ -19,6 +19,7 @@ export class Products implements OnInit, OnDestroy {
   products: Product[] = [];
   filteredProducts: Product[] = [];
   featuredProducts: Product[] = [];
+  categories: string[] = [];
   
   selectedCategory: string = '';
   searchQuery: string = '';
@@ -53,6 +54,19 @@ export class Products implements OnInit, OnDestroy {
     
     // Load featured products
     this.loadFeaturedProducts();
+
+    // Keep dynamic categories count updated from backend
+    const categoriesSub = this.productService.categories$.subscribe(list => {
+      if (Array.isArray(list)) {
+        this.categoriesCount = list.length;
+        this.categories = list
+          .map(c => (c || '').toString().toLowerCase())
+          .filter(Boolean)
+          .filter((v, i, a) => a.indexOf(v) === i)
+          .sort();
+      }
+    });
+    this.subscriptions.push(categoriesSub);
   }
 
   ngOnDestroy() {
@@ -130,7 +144,8 @@ export class Products implements OnInit, OnDestroy {
       'organic': 'Organic Products',
       'groceries': 'Groceries & Essentials'
     };
-    return categoryNames[this.selectedCategory] || 'All Products';
+    if (!this.selectedCategory) return 'All Products';
+    return categoryNames[this.selectedCategory] || this.toTitleCase(this.selectedCategory);
   }
 
   getCategoryDescription(): string {
@@ -141,7 +156,14 @@ export class Products implements OnInit, OnDestroy {
       'groceries': 'Daily essentials and pantry staples for your kitchen',
       '': 'Discover our wide range of fresh, organic, and quality products'
     };
-    return descriptions[this.selectedCategory] || descriptions[''];
+    return descriptions[this.selectedCategory] || `Explore our best ${this.toTitleCase(this.selectedCategory)} selections`;
+  }
+
+  private toTitleCase(value: string): string {
+    return (value || '')
+      .split(/[-_\s]+/)
+      .map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase())
+      .join(' ');
   }
 
   filterByCategory(category: string) {
@@ -248,11 +270,23 @@ export class Products implements OnInit, OnDestroy {
     products.sort((a, b) => {
       switch (this.sortBy) {
         case 'price_low':
+        case 'price-low':
           return a.price - b.price;
         case 'price_high':
+        case 'price-high':
           return b.price - a.price;
         case 'rating':
           return b.rating - a.rating;
+        case 'discount': {
+          const discA = (a.discount ?? (a.originalPrice ? Math.round(((a.originalPrice - a.price) / a.originalPrice) * 100) : 0)) || 0;
+          const discB = (b.discount ?? (b.originalPrice ? Math.round(((b.originalPrice - b.price) / b.originalPrice) * 100) : 0)) || 0;
+          return discB - discA;
+        }
+        case 'newest': {
+          const timeA = (a as any)?.createdAt ? new Date((a as any).createdAt).getTime() : 0;
+          const timeB = (b as any)?.createdAt ? new Date((b as any).createdAt).getTime() : 0;
+          return timeB - timeA;
+        }
         case 'name':
         default:
           return a.name.localeCompare(b.name);

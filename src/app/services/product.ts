@@ -90,12 +90,66 @@ export class ProductService {
       });
   }
 
+  private normalizeProduct(dto: any): Product {
+    const category = (dto.category || '').toString().toLowerCase();
+    const originalPrice = dto.originalPrice != null ? Number(dto.originalPrice) : undefined;
+    const price = Number(dto.price);
+    const discountFromPrices = originalPrice && originalPrice > price
+      ? Math.round(((originalPrice - price) / originalPrice) * 100)
+      : 0;
+    const normalized: Product = {
+      id: String(dto.id),
+      name: String(dto.name),
+      description: String(dto.description || ''),
+      price,
+      originalPrice,
+      category,
+      subcategory: dto.subcategory || undefined,
+      image: dto.image || '',
+      images: Array.isArray(dto.images) ? dto.images : undefined,
+      inStock: Boolean(dto.inStock),
+      quantity: Number(dto.quantity ?? 0),
+      unit: String(dto.unit || ''),
+      rating: Number(dto.rating ?? 0),
+      reviewCount: Number(dto.reviewCount ?? 0),
+      organic: Boolean(dto.organic),
+      fresh: Boolean(dto.fresh),
+      discount: dto.discount != null ? Number(dto.discount) : discountFromPrices,
+      featured: Boolean(dto.featured),
+      sku: dto.sku || undefined,
+      barcode: dto.barcode || undefined,
+      weightKg: dto.weightKg != null ? Number(dto.weightKg) : undefined,
+      shelfLifeDays: dto.shelfLifeDays != null ? Number(dto.shelfLifeDays) : undefined,
+      storageInstructions: dto.storageInstructions || undefined,
+      originCountry: dto.originCountry || undefined,
+      supplierName: dto.supplierName || undefined,
+      createdAt: dto.createdAt || undefined,
+      nutritionalInfo: dto.nutritionalInfo ? {
+        calories: dto.nutritionalInfo.caloriesPer100g != null ? Number(dto.nutritionalInfo.caloriesPer100g) : undefined,
+        protein: dto.nutritionalInfo.proteinG != null ? Number(dto.nutritionalInfo.proteinG) : undefined,
+        carbs: dto.nutritionalInfo.carbsG != null ? Number(dto.nutritionalInfo.carbsG) : undefined,
+        fat: dto.nutritionalInfo.fatG != null ? Number(dto.nutritionalInfo.fatG) : undefined,
+        fiber: dto.nutritionalInfo.fiberG != null ? Number(dto.nutritionalInfo.fiberG) : undefined,
+        vitamins: Array.isArray(dto.nutritionalInfo.vitamins) ? dto.nutritionalInfo.vitamins : undefined,
+      } : undefined,
+    };
+    return normalized;
+  }
+
+  private mapPage<T>(page: PageResponse<T>, mapper: (x: any) => T): PageResponse<T> {
+    return {
+      ...page,
+      content: Array.isArray((page as any).content) ? (page as any).content.map(mapper) : [],
+    } as PageResponse<T>;
+  }
+
   getAllProducts(page: number = 0, size: number = 20, sortBy: string = 'name', sortDirection: string = 'asc'): Observable<PageResponse<Product>> {
     this.setLoading(true);
     
     const params = { page, size, sortBy, sortDirection };
     
-    return this.apiService.get<PageResponse<Product>>('productService', '/api/products', params).pipe(
+    return this.apiService.get<PageResponse<any>>('productService', '/api/products', params).pipe(
+      map(res => this.mapPage<any>(res, (dto) => this.normalizeProduct(dto)) as unknown as PageResponse<Product>),
       tap(response => {
         this.productsSubject.next(response.content);
         this.filteredProductsSubject.next(response);
@@ -110,11 +164,11 @@ export class ProductService {
   }
 
   getProductById(id: string): Observable<Product> {
-    return this.apiService.get<Product>('productService', `/api/products/${id}`);
+    return this.apiService.get<any>('productService', `/api/products/${id}`).pipe(map(dto => this.normalizeProduct(dto)));
   }
 
   getProductBySku(sku: string): Observable<Product> {
-    return this.apiService.get<Product>('productService', `/api/products/sku/${sku}`);
+    return this.apiService.get<any>('productService', `/api/products/sku/${sku}`).pipe(map(dto => this.normalizeProduct(dto)));
   }
 
   searchProducts(filters: ProductSearchFilters): Observable<PageResponse<Product>> {
@@ -139,7 +193,8 @@ export class ProductService {
     if (filters.fresh !== undefined) params.fresh = filters.fresh;
     if (filters.featured !== undefined) params.featured = filters.featured;
 
-    return this.apiService.get<PageResponse<Product>>('productService', '/api/products/search', params).pipe(
+    return this.apiService.get<PageResponse<any>>('productService', '/api/products/search', params).pipe(
+      map(res => this.mapPage<any>(res, (dto) => this.normalizeProduct(dto)) as unknown as PageResponse<Product>),
       tap(response => {
         this.filteredProductsSubject.next(response);
         this.setLoading(false);
@@ -167,7 +222,8 @@ export class ProductService {
     
     const params = { page, size, sortBy: 'name', sortDirection: 'asc' };
     
-    return this.apiService.get<PageResponse<Product>>('productService', `/api/products/category/${category}`, params).pipe(
+    return this.apiService.get<PageResponse<any>>('productService', `/api/products/category/${category}`, params).pipe(
+      map(res => this.mapPage<any>(res, (dto) => this.normalizeProduct(dto)) as unknown as PageResponse<Product>),
       tap(response => {
         this.filteredProductsSubject.next(response);
         this.setLoading(false);
@@ -185,7 +241,8 @@ export class ProductService {
     
     const params = { page, size };
     
-    return this.apiService.get<PageResponse<Product>>('productService', '/api/products/featured', params).pipe(
+    return this.apiService.get<PageResponse<any>>('productService', '/api/products/featured', params).pipe(
+      map(res => this.mapPage<any>(res, (dto) => this.normalizeProduct(dto)) as unknown as PageResponse<Product>),
       tap(response => {
         this.setLoading(false);
       }),
@@ -202,7 +259,8 @@ export class ProductService {
     
     const params = { page, size };
     
-    return this.apiService.get<PageResponse<Product>>('productService', '/api/products/organic', params).pipe(
+    return this.apiService.get<PageResponse<any>>('productService', '/api/products/organic', params).pipe(
+      map(res => this.mapPage<any>(res, (dto) => this.normalizeProduct(dto)) as unknown as PageResponse<Product>),
       tap(response => {
         this.setLoading(false);
       }),
@@ -219,7 +277,8 @@ export class ProductService {
     
     const params = { page, size };
     
-    return this.apiService.get<PageResponse<Product>>('productService', '/api/products/sale', params).pipe(
+    return this.apiService.get<PageResponse<any>>('productService', '/api/products/sale', params).pipe(
+      map(res => this.mapPage<any>(res, (dto) => this.normalizeProduct(dto)) as unknown as PageResponse<Product>),
       tap(response => {
         this.setLoading(false);
       }),
@@ -236,7 +295,8 @@ export class ProductService {
     
     const params = { page, size };
     
-    return this.apiService.get<PageResponse<Product>>('productService', '/api/products/top-rated', params).pipe(
+    return this.apiService.get<PageResponse<any>>('productService', '/api/products/top-rated', params).pipe(
+      map(res => this.mapPage<any>(res, (dto) => this.normalizeProduct(dto)) as unknown as PageResponse<Product>),
       tap(response => {
         this.setLoading(false);
       }),
@@ -251,11 +311,15 @@ export class ProductService {
   getRelatedProducts(productId: string, page: number = 0, size: number = 8): Observable<PageResponse<Product>> {
     const params = { page, size };
     
-    return this.apiService.get<PageResponse<Product>>('productService', `/api/products/${productId}/related`, params);
+    return this.apiService.get<PageResponse<any>>('productService', `/api/products/${productId}/related`, params).pipe(
+      map(res => this.mapPage<any>(res, (dto) => this.normalizeProduct(dto)) as unknown as PageResponse<Product>)
+    );
   }
 
   getLowStockProducts(): Observable<Product[]> {
-    return this.apiService.get<Product[]>('productService', '/api/products/low-stock');
+    return this.apiService.get<any[]>('productService', '/api/products/low-stock').pipe(
+      map(list => Array.isArray(list) ? list.map(dto => this.normalizeProduct(dto)) : [])
+    );
   }
 
   getProductCountByCategory(): Observable<any[]> {
@@ -284,7 +348,9 @@ export class ProductService {
   }
 
   getProductsByIds(ids: string[]): Observable<Product[]> {
-    return this.apiService.post<Product[]>('productService', `/api/products/by-ids`, ids);
+    return this.apiService.post<any[]>('productService', `/api/products/by-ids`, ids).pipe(
+      map(list => Array.isArray(list) ? list.map(dto => this.normalizeProduct(dto)) : [])
+    );
   }
 
   // Helper methods for backward compatibility with existing frontend code

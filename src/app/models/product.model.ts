@@ -4,7 +4,7 @@ export interface Product {
   description: string;
   price: number;
   originalPrice?: number;
-  category: 'fruits' | 'vegetables' | 'organic' | 'groceries';
+  category: string; // backend may send many categories; normalize to lowercase in services
   subcategory?: string;
   image: string;
   images?: string[];
@@ -15,13 +15,22 @@ export interface Product {
   reviewCount: number;
   organic: boolean;
   fresh: boolean;
-  discount?: number;
+  discount?: number; // could be absolute or percent; compute when missing
+  featured?: boolean;
+  sku?: string;
+  barcode?: string;
+  weightKg?: number;
+  shelfLifeDays?: number;
+  storageInstructions?: string;
+  originCountry?: string;
+  supplierName?: string;
+  createdAt?: string;
   nutritionalInfo?: {
-    calories: number;
-    protein: number;
-    carbs: number;
-    fat: number;
-    fiber: number;
-    vitamins: string[];
+    calories?: number; // map from caloriesPer100g
+    protein?: number;  // map from proteinG
+    carbs?: number;    // map from carbsG
+    fat?: number;      // map from fatG
+    fiber?: number;    // map from fiberG
+    vitamins?: string[];
   };
 }

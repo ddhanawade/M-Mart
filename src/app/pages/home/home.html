@@ -5,19 +5,28 @@
       <div class="hero-content">
         <div class="hero-text">
           <h1 class="hero-title fade-in">
-            Fresh from Farm to <span class="highlight">Your Home</span>
+            Mahabaleshwar’s <span class="highlight">Farm-to-Table</span> Market
           </h1>
           <p class="hero-description fade-in">
-            Get the freshest fruits, vegetables, and organic products delivered directly from local farmers. 
-            No chemicals, no compromises - just pure, natural goodness for your family.
+            Fresh, seasonal harvest from local farms and makers. Hand‑picked, farm‑verified, and delivered with care — a digital farmer’s market crafted for you.
           </p>
           <div class="hero-actions fade-in">
-            <a routerLink="/products" class="btn btn-primary">
-              Shop Now
-            </a>
-            <a routerLink="/products/organic" class="btn btn-outline">
-              Organic Products
-            </a>
+            <a (click)="navigateToProducts()" class="btn btn-primary">Shop Seasonal Fruits</a>
+            <a (click)="navigateToFarmers()" class="btn btn-outline">Meet Our Farmers</a>
+          </div>
+          <div class="hero-trust fade-in">
+            <div class="trust-item">
+              <img src="assets/images/icons/check-circle.svg" class="trust-icon" alt="Verified">
+              <span>Farm‑Verified</span>
+            </div>
+            <div class="trust-item">
+              <img src="assets/images/icons/sparkles.svg" class="trust-icon" alt="Hand‑Picked">
+              <span>Hand‑Picked</span>
+            </div>
+            <div class="trust-item">
+              <img src="assets/images/icons/truck.svg" class="trust-icon" alt="Cold‑Chain">
+              <span>Cold‑Chain Ready</span>
+            </div>
           </div>
           <div class="hero-stats fade-in">
             <div class="stat">
@@ -105,7 +114,66 @@
     </div>
   </section>
 
-  <!-- Product Categories -->
+  <!-- Fresh & Seasonal Fruits -->
+  <section class="seasonal">
+    <div class="container">
+      <div class="section-header">
+        <div class="eyebrow">Winter Harvest</div>
+        <h2 class="section-title">Fresh & Seasonal Fruits</h2>
+        <p class="section-description">Picked today from Mahabaleshwar’s orchards</p>
+      </div>
+      <div class="seasonal-grid">
+        <div class="seasonal-lead" (click)="navigateToCategory('fruits')">
+          <div class="lead-image"></div>
+          <div class="lead-info">
+            <div class="pills">
+              <span class="pill">Picked Today</span>
+              <span class="pill warn">Limited Season</span>
+            </div>
+            <h3>Strawberries (Premium)</h3>
+            <p>Sweet, juicy, hand‑picked at dawn</p>
+            <button class="btn btn-primary">Shop Now</button>
+          </div>
+        </div>
+        <div class="seasonal-cards">
+          <div class="seasonal-card" (click)="navigateToCategory('fruits')">
+            <div class="img img-mango"></div>
+            <div class="info">
+              <div class="pills"><span class="pill">New</span></div>
+              <h4>Alphonso Mango</h4>
+              <p>King of fruits, pre‑order</p>
+            </div>
+          </div>
+          <div class="seasonal-card" (click)="navigateToCategory('fruits')">
+            <div class="img img-mulberry"></div>
+            <div class="info">
+              <div class="pills"><span class="pill">Seasonal</span></div>
+              <h4>Mulberry</h4>
+              <p>Delicate & antioxidant‑rich</p>
+            </div>
+          </div>
+          <div class="seasonal-card" (click)="navigateToCategory('fruits')">
+            <div class="img img-berries"></div>
+            <div class="info">
+              <div class="pills"><span class="pill">Organic</span></div>
+              <h4>Mixed Berries</h4>
+              <p>Breakfast‑ready assortment</p>
+            </div>
+          </div>
+          <div class="seasonal-card" (click)="navigateToCategory('fruits')">
+            <div class="img img-guava"></div>
+            <div class="info">
+              <div class="pills"><span class="pill">Popular</span></div>
+              <h4>Guava</h4>
+              <p>Crunchy and aromatic</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Categories (kept) -->
   <section class="categories">
     <div class="container">
       <div class="section-header">
@@ -160,6 +228,125 @@
           <h3 class="category-title">Groceries</h3>
           <p class="category-description">Daily essentials and pantry staples</p>
           <span class="category-count">250+ Products</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Famous Local Brands -->
+  <section class="brands">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Famous Local Brands</h2>
+        <p class="section-description">Mapro · Malas · Madhusagar</p>
+      </div>
+      <div class="brand-strip">
+        <div class="brand-chip">Mapro</div>
+        <div class="brand-chip">Malas</div>
+        <div class="brand-chip">Madhusagar</div>
+      </div>
+      <div class="brand-cards">
+        <div class="brand-card">
+          <div class="img brand-mapro"></div>
+          <div class="info"><h4>Mapro Strawberry Crush</h4><p>Classic from Panchgani</p></div>
+        </div>
+        <div class="brand-card">
+          <div class="img brand-malas"></div>
+          <div class="info"><h4>Malas Jam</h4><p>Rich, fruity spreads</p></div>
+        </div>
+        <div class="brand-card">
+          <div class="img brand-madhusagar"></div>
+          <div class="info"><h4>Madhusagar Honey</h4><p>Raw, floral notes</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Artisanal & Local Gems -->
+  <section class="artisanal">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Artisanal & Local Gems</h2>
+        <p class="section-description">Stories behind beloved local specialties</p>
+      </div>
+      <div class="story-grid">
+        <div class="story-card">
+          <div class="story-img story-pedhe"></div>
+          <div class="story-body">
+            <h3>Satarkar Kandi Pedhe</h3>
+            <p>Hand‑crafted sweets with a century‑old legacy.</p>
+            <a class="link">Learn the story →</a>
+          </div>
+        </div>
+        <div class="story-card">
+          <div class="story-img story-dhananjay"></div>
+          <div class="story-body">
+            <h3>Dhananjay Shop</h3>
+            <p>Small‑batch local favorites and festival specials.</p>
+            <a class="link">Learn the story →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Greenery (Plant Nursery) -->
+  <section class="nursery">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Greenery</h2>
+        <p class="section-description">Plant Nursery — bring home some Mahabaleshwar green</p>
+      </div>
+      <div class="filter-chips">
+        <button class="chip">Indoor</button>
+        <button class="chip">Air‑Purifying</button>
+        <button class="chip">Low Maintenance</button>
+        <button class="chip">Balcony</button>
+      </div>
+      <div class="nursery-grid">
+        <div class="nursery-card"><div class="img plant-1"></div><h4>Areca Palm</h4></div>
+        <div class="nursery-card"><div class="img plant-2"></div><h4>Snake Plant</h4></div>
+        <div class="nursery-card"><div class="img plant-3"></div><h4>Money Plant</h4></div>
+        <div class="nursery-card"><div class="img plant-4"></div><h4>Rubber Plant</h4></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Meet Our Farmers -->
+  <section class="farmers">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Meet Our Farmers</h2>
+        <p class="section-description">Real people, real farms, real stories</p>
+      </div>
+      <div class="farmer-grid">
+        <div class="farmer-card">
+          <div class="avatar farmer-1"></div>
+          <div class="meta">
+            <h4>Anjali · Metgutad</h4>
+            <p>Organic strawberries · Rainwater harvesting</p>
+          </div>
+        </div>
+        <div class="farmer-card">
+          <div class="avatar farmer-2"></div>
+          <div class="meta">
+            <h4>Bharat · Bhilar</h4>
+            <p>Mulberries · Natural composting</p>
+          </div>
+        </div>
+        <div class="farmer-card">
+          <div class="avatar farmer-3"></div>
+          <div class="meta">
+            <h4>Meera · Panchgani</h4>
+            <p>Alphonso mangoes · Residue‑free</p>
+          </div>
+        </div>
+        <div class="farmer-card">
+          <div class="avatar farmer-4"></div>
+          <div class="meta">
+            <h4>Sameer · Mahabaleshwar</h4>
+            <p>Nursery · Low‑water plants</p>
+          </div>
         </div>
       </div>
     </div>
