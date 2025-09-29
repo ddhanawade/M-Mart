@@ -24,6 +24,9 @@ export interface Product {
   storageInstructions?: string;
   originCountry?: string;
   supplierName?: string;
+  brand?: string;
+  farmerName?: string;
+  season?: string;
   createdAt?: string;
   nutritionalInfo?: {
     calories?: number; // map from caloriesPer100g

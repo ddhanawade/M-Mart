@@ -1,0 +1,7 @@
+{
+  "/user-service": { "target": "http://localhost:8080", "secure": false, "changeOrigin": true },
+  "/product-service": { "target": "http://localhost:8080", "secure": false, "changeOrigin": true },
+  "/cart-service": { "target": "http://localhost:8080", "secure": false, "changeOrigin": true },
+  "/order-service": { "target": "http://localhost:8080", "secure": false, "changeOrigin": true },
+  "/notification-service": { "target": "http://localhost:8080", "secure": false, "changeOrigin": true }
+}

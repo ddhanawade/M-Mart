@@ -1,0 +1,32 @@
+.specials-page {
+  .section-header { text-align: center; margin: 2.5rem 0 1.5rem; }
+  .specials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+  .special-card {
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    padding: 16px;
+    cursor: pointer;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    border: 1px solid #e5e7eb;
+    transition: transform .2s ease, box-shadow .2s ease;
+    &:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
+  }
+  .img {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background:
+      radial-gradient(60% 60% at 60% 20%, rgba(234,179,8,0.15), transparent),
+      linear-gradient(180deg, #fffbeb, #fef3c7);
+    flex-shrink: 0;
+  }
+}
+
+

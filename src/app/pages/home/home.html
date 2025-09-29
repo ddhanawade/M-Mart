@@ -121,6 +121,12 @@
         <div class="eyebrow">Winter Harvest</div>
         <h2 class="section-title">Fresh & Seasonal Fruits</h2>
         <p class="section-description">Picked today from Mahabaleshwar’s orchards</p>
+        <div class="carousel-hint">
+          <span>Swipe to explore</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M5 12H19M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
       </div>
       <div class="seasonal-grid">
         <div class="seasonal-lead" (click)="navigateToCategory('fruits')">
@@ -135,7 +141,9 @@
             <button class="btn btn-primary">Shop Now</button>
           </div>
         </div>
-        <div class="seasonal-cards">
+        <div class="seasonal-cards" #seasonalCards>
+          <button class="carousel-arrow left" type="button" aria-label="Scroll left" (click)="$event.stopPropagation(); seasonalCards.scrollBy({left: -320, behavior: 'smooth'})"></button>
+          <button class="carousel-arrow right" type="button" aria-label="Scroll right" (click)="$event.stopPropagation(); seasonalCards.scrollBy({left: 320, behavior: 'smooth'})"></button>
           <div class="seasonal-card" (click)="navigateToCategory('fruits')">
             <div class="img img-mango"></div>
             <div class="info">
@@ -161,11 +169,11 @@
             </div>
           </div>
           <div class="seasonal-card" (click)="navigateToCategory('fruits')">
-            <div class="img img-guava"></div>
+          <div class="img img-raspberry"></div>
             <div class="info">
               <div class="pills"><span class="pill">Popular</span></div>
-              <h4>Guava</h4>
-              <p>Crunchy and aromatic</p>
+            <h4>Raspberry</h4>
+              <p>Tart, vibrant, and fresh</p>
             </div>
           </div>
         </div>
@@ -179,8 +187,16 @@
       <div class="section-header">
         <h2 class="section-title">Shop by Category</h2>
         <p class="section-description">Discover our wide range of fresh and organic products</p>
+        <div class="carousel-hint">
+          <span>Swipe to explore</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M5 12H19M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
       </div>
-      <div class="categories-grid">
+      <div class="categories-grid" #categoriesRow>
+        <button class="carousel-arrow left" type="button" aria-label="Scroll left" (click)="$event.stopPropagation(); categoriesRow.scrollBy({left: -320, behavior: 'smooth'})"></button>
+        <button class="carousel-arrow right" type="button" aria-label="Scroll right" (click)="$event.stopPropagation(); categoriesRow.scrollBy({left: 320, behavior: 'smooth'})"></button>
         <div class="category-card" (click)="navigateToCategory('fruits')">
           <div class="category-icon">
             <img src="assets/images/icons/apple.svg" alt="Fresh Fruits" class="category-svg">
@@ -241,9 +257,9 @@
         <p class="section-description">Mapro · Malas · Madhusagar</p>
       </div>
       <div class="brand-strip">
-        <div class="brand-chip">Mapro</div>
-        <div class="brand-chip">Malas</div>
-        <div class="brand-chip">Madhusagar</div>
+        <button class="brand-chip" [routerLink]="['/brands']">Mapro</button>
+        <button class="brand-chip" [routerLink]="['/brands']">Malas</button>
+        <button class="brand-chip" [routerLink]="['/brands']">Madhusagar</button>
       </div>
       <div class="brand-cards">
         <div class="brand-card">
@@ -275,7 +291,7 @@
           <div class="story-body">
             <h3>Satarkar Kandi Pedhe</h3>
             <p>Hand‑crafted sweets with a century‑old legacy.</p>
-            <a class="link">Learn the story →</a>
+            <a class="link" [routerLink]="['/specials']">Shop now →</a>
           </div>
         </div>
         <div class="story-card">
@@ -283,7 +299,7 @@
           <div class="story-body">
             <h3>Dhananjay Shop</h3>
             <p>Small‑batch local favorites and festival specials.</p>
-            <a class="link">Learn the story →</a>
+            <a class="link" [routerLink]="['/specials']">Shop now →</a>
           </div>
         </div>
       </div>

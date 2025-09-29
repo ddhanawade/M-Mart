@@ -9,6 +9,11 @@ import { Profile } from './pages/profile/profile';
 import { Orders } from './pages/orders/orders';
 import { CreateProduct } from './pages/create-product/create-product';
 import { Wishlist } from './pages/wishlist/wishlist';
+import { Farmers } from './pages/farmers/farmers';
+import { Brands } from './pages/brands/brands';
+import { Seasonal } from './pages/seasonal/seasonal';
+import { Nursery } from './pages/nursery/nursery';
+import { LocalSpecials } from './pages/local-specials/local-specials';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -21,6 +26,11 @@ export const routes: Routes = [
   { path: 'orders', component: Orders },
   { path: 'create-product', component: CreateProduct },
   { path: 'wishlist', component: Wishlist },
+  { path: 'farmers', component: Farmers },
+  { path: 'brands', component: Brands },
+  { path: 'seasonal', component: Seasonal },
+  { path: 'nursery', component: Nursery },
+  { path: 'specials', component: LocalSpecials },
   { path: 'profile', component: Profile },
   { path: 'auth', component: Auth },
   { path: 'login', component: Auth },

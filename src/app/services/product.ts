@@ -7,6 +7,9 @@ export interface ProductSearchFilters {
   query?: string;
   category?: string;
   subcategory?: string;
+  brand?: string;
+  farmer?: string;
+  season?: string;
   minPrice?: number;
   maxPrice?: number;
   minRating?: number;
@@ -185,6 +188,9 @@ export class ProductService {
     if (filters.query) params.query = filters.query;
     if (filters.category) params.category = filters.category;
     if (filters.subcategory) params.subcategory = filters.subcategory;
+    if (filters.brand) params.brand = filters.brand;
+    if (filters.farmer) params.farmer = filters.farmer;
+    if (filters.season) params.season = filters.season;
     if (filters.minPrice !== undefined) params.minPrice = filters.minPrice;
     if (filters.maxPrice !== undefined) params.maxPrice = filters.maxPrice;
     if (filters.minRating !== undefined) params.minRating = filters.minRating;

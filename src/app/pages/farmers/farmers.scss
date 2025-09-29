@@ -1,0 +1,41 @@
+.farmers-page {
+  .section-header { text-align: center; margin: 2.5rem 0 1.5rem; }
+  .farmer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+  .farmer-card {
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    border: 1px solid #e5e7eb;
+    transition: transform .2s ease, box-shadow .2s ease;
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    }
+  }
+  .avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 9999px;
+    background:
+      radial-gradient(60% 60% at 60% 20%, rgba(34,197,94,0.15), transparent),
+      linear-gradient(180deg, #ecfdf5, #f0fdf4);
+    flex-shrink: 0;
+  }
+  .farmer-1 { background-image: url('/assets/images/farmers/1.jpg'); }
+  .farmer-2 { background-image: url('/assets/images/farmers/2.jpg'); }
+  .farmer-3 { background-image: url('/assets/images/farmers/3.jpg'); }
+  .farmer-4 { background-image: url('/assets/images/farmers/4.jpg'); }
+  .meta h3 { margin: 0 0 4px; }
+  .meta p { margin: 0 0 8px; color: #555; }
+  .actions { display: flex; gap: 8px; }
+}
+
+

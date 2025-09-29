@@ -1,0 +1,18 @@
+.nursery-page {
+  .section-header { text-align: center; margin: 2rem 0 1rem; }
+  .nursery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.25rem;
+  }
+  .nursery-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    padding: 16px;
+    text-align: center;
+  }
+  .img { height: 140px; border-radius: 8px; background: #e5e7eb; margin-bottom: 8px; }
+}
+
+

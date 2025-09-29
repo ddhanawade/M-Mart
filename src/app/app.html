@@ -1,5 +1,16 @@
 <div class="app-container">
   <app-header></app-header>
+  <nav class="category-subnav">
+    <div class="container">
+      <a routerLink="/products/fruits" routerLinkActive="active">Fruits</a>
+      <a routerLink="/products/vegetables" routerLinkActive="active">Vegetables</a>
+      <a routerLink="/products/organic" routerLinkActive="active">Organic</a>
+      <a routerLink="/products/groceries" routerLinkActive="active">Groceries</a>
+      <a routerLink="/brands" routerLinkActive="active">Brands</a>
+      <a routerLink="/seasonal" routerLinkActive="active">Seasonal</a>
+      <a routerLink="/farmers" routerLinkActive="active">Farmers</a>
+    </div>
+  </nav>
   
   <main class="main-content">
     <router-outlet></router-outlet>

@@ -31,6 +31,6 @@ export class Home implements OnInit {
   }
 
   navigateToFarmers() {
-    this.router.navigate(['/products']);
+    this.router.navigate(['/farmers']);
   }
 }

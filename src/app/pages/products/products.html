@@ -214,6 +214,11 @@
       <!-- Results Summary -->
       <div class="results-summary">
         <h3>Showing {{filteredProducts.length}} products</h3>
+        <div class="active-chips" *ngIf="route.snapshot.queryParams['brand'] || route.snapshot.queryParams['farmer'] || route.snapshot.queryParams['season']">
+          <span class="chip" *ngIf="route.snapshot.queryParams['brand']">Brand: {{route.snapshot.queryParams['brand']}} <button (click)="router.navigate(['/products'])">×</button></span>
+          <span class="chip" *ngIf="route.snapshot.queryParams['farmer']">Farmer: {{route.snapshot.queryParams['farmer']}} <button (click)="router.navigate(['/products'])">×</button></span>
+          <span class="chip" *ngIf="route.snapshot.queryParams['season']">Season: {{route.snapshot.queryParams['season']}} <button (click)="router.navigate(['/products'])">×</button></span>
+        </div>
         <button class="clear-filters-btn" *ngIf="hasActiveFilters()" (click)="clearAllFilters()">
           Clear All Filters
         </button>

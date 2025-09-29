@@ -683,6 +683,24 @@
           box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
         }
       }
+
+      .active-chips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        .chip {
+          background: #f1f5f9;
+          border: 1px solid #e2e8f0;
+          color: #334155;
+          padding: 6px 10px;
+          border-radius: 9999px;
+          font-weight: 600;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          button { border: none; background: transparent; cursor: pointer; font-weight: 700; color: #64748b; }
+        }
+      }
     }
 
     // Loading State

@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ProductService, ProductSearchFilters } from '../../services/product';
@@ -40,7 +40,8 @@ export class Products implements OnInit, OnDestroy {
   totalPages: number = 0;
   
   private productService = inject(ProductService);
-  private route = inject(ActivatedRoute);
+  public route = inject(ActivatedRoute);
+  public router = inject(Router);
   
   private subscriptions: Subscription[] = [];
 
@@ -51,6 +52,33 @@ export class Products implements OnInit, OnDestroy {
       this.loadProducts();
     });
     this.subscriptions.push(routeSubscription);
+
+    // Read search query from query params (e.g., from Farmers/Brands/Seasonal pages)
+    const querySub = this.route.queryParams.subscribe(qp => {
+      const q = (qp['q'] || qp['query'] || '').toString();
+      const brand = (qp['brand'] || '').toString();
+      const farmer = (qp['farmer'] || '').toString();
+      const season = (qp['season'] || '').toString();
+      if (brand || farmer || season || q) {
+        this.searchQuery = q;
+        this.isLoading = true;
+        const filters: ProductSearchFilters = {
+          query: q || undefined,
+          brand: brand || undefined,
+          farmer: farmer || undefined,
+          season: season || undefined,
+          page: 0,
+          size: this.pageSize,
+          sortBy: this.sortBy,
+          sortDirection: 'asc'
+        };
+        this.productService.searchProducts(filters).subscribe({
+          next: (response) => this.handleProductResponse(response),
+          error: () => { this.isLoading = false; }
+        });
+      }
+    });
+    this.subscriptions.push(querySub);
     
     // Load featured products
     this.loadFeaturedProducts();
