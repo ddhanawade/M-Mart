@@ -245,6 +245,19 @@
             }
           }
         }
+
+        // Explore/More trigger should visually match other nav links
+        &.explore-trigger {
+          padding: 0.75rem 1rem; // match .nav-link default
+          border: none;
+          background: none;
+          color: inherit;
+          border-radius: 12px;
+          box-shadow: none;
+
+          .nav-icon { opacity: 0.9; }
+          .dropdown-arrow { opacity: 0.7; }
+        }
       }
 
       // Professional Dropdown
@@ -297,8 +310,19 @@
             }
 
             .item-icon {
-              font-size: 1.1rem;
-              opacity: 0.8;
+              width: 20px;
+              height: 20px;
+              flex: 0 0 20px;
+              display: inline-block;
+              object-fit: contain;
+              opacity: 0.9;
+            }
+
+            // Ensure inline SVGs also follow the same sizing
+            svg.item-icon {
+              width: 20px;
+              height: 20px;
+              flex: 0 0 20px;
             }
 
             .item-label {
@@ -851,8 +875,19 @@
               }
 
               .item-icon {
-                font-size: 1rem;
-                opacity: 0.8;
+                width: 20px;
+                height: 20px;
+                flex: 0 0 20px;
+                display: inline-block;
+                object-fit: contain;
+                opacity: 0.9;
+              }
+
+              // Inline SVG consistency
+              svg.item-icon {
+                width: 20px;
+                height: 20px;
+                flex: 0 0 20px;
               }
             }
           }

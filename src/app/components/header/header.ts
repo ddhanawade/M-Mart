@@ -20,6 +20,8 @@ export class Header implements OnInit {
   isMobileMenuOpen: boolean = false;
   isUserDropdownOpen: boolean = false;
   isProductDropdownOpen: boolean = false;
+  isExploreOpen: boolean = false; // desktop Explore dropdown
+  isExploreMobileOpen: boolean = false; // mobile Explore dropdown
   isLoggingOut: boolean = false;
   isScrolled: boolean = false;
 
@@ -75,6 +77,9 @@ export class Header implements OnInit {
     if (!target.closest('.product-dropdown-container')) {
       this.isProductDropdownOpen = false;
     }
+    if (!target.closest('.explore-dropdown-container')) {
+      this.isExploreOpen = false;
+    }
   }
 
   onSearch() {
@@ -120,17 +125,21 @@ export class Header implements OnInit {
     event.stopPropagation();
     this.isUserDropdownOpen = !this.isUserDropdownOpen;
     this.isProductDropdownOpen = false;
+    this.isExploreOpen = false;
   }
 
   toggleProductDropdown(event: Event) {
     event.stopPropagation();
     this.isProductDropdownOpen = !this.isProductDropdownOpen;
     this.isUserDropdownOpen = false;
+    this.isExploreOpen = false;
   }
 
   closeAllDropdowns() {
     this.isUserDropdownOpen = false;
     this.isProductDropdownOpen = false;
+    this.isExploreOpen = false;
+    this.isExploreMobileOpen = false;
   }
 
   navigateToCategory(category: string) {
