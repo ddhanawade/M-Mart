@@ -1,0 +1,473 @@
+# Production Docker Compose - Mahabaleshwer Mart
+# Frontend + All Backend Microservices for AWS EC2 Deployment
+
+services:
+  # ==================== FRONTEND ====================
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mahabaleshwer-frontend
+    ports:
+      - "4200:80"
+    restart: always
+    environment:
+      - NODE_ENV=production
+    networks:
+      - mahabaleshwer-network
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==================== INFRASTRUCTURE SERVICES ====================
+
+  # Config Server
+  config-server:
+    build:
+      context: ../mahabaleshwer-mart-backend
+      dockerfile: config-server/Dockerfile
+    container_name: mahabaleshwer-config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - mahabaleshwer-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=native
+      - CONFIG_SERVER_USERNAME=config-user
+      - CONFIG_SERVER_PASSWORD=config-pass
+      - EUREKA_SERVER_URL=http://service-discovery:8761/eureka/
+      - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=classpath:/config/
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Service Discovery (Eureka Server)
+  service-discovery:
+    build:
+      context: ../mahabaleshwer-mart-backend
+      dockerfile: service-discovery/Dockerfile
+    container_name: mahabaleshwer-service-discovery
+    ports:
+      - "8761:8761"
+    networks:
+      - mahabaleshwer-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_URI=http://config-server:8888
+      - EUREKA_SERVER_USERNAME=eureka-user
+      - EUREKA_SERVER_PASSWORD=eureka-pass
+    depends_on:
+      config-server:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ../mahabaleshwer-mart-backend
+      dockerfile: api-gateway/Dockerfile
+    container_name: mahabaleshwer-api-gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - mahabaleshwer-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_URI=http://config-server:8888
+      - EUREKA_SERVER_URL=http://eureka-user:eureka-pass@service-discovery:8761/eureka/
+      - REDIS_HOST=redis
+      - JWT_SECRET=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      - CORS_ALLOWED_ORIGINS=https://mahabaleshwar-mart.store,https://www.mahabaleshwar-mart.store,http://localhost:4200
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-discovery:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  # ==================== DATABASE & CACHE ====================
+
+  mysql:
+    image: mysql:8.0
+    container_name: mahabaleshwer-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mahabaleshwer_mart
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ../mahabaleshwer-mart-backend/scripts/init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - mahabaleshwer-network
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password --max_connections=500
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: mahabaleshwer-redis
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - mahabaleshwer-network
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==================== MESSAGE QUEUE ====================
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: mahabaleshwer-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - mahabaleshwer-network
+    restart: always
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_logs:/var/lib/zookeeper/log
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: mahabaleshwer-kafka
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_NUM_PARTITIONS: 3
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    networks:
+      - mahabaleshwer-network
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    restart: always
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # ==================== MICROSERVICES ====================
+
+  # User Service
+  user-service:
+    build:
+      context: ../mahabaleshwer-mart-backend
+      dockerfile: user-service/Dockerfile
+    container_name: mahabaleshwer-user-service
+    ports:
+      - "8081:8081"
+    networks:
+      - mahabaleshwer-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_URI=http://config-server:8888
+      - EUREKA_SERVER_URL=http://eureka-user:eureka-pass@service-discovery:8761/eureka/
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=mahabaleshwer_mart_users
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=root
+      - REDIS_HOST=redis
+      - JWT_SECRET=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-discovery:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  # Product Service
+  product-service:
+    build:
+      context: ../mahabaleshwer-mart-backend
+      dockerfile: product-service/Dockerfile
+    container_name: mahabaleshwer-product-service
+    ports:
+      - "8082:8082"
+    networks:
+      - mahabaleshwer-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_URI=http://config-server:8888
+      - EUREKA_SERVER_URL=http://eureka-user:eureka-pass@service-discovery:8761/eureka/
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=mahabaleshwer_mart_products
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=root
+      - REDIS_HOST=redis
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-discovery:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  # Cart Service
+  cart-service:
+    build:
+      context: ../mahabaleshwer-mart-backend
+      dockerfile: cart-service/Dockerfile
+    container_name: mahabaleshwer-cart-service
+    ports:
+      - "8083:8083"
+    networks:
+      - mahabaleshwer-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_URI=http://config-server:8888
+      - EUREKA_SERVER_URL=http://eureka-user:eureka-pass@service-discovery:8761/eureka/
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=mahabaleshwer_mart_carts
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=root
+      - REDIS_HOST=redis
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-discovery:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  # Order Service
+  order-service:
+    build:
+      context: ../mahabaleshwer-mart-backend
+      dockerfile: order-service/Dockerfile
+    container_name: mahabaleshwer-order-service
+    ports:
+      - "8084:8084"
+    networks:
+      - mahabaleshwer-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_URI=http://config-server:8888
+      - EUREKA_SERVER_URL=http://eureka-user:eureka-pass@service-discovery:8761/eureka/
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=mahabaleshwer_mart_orders
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=root
+      - REDIS_HOST=redis
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - PAYMENT_GATEWAY_ENABLED=false
+      - PAYMENT_MOCK_MODE=true
+      - SKIP_PAYMENT_PROCESSING=true
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-discovery:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  # Payment Service
+  payment-service:
+    build:
+      context: ../mahabaleshwer-mart-backend
+      dockerfile: payment-service/Dockerfile
+    container_name: mahabaleshwer-payment-service
+    ports:
+      - "8086:8086"
+    networks:
+      - mahabaleshwer-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_URI=http://config-server:8888
+      - EUREKA_SERVER_URL=http://eureka-user:eureka-pass@service-discovery:8761/eureka/
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=mahabaleshwer_mart_payments
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - REDIS_HOST=redis
+      - PAYMENT_GATEWAY_ENABLED=false
+      - PAYMENT_MOCK_MODE=true
+      - RAZORPAY_ENABLED=false
+      - STRIPE_ENABLED=false
+      - PAYPAL_ENABLED=false
+      - RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxx
+      - RAZORPAY_KEY_SECRET=test_secret_key
+      - RAZORPAY_WEBHOOK_SECRET=test_webhook_secret
+      - STRIPE_PUBLIC_KEY=pk_test_xxxxxxxxxx
+      - STRIPE_SECRET_KEY=sk_test_xxxxxxxxxx
+      - PAYPAL_CLIENT_ID=sandbox_client_id
+      - PAYPAL_CLIENT_SECRET=sandbox_secret
+      - PAYPAL_MODE=sandbox
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-discovery:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/api/payments/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  # Notification Service
+  notification-service:
+    build:
+      context: ../mahabaleshwer-mart-backend
+      dockerfile: notification-service/Dockerfile
+    container_name: mahabaleshwer-notification-service
+    ports:
+      - "8085:8085"
+    networks:
+      - mahabaleshwer-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_URI=http://config-server:8888
+      - EUREKA_SERVER_URL=http://eureka-user:eureka-pass@service-discovery:8761/eureka/
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - EMAIL_ENABLED=true
+      - MAIL_HOST=smtp.gmail.com
+      - MAIL_PORT=587
+      - MAIL_USERNAME=ddhanawade804@gmail.com
+      - MAIL_PASSWORD=gmqe wtby ajfm fyyu
+      - EMAIL_FROM=noreply@mahabaleshwarmart.com
+      - MAIL_DEBUG=false
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-discovery:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+# ==================== VOLUMES ====================
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  kafka_data:
+    driver: local
+  zookeeper_data:
+    driver: local
+  zookeeper_logs:
+    driver: local
+
+# ==================== NETWORKS ====================
+
+networks:
+  mahabaleshwer-network:
+    external: true
+    name: mahabaleshwer-mart-backend_mahabaleshwer-network
