@@ -135,6 +135,22 @@ export class Header implements OnInit {
     this.isExploreOpen = false;
   }
 
+  // Desktop hover handlers for product dropdown
+  openProductDropdown() {
+    this.isProductDropdownOpen = true;
+    this.isUserDropdownOpen = false;
+    this.isExploreOpen = false;
+  }
+
+  closeProductDropdown() {
+    this.isProductDropdownOpen = false;
+  }
+
+  // Close dropdown after selecting an item
+  onDropdownItemSelect() {
+    this.isProductDropdownOpen = false;
+  }
+
   closeAllDropdowns() {
     this.isUserDropdownOpen = false;
     this.isProductDropdownOpen = false;

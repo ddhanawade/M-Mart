@@ -1,0 +1,18 @@
+services:
+  mahabaleshwer-mart:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mahabaleshwer-mart-app
+    ports:
+      - "4200:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - mahabaleshwer-network
+
+networks:
+  mahabaleshwer-network:
+    external: true
+    name: mahabaleshwer-mart-backend_mahabaleshwer-network

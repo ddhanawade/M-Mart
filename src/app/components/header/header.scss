@@ -24,6 +24,18 @@
     border-bottom-color: rgba(34, 197, 94, 0.2);
   }
 
+  // Mobile: use products header gradient for the top bar
+  @media (max-width: 768px) {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 25%, #475569 50%, #64748b 75%, #94a3b8 100%);
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+
+    .brand-link { color: #ffffff; }
+    .brand-text {
+      .brand-name { color: #ffffff; }
+      .brand-tagline { color: rgba(255, 255, 255, 0.85); }
+    }
+  }
+
   // Modern overlay effect
   &::before {
     content: '';
@@ -86,7 +98,7 @@
       align-items: center;
       gap: 0.75rem;
       text-decoration: none;
-      color: white;
+      color: #111827;
       transition: opacity 0.2s ease;
 
       &:hover {
@@ -128,7 +140,7 @@
           font-size: 1.25rem;
           font-weight: 700;
           line-height: 1.2;
-          color: white;
+          color: #111827;
           letter-spacing: -0.01em;
 
           @media (max-width: 768px) {
@@ -138,7 +150,7 @@
 
         .brand-tagline {
           font-size: 0.7rem;
-          color: rgba(255, 255, 255, 0.8);
+          color: #6b7280;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           font-weight: 500;
@@ -177,38 +189,32 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        color: #374151;
+        color: #1f2937;
         text-decoration: none;
         font-size: 0.9rem;
         font-weight: 500;
-        padding: 0.75rem 1rem;
-        border-radius: 12px;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         white-space: nowrap;
         position: relative;
 
         &:hover {
-          background: linear-gradient(135deg, 
-            rgba(34, 197, 94, 0.1) 0%, 
-            rgba(16, 185, 129, 0.05) 100%);
-          color: #22c55e;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+          background: rgba(17, 24, 39, 0.04);
+          color: #111827;
         }
 
         &.active {
-          background: linear-gradient(135deg, 
-            rgba(34, 197, 94, 0.15) 0%, 
-            rgba(16, 185, 129, 0.1) 100%);
-          color: #22c55e;
+          background: rgba(34, 197, 94, 0.1);
+          color: #065f46;
           &::after {
             content: '';
             position: absolute;
             bottom: -2px;
             left: 50%;
             transform: translateX(-50%);
-            width: 24px;
-            height: 3px;
+            width: 18px;
+            height: 2px;
             background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
             border-radius: 2px;
           }
@@ -444,11 +450,11 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.75rem 1rem;
-      background: rgba(255, 255, 255, 0.9);
+      background: white;
       backdrop-filter: blur(10px);
       border: 2px solid rgba(34, 197, 94, 0.2);
       border-radius: 12px;
-      color: #374151;
+      color: #1f2937;
       text-decoration: none;
       font-size: 0.85rem;
       font-weight: 500;
@@ -469,13 +475,9 @@
       }
 
       &:hover {
-        background: linear-gradient(135deg, 
-          rgba(34, 197, 94, 0.1) 0%, 
-          rgba(16, 185, 129, 0.05) 100%);
-        border-color: #22c55e;
-        color: #22c55e;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+        background: #f9fafb;
+        border-color: rgba(34, 197, 94, 0.35);
+        color: #065f46;
       }
 
       .btn-icon {
@@ -535,6 +537,12 @@
         .btn-icon {
           filter: brightness(0) invert(1);
         }
+      }
+
+      // Wishlist
+      &.wishlist-btn {
+        border-color: rgba(239, 68, 68, 0.25);
+        &:hover { border-color: rgba(239, 68, 68, 0.5); }
       }
 
       // User dropdown button
@@ -694,6 +702,7 @@
     top: 100%;
     left: 0;
     width: 100%;
+    // Mobile panel: clean white background
     background: white;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     opacity: 0;
@@ -802,6 +811,7 @@
           .nav-icon {
             font-size: 1.1rem;
             opacity: 0.8;
+            filter: none;
           }
 
           .nav-label {
@@ -881,6 +891,7 @@
                 display: inline-block;
                 object-fit: contain;
                 opacity: 0.9;
+                filter: none;
               }
 
               // Inline SVG consistency

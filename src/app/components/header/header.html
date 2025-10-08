@@ -6,17 +6,17 @@
       <div class="brand-section">
         <a routerLink="/" class="brand-link" (click)="closeMobileMenu()">
           <picture>
-            <source srcset="assets/images/logo-mark.svg" media="(max-width: 640px)">
-            <img src="assets/images/logo-horizontal.svg" 
-                 alt="Mahabaleshwer Mart - Premium Fresh Produce" 
+            <source srcset="assets/images/logo-badge-round.svg" media="(max-width: 640px)">
+            <img src="assets/images/logo-badge-round.svg" 
+                 alt="GreenGhat — Mahabaleshwar's Pure Produce" 
                  class="brand-logo"
-                 width="220" 
+                 width="56" 
                  height="56">
           </picture>
-          <!-- <span class="brand-text">
-            <span class="brand-name">Mahabaleshwer Mart</span>
-            <span class="brand-tagline">Farm-to-Table • Mahabaleshwar</span>
-          </span> -->
+          <span class="brand-text">
+            <span class="brand-name">GreenGhat</span>
+            <span class="brand-tagline">Mahabaleshwar's Pure Produce</span>
+          </span>
         </a>
       </div>
 
@@ -32,7 +32,9 @@
             <span class="nav-label">Home</span>
           </a>
           <!-- Shop Dropdown (Consolidated) -->
-          <div class="nav-dropdown product-dropdown-container">
+          <div class="nav-dropdown product-dropdown-container"
+               (mouseenter)="openProductDropdown()"
+               (mouseleave)="closeProductDropdown()">
             <button class="nav-link dropdown-trigger" 
                     (click)="toggleProductDropdown($event)"
                     [class.active]="isProductDropdownOpen">
@@ -44,74 +46,47 @@
             </button>
             
             <div class="dropdown-panel" [class.show]="isProductDropdownOpen">
-              <a routerLink="/products" class="dropdown-item">
+              <a routerLink="/products" class="dropdown-item" (click)="onDropdownItemSelect()">
                 <img src="assets/images/icons/package.svg" alt="All Products" class="item-icon">
                 <span class="item-label">All Products</span>
               </a>
-              <a (click)="navigateToCategory('fruits')" class="dropdown-item">
+              <a (click)="navigateToCategory('fruits'); onDropdownItemSelect()" class="dropdown-item">
                 <img src="assets/images/icons/apple.svg" alt="Fruits" class="item-icon">
                 <span class="item-label">Fresh Fruits</span>
               </a>
-              <a (click)="navigateToCategory('vegetables')" class="dropdown-item">
+              <a (click)="navigateToCategory('vegetables'); onDropdownItemSelect()" class="dropdown-item">
                 <img src="assets/images/icons/vegetables.svg" alt="Vegetables" class="item-icon">
                 <span class="item-label">Vegetables</span>
               </a>
-              <a (click)="navigateToCategory('organic')" class="dropdown-item">
+              <a (click)="navigateToCategory('organic'); onDropdownItemSelect()" class="dropdown-item">
                 <img src="assets/images/icons/organic.svg" alt="Organic" class="item-icon">
                 <span class="item-label">Organic Products</span>
               </a>
-              <a (click)="navigateToCategory('groceries')" class="dropdown-item">
+              <a (click)="navigateToCategory('groceries'); onDropdownItemSelect()" class="dropdown-item">
                 <img src="assets/images/icons/shopping-cart.svg" alt="Groceries" class="item-icon">
                 <span class="item-label">Groceries</span>
               </a>
             </div>
           </div>
 
-          <!-- Explore Dropdown (Secondary links) -->
-          <div class="nav-dropdown explore-dropdown-container">
-            <button class="nav-link dropdown-trigger explore-trigger"
-                    (click)="$event.stopPropagation(); isUserDropdownOpen = false; isProductDropdownOpen = false; (isExploreOpen = !isExploreOpen)"
-                    [class.active]="isExploreOpen">
-              <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M15.5 8.5l-2.8 6.8-6.8 2.8 2.8-6.8 6.8-2.8z" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span class="nav-label">More</span>
-              <svg class="dropdown-arrow" [class.rotated]="isExploreOpen" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="dropdown-panel" [class.show]="isExploreOpen">
-              <a routerLink="/farmers" class="dropdown-item">
-                <img src="assets/images/icons/user.svg" alt="Farmers" class="item-icon">
-                <span class="item-label">Farmers</span>
-              </a>
-              <a routerLink="/brands" class="dropdown-item">
-                <img src="assets/images/icons/star.svg" alt="Brands" class="item-icon">
-                <span class="item-label">Brands</span>
-              </a>
-              <a routerLink="/seasonal" class="dropdown-item">
-                <img src="assets/images/icons/sparkles.svg" alt="Seasonal" class="item-icon">
-                <span class="item-label">Seasonal</span>
-              </a>
-              <a routerLink="/nursery" class="dropdown-item">
-                <img src="assets/images/icons/leaf.svg" alt="Nursery" class="item-icon">
-                <span class="item-label">Nursery</span>
-              </a>
-              <a routerLink="/specials" class="dropdown-item">
-                <svg class="item-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M20.84 4.61c-1.54-1.34-3.97-1.12-5.43.5L12 8.09l-3.41-2.98c-1.46-1.62-3.89-1.84-5.43-.5-1.82 1.59-1.9 4.34-.18 6.05L12 21l9.02-10.34c1.72-1.71 1.64-4.46-.18-6.05Z" stroke="url(#specialsHeartGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <defs>
-                    <linearGradient id="specialsHeartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
-                      <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <span class="item-label">Specials</span>
-              </a>
-            </div>
-          </div>
+          <!-- Primary informational links -->
+          <!-- <a href="#" class="nav-link" aria-label="About GreenGhat">
+            <img src="assets/images/icons/info.svg" alt="About" class="nav-icon">
+            <span class="nav-label">About Us</span>
+          </a>
+          <a href="#" class="nav-link" aria-label="Contact GreenGhat">
+            <img src="assets/images/icons/phone.svg" alt="Contact" class="nav-icon">
+            <span class="nav-label">Contact</span>
+          </a>
+          <a href="#" class="nav-link" aria-label="Blog and Recipes">
+            <img src="assets/images/icons/book-open.svg" alt="Recipes" class="nav-icon">
+            <span class="nav-label">Recipes</span>
+          </a> -->
+          <!-- Sell Product -->
+          <a routerLink="/create-product" class="nav-link" aria-label="Sell a Product">
+            <img src="assets/images/icons/package.svg" alt="Sell" class="nav-icon">
+            <span class="nav-label">Sell</span>
+          </a>
         </nav>
 
         <!-- Search Bar -->
@@ -121,7 +96,7 @@
               <img src="assets/images/icons/search.svg" alt="Search" class="search-icon-left">
               <input type="text" 
                      class="search-input" 
-                     placeholder="Search fresh products..."
+                     placeholder="Search for fresh produce..."
                      [(ngModel)]="searchQuery"
                      name="search">
               <button type="submit" class="search-btn">
@@ -135,6 +110,12 @@
       <!-- Right: Action Buttons -->
       <div class="actions-section">
         
+        <!-- Wishlist Button -->
+        <a routerLink="/wishlist" class="action-btn wishlist-btn" aria-label="Wishlist">
+          <img src="assets/images/icons/heart.svg" alt="Wishlist" class="btn-icon">
+          <span class="btn-label">Wishlist</span>
+        </a>
+
         <!-- Cart Button -->
         <a routerLink="/cart" class="action-btn cart-btn">
           <img src="assets/images/icons/shopping-cart.svg" alt="Cart" class="btn-icon">
@@ -314,6 +295,15 @@
           <img src="assets/images/icons/shopping-cart.svg" alt="Cart" class="nav-icon">
           <span class="nav-label">Cart</span>
           <span class="cart-count" *ngIf="cartItemCount > 0">{{cartItemCount}}</span>
+        </a>
+
+        <!-- Sell (Mobile) -->
+        <a routerLink="/create-product" 
+           routerLinkActive="active" 
+           class="mobile-link"
+           (click)="closeMobileMenu()">
+          <img src="assets/images/icons/package.svg" alt="Sell" class="nav-icon">
+          <span class="nav-label">Sell</span>
         </a>
 
         <!-- Mobile User Section -->
