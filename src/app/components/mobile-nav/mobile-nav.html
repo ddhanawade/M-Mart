@@ -1,0 +1,25 @@
+<nav class="mobile-bottom-nav">
+  <a routerLink="/" class="nav-item" [class.active]="isActive('/')" aria-label="Home">
+    <img src="assets/images/icons/home.svg" alt="Home" class="icon">
+    <span class="label">Home</span>
+  </a>
+  <a routerLink="/products" class="nav-item" [class.active]="isActive('/products')" aria-label="Shop">
+    <img src="assets/images/icons/shopping-bag.svg" alt="Shop" class="icon">
+    <span class="label">Shop</span>
+  </a>
+  <a routerLink="/cart" class="nav-item cart" [class.active]="isActive('/cart')" aria-label="Cart">
+    <span class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</span>
+    <img src="assets/images/icons/shopping-cart.svg" alt="Cart" class="icon">
+    <span class="label">Cart</span>
+  </a>
+  <a routerLink="/wishlist" class="nav-item" [class.active]="isActive('/wishlist')" aria-label="Wishlist">
+    <img src="assets/images/icons/heart.svg" alt="Wishlist" class="icon">
+    <span class="label">Wishlist</span>
+  </a>
+  <a routerLink="/profile" class="nav-item" [class.active]="isActive('/profile')" aria-label="Account">
+    <img src="assets/images/icons/user.svg" alt="Account" class="icon">
+    <span class="label">Account</span>
+  </a>
+</nav>
+
+

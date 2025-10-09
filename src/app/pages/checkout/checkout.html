@@ -483,7 +483,7 @@
               <div class="summary-item" *ngFor="let item of cartItems">
                 <div class="item-info">
                   <ng-container *ngIf="item.product.image && item.product.image.startsWith('http'); else emojiThumb">
-                    <img class="item-thumb" [src]="item.product.image" [alt]="item.product.name" />
+                    <img class="item-thumb" [src]="item.product.image" [alt]="item.product.name" loading="lazy" decoding="async" />
                   </ng-container>
                   <ng-template #emojiThumb>
                     <span class="item-emoji">{{item.product.image}}</span>

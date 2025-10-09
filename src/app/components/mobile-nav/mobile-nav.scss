@@ -1,0 +1,67 @@
+.mobile-bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 64px;
+  padding-bottom: var(--safe-area-bottom);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid #e5e7eb;
+  display: none;
+  z-index: 1090;
+  pointer-events: auto;
+
+  // isolate from any parent transforms so it stays fixed during scroll/translate effects
+  transform: translateZ(0);
+
+  @media (max-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    // prevent horizontal drag from moving the bar
+    overflow: hidden;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: #64748b;
+    text-decoration: none;
+    position: relative;
+
+    &.active {
+      color: #065f46;
+    }
+
+    .icon {
+      width: 22px;
+      height: 22px;
+    }
+
+    .label {
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    &.cart .cart-badge {
+      position: absolute;
+      top: 4px;
+      right: 24px;
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 9999px;
+      min-width: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+

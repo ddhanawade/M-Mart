@@ -34,6 +34,9 @@ export class Products implements OnInit, OnDestroy {
   categoriesCount: number = 5;
   hasMoreProducts: boolean = false;
   
+  // Mobile filter drawer state
+  isMobileFiltersOpen: boolean = false;
+  
   // Pagination
   currentPage: number = 0;
   pageSize: number = 20;
@@ -95,6 +98,31 @@ export class Products implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(categoriesSub);
+  }
+
+  // Mobile filters drawer controls
+  openMobileFilters() {
+    this.isMobileFiltersOpen = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeMobileFilters() {
+    this.isMobileFiltersOpen = false;
+    document.body.style.overflow = '';
+  }
+
+  toggleMobileFilters() {
+    this.isMobileFiltersOpen ? this.closeMobileFilters() : this.openMobileFilters();
+  }
+
+  getActiveFiltersCount(): number {
+    let count = 0;
+    if (this.selectedCategory) count++;
+    if (this.searchQuery) count++;
+    if (this.showOnlyOrganic) count++;
+    if (this.showOnlyDiscounted) count++;
+    if (this.showOnlyInStock) count++;
+    return count;
   }
 
   ngOnDestroy() {

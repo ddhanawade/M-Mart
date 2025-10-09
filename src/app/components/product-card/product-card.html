@@ -2,7 +2,7 @@
   <!-- Professional Image Section -->
   <div class="card-image-section">
     <ng-container *ngIf="product.image && product.image.startsWith('http'); else textImage">
-      <img class="product-img" [src]="product.image" [alt]="product.name" />
+      <img class="product-img" [src]="product.image" [alt]="product.name" loading="lazy" decoding="async" />
     </ng-container>
     <ng-template #textImage>
       <span class="product-image">{{product.image}}</span>
@@ -24,6 +24,9 @@
 
   <!-- Professional Content Section -->
   <div class="card-content">
+    <!-- Product Details -->
+    <h3 class="product-title">{{product.name}}</h3>
+
     <!-- Rating & Reviews -->
     <div class="rating-section">
       <div class="stars">
@@ -31,25 +34,19 @@
       </div>
       <span class="review-count">({{product.reviewCount}})</span>
     </div>
-
-    <!-- Product Details -->
-    <h3 class="product-title">{{product.name}}</h3>
     <p class="product-description">{{product.description}}</p>
 
-    <!-- Nutrition Info -->
-    <div class="nutrition-info" *ngIf="product.nutritionalInfo?.vitamins">
-      <span class="nutrition-tag" *ngFor="let vitamin of product.nutritionalInfo?.vitamins?.slice(0, 2)">
-        {{vitamin}}
-      </span>
-    </div>
+    <!-- Nutrition/feature chips intentionally hidden for a cleaner, commerce-style card -->
 
     <!-- Price Section -->
     <div class="price-section">
       <div class="price-row">
-        <span class="current-price">₹{{product.price}}</span>
-        <span class="original-price" *ngIf="product.originalPrice">₹{{product.originalPrice}}</span>
+        <div class="price-left">
+          <span class="current-price">₹{{product.price}}</span>
+          <span class="original-price" *ngIf="product.originalPrice">₹{{product.originalPrice}}</span>
+        </div>
+        <span class="unit-info">/ {{product.unit}}</span>
       </div>
-      <span class="unit-info">/ {{product.unit}}</span>
       <div class="savings" *ngIf="product.originalPrice">
         Save ₹{{product.originalPrice - product.price}}
       </div>

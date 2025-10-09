@@ -63,7 +63,7 @@
                 <!-- Product Image -->
                 <div class="item-image">
                   <img *ngIf="item.product.image && item.product.image.startsWith('http')"
-                       [src]="item.product.image"
+                       [src]="item.product.image" loading="lazy" decoding="async"
                        alt="{{item.product.name}}"
                        class="product-img" />
                   <span *ngIf="!item.product.image || !item.product.image.startsWith('http')"

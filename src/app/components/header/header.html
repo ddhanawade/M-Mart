@@ -28,7 +28,7 @@
              routerLinkActive="active" 
              [routerLinkActiveOptions]="{exact: true}" 
              class="nav-link">
-            <img src="assets/images/icons/home.svg" alt="Home" class="nav-icon">
+            <img src="assets/images/icons/home.svg" alt="Home" class="nav-icon" loading="lazy" decoding="async">
             <span class="nav-label">Home</span>
           </a>
           <!-- Shop Dropdown (Consolidated) -->
@@ -38,7 +38,7 @@
             <button class="nav-link dropdown-trigger" 
                     (click)="toggleProductDropdown($event)"
                     [class.active]="isProductDropdownOpen">
-              <img src="assets/images/icons/shopping-bag.svg" alt="Shop" class="nav-icon">
+              <img src="assets/images/icons/shopping-bag.svg" alt="Shop" class="nav-icon" loading="lazy" decoding="async">
               <span class="nav-label">Shop</span>
               <svg class="dropdown-arrow" [class.rotated]="isProductDropdownOpen" width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -47,11 +47,11 @@
             
             <div class="dropdown-panel" [class.show]="isProductDropdownOpen">
               <a routerLink="/products" class="dropdown-item" (click)="onDropdownItemSelect()">
-                <img src="assets/images/icons/package.svg" alt="All Products" class="item-icon">
+                <img src="assets/images/icons/package.svg" alt="All Products" class="item-icon" loading="lazy" decoding="async">
                 <span class="item-label">All Products</span>
               </a>
               <a (click)="navigateToCategory('fruits'); onDropdownItemSelect()" class="dropdown-item">
-                <img src="assets/images/icons/apple.svg" alt="Fruits" class="item-icon">
+                <img src="assets/images/icons/apple.svg" alt="Fruits" class="item-icon" loading="lazy" decoding="async">
                 <span class="item-label">Fresh Fruits</span>
               </a>
               <a (click)="navigateToCategory('vegetables'); onDropdownItemSelect()" class="dropdown-item">

@@ -74,7 +74,9 @@
   
   @media (max-width: 480px) {
     margin-top: 60px; // Mobile header height
-    min-height: calc(100vh - 60px);
+    // Account for bottom nav on mobile; ensure content never hides below
+    padding-bottom: calc(64px + var(--safe-area-bottom));
+    min-height: calc(100vh - 60px - 64px);
   }
 }
 

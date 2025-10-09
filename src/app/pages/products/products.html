@@ -53,6 +53,144 @@
         <p class="filters-subtitle">Use our smart filters to discover exactly what you need</p>
       </div>
       
+      <!-- Mobile Filters Trigger moved into results strip -->
+
+      <!-- Side Drawer Backdrop (mobile) -->
+      <div class="filters-backdrop" *ngIf="isMobileFiltersOpen" (click)="closeMobileFilters()"></div>
+
+      <!-- Side Drawer (mobile) -->
+      <aside class="filters-drawer" [class.open]="isMobileFiltersOpen">
+        <div class="drawer-header">
+          <h3>Filters</h3>
+          <div class="drawer-right">
+            <div class="drawer-sort">
+              <label for="drawer-sort-select">Sort</label>
+              <select id="drawer-sort-select" [(ngModel)]="sortBy" (change)="onSortChange()">
+                <option value="name">Name (A-Z)</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+                <option value="discount">Best Deals</option>
+                <option value="newest">Newest First</option>
+              </select>
+            </div>
+            <button class="close-btn" (click)="closeMobileFilters()" aria-label="Close">×</button>
+          </div>
+        </div>
+        <div class="drawer-content">
+          <!-- Category Filter duplicated for drawer -->
+          <div class="filter-group category-filter">
+            <label class="filter-label">
+              <img src="assets/images/icons/package.svg" alt="Category" class="filter-icon">
+              <span>Categories</span>
+            </label>
+            <div class="category-buttons">
+              <button 
+                class="category-btn modern-btn" 
+                [class.active]="!selectedCategory"
+                (click)="filterByCategory(''); closeMobileFilters()">
+                <div class="btn-content">
+                  <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 7V5C3 3.89 3.89 3 5 3H19C20.11 3 21 3.89 21 5V7M3 7V19C3 20.11 3.89 21 5 21H19C20.11 21 19 20.11 19 19V7M3 7H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>All Products</span>
+                </div>
+              </button>
+              <button 
+                class="category-btn modern-btn" 
+                [class.active]="selectedCategory === 'fruits'"
+                (click)="filterByCategory('fruits'); closeMobileFilters()">
+                <div class="btn-content">
+                  <img src="assets/images/icons/apple.svg" alt="Fruits" class="btn-icon">
+                  <span>Fresh Fruits</span>
+                </div>
+              </button>
+              <button 
+                class="category-btn modern-btn" 
+                [class.active]="selectedCategory === 'vegetables'"
+                (click)="filterByCategory('vegetables'); closeMobileFilters()">
+                <div class="btn-content">
+                  <img src="assets/images/icons/vegetables.svg" alt="Vegetables" class="btn-icon">
+                  <span>Vegetables</span>
+                </div>
+              </button>
+              <button 
+                class="category-btn modern-btn" 
+                [class.active]="selectedCategory === 'organic'"
+                (click)="filterByCategory('organic'); closeMobileFilters()">
+                <div class="btn-content">
+                  <img src="assets/images/icons/organic.svg" alt="Organic" class="btn-icon">
+                  <span>Organic</span>
+                </div>
+              </button>
+              <button 
+                class="category-btn modern-btn" 
+                [class.active]="selectedCategory === 'groceries'"
+                (click)="filterByCategory('groceries'); closeMobileFilters()">
+                <div class="btn-content">
+                  <img src="assets/images/icons/shopping-cart.svg" alt="Groceries" class="btn-icon">
+                  <span>Groceries</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Smart Filters duplicated for drawer -->
+          <div class="filter-group smart-filters">
+            <label class="filter-label">
+              <svg class="filter-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M22 3H2L10 12.46V19L14 21V12.46L22 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Smart Filters</span>
+            </label>
+            <div class="filter-buttons">
+              <button 
+                class="filter-btn modern-filter-btn" 
+                [class.active]="showOnlyOrganic"
+                (click)="toggleOrganicFilter()">
+                <div class="filter-btn-content">
+                  <img src="assets/images/icons/organic.svg" alt="Organic" class="filter-btn-icon">
+                  <span>Organic Only</span>
+                  <div class="filter-badge" *ngIf="showOnlyOrganic">✓</div>
+                </div>
+              </button>
+              <button 
+                class="filter-btn modern-filter-btn" 
+                [class.active]="showOnlyDiscounted"
+                (click)="toggleDiscountFilter()">
+                <div class="filter-btn-content">
+                  <svg class="filter-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M20.59 13.41L13.42 20.58C13.05 20.95 12.55 21.16 12.02 21.16C11.49 21.16 10.99 20.95 10.62 20.58L2.42 12.38C2.05 12.01 1.84 11.51 1.84 10.98V4.84C1.84 3.75 2.75 2.84 3.84 2.84H9.98C10.51 2.84 11.01 3.05 11.38 3.42L19.58 11.62C20.35 12.39 20.35 13.64 19.58 14.41L20.59 13.41Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="6.84" cy="6.84" r="1" fill="currentColor"/>
+                  </svg>
+                  <span>On Sale</span>
+                  <div class="filter-badge" *ngIf="showOnlyDiscounted">✓</div>
+                </div>
+              </button>
+              <button 
+                class="filter-btn modern-filter-btn" 
+                [class.active]="showOnlyInStock"
+                (click)="toggleStockFilter()">
+                <div class="filter-btn-content">
+                  <svg class="filter-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 12L11 14L15 10M21 12C21 16.97 16.97 21 12 21C7.03 21 3 16.97 3 12C3 7.03 7.03 3 12 3C16.97 3 21 7.03 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>In Stock</span>
+                  <div class="filter-badge" *ngIf="showOnlyInStock">✓</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div class="drawer-actions">
+            <button class="btn btn-outline" (click)="clearAllFilters()">Clear All</button>
+            <button class="btn btn-primary" (click)="closeMobileFilters()">Apply</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- results-strip removed per request -->
+
       <div class="filters-content">
         <!-- Category Filter -->
         <div class="filter-group category-filter">
@@ -211,18 +349,7 @@
   <!-- Products Grid -->
   <div class="products-section">
     <div class="container">
-      <!-- Results Summary -->
-      <div class="results-summary">
-        <h3>Showing {{filteredProducts.length}} products</h3>
-        <div class="active-chips" *ngIf="route.snapshot.queryParams['brand'] || route.snapshot.queryParams['farmer'] || route.snapshot.queryParams['season']">
-          <span class="chip" *ngIf="route.snapshot.queryParams['brand']">Brand: {{route.snapshot.queryParams['brand']}} <button (click)="router.navigate(['/products'])">×</button></span>
-          <span class="chip" *ngIf="route.snapshot.queryParams['farmer']">Farmer: {{route.snapshot.queryParams['farmer']}} <button (click)="router.navigate(['/products'])">×</button></span>
-          <span class="chip" *ngIf="route.snapshot.queryParams['season']">Season: {{route.snapshot.queryParams['season']}} <button (click)="router.navigate(['/products'])">×</button></span>
-        </div>
-        <button class="clear-filters-btn" *ngIf="hasActiveFilters()" (click)="clearAllFilters()">
-          Clear All Filters
-        </button>
-      </div>
+      <!-- Results Summary removed per request -->
 
       <!-- Loading State -->
       <div class="loading-state" *ngIf="isLoading">

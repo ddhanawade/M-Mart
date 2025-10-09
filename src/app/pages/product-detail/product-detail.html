@@ -71,7 +71,7 @@
             <div class="main-image">
               <div class="image-container" (click)="openLightbox()" role="button" aria-label="View larger image">
                 <ng-container *ngIf="selectedImage && selectedImage.startsWith('http'); else textMainImg">
-                  <img class="product-main-img" [src]="selectedImage" [alt]="product.name" />
+                  <img class="product-main-img" [src]="selectedImage" [alt]="product.name" loading="lazy" decoding="async" />
                 </ng-container>
                 <ng-template #textMainImg>
                   <span class="product-emoji">{{selectedImage}}</span>
@@ -96,7 +96,7 @@
                 [class.active]="selectedImage === image"
                 (click)="selectImage(image)">
                 <ng-container *ngIf="image && image.startsWith('http'); else textThumb">
-                  <img class="thumbnail-img" [src]="image" [alt]="product.name" />
+                  <img class="thumbnail-img" [src]="image" [alt]="product.name" loading="lazy" decoding="async" />
                 </ng-container>
                 <ng-template #textThumb>
                   <span class="thumbnail-emoji">{{image}}</span>
